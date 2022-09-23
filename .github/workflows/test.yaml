@@ -10,10 +10,15 @@ jobs:
         runs-on: ubuntu-latest
         steps:
         - uses: actions/checkout@v2
-        - uses: xt0rted/dotnet-format-problem-matcher@v1
         - uses: xt0rted/dotnet-tool-restore@v1
-        - uses: xt0rted/dotnet-format@v1
-          with:
-              only-changed-files: "true"
-              fail-fast: "false"
+        - run: dotnet format --verify-no-changes --verbosity diagnostic
               
+    #test_unit:
+    #    runs-on: ubuntu-latest
+    #    steps:
+    #        - uses: actions/checkout@v2
+    #        - name: use this action, test solution dir
+    #          uses: zyborg/dotnet-tests-report@v1
+    #          with:
+    #              project_path: tests/My.Project.Tests
+    #              github_token: ${{ secrets.GITHUB_TOKEN }}
