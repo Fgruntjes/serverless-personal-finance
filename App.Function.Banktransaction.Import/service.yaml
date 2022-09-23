@@ -1,0 +1,14 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: personal-finance-banktransaction-import
+spec:
+  template:
+    spec:
+      containerConcurrency: 10
+      containers:
+        - image: europe-central2-docker.pkg.dev/serverless-personal-finance/banktransaction/import:dev-3
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi
