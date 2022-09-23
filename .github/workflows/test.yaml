@@ -1,0 +1,19 @@
+name: Test
+on:
+    pull_request:
+
+jobs:
+    #########################################################
+    # Code quality and unit tests
+    #########################################################
+    test_quality:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v2
+        - uses: xt0rted/dotnet-format-problem-matcher@v1
+        - uses: xt0rted/dotnet-tool-restore@v1
+        - uses: xt0rted/dotnet-format@v1
+          with:
+              only-changed-files: "true"
+              fail-fast: "false"
+              
