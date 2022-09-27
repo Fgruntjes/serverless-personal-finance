@@ -48,14 +48,11 @@ jobs:
         steps:
             - run: 'echo ${{ github.ref }}'
             - uses: 'actions/checkout@v3'
-            - id: 'auth'
-              name: 'Authenticate to Google Cloud'
-              uses: 'google-github-actions/auth@v0'
+            - uses: 'google-github-actions/auth@v0'
               with:
                   workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
                   service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
-            - id: 'deploy'
-              uses: 'google-github-actions/deploy-cloudrun@v0'
+            - uses: 'google-github-actions/deploy-cloudrun@v0'
               with:
-                  metadata: '${{ matrix.project }}'
+                  metadata: '${{ matrix.project }}/service.yaml'
                   env_vars: 'DEPLOY_ENV=${{ matrix.environment }}'
