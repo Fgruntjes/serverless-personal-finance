@@ -13,12 +13,12 @@ jobs:
         - uses: xt0rted/dotnet-tool-restore@v1
         - run: dotnet format --verify-no-changes --verbosity diagnostic
               
-    #test_unit:
-    #    runs-on: ubuntu-latest
-    #    steps:
-    #        - uses: actions/checkout@v2
-    #        - name: use this action, test solution dir
-    #          uses: zyborg/dotnet-tests-report@v1
-    #          with:
-    #              project_path: tests/My.Project.Tests
-    #              github_token: ${{ secrets.GITHUB_TOKEN }}
+    test_unit:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: use this action, test solution dir
+              uses: zyborg/dotnet-tests-report@v1
+              with:
+                  project_path: tests/App.Function.Banktransaction.Import.Tests
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
