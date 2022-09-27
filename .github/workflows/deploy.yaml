@@ -56,8 +56,14 @@ jobs:
               id: docker_meta
               with:
                   images: ghcr.io/${{ github.repository }}/${{ matrix.project }}
-            - run: sed -i 's/\${DEPLOY_ENV}t/${{ matrix.environment }}/g' '${{ matrix.project }}/service.yaml'
-            - run: sed -i 's/\${IMAGE}t/${{ steps.docker_meta.outputs.tags }}/g' '${{ matrix.project }}/service.yaml'
+            - uses: mshick/fast-envsubst@v1
+              env:
+                  DEPLOY_ENV: ${{ matrix.environment }}
+                  IMAGE: ${{ steps.docker_meta.outputs.tags }}
+              with:
+                  in-file: ${{ matrix.project }}/service.yaml
+                  out-file: ${{ matrix.project }}/service.deploy.yaml
+            - run: cat ${{ matrix.project }}/service.deploy.yaml
             - uses: 'google-github-actions/deploy-cloudrun@v0'
               with:
-                  metadata: '${{ matrix.project }}/service.yaml'
+                  metadata: '${{ matrix.project }}/service.deploy.yaml'
