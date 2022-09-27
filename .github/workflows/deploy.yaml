@@ -45,6 +45,7 @@ jobs:
             matrix:
                 project: [ 'App.Function.Banktransaction.Import' ]
                 environment: [ 'beta' ]
+                region: [ 'europe-central2' ]
         steps:
             - run: 'echo ${{ github.ref }}'
             - uses: 'actions/checkout@v3'
@@ -67,3 +68,4 @@ jobs:
             - uses: 'google-github-actions/deploy-cloudrun@v0'
               with:
                   metadata: '${{ matrix.project }}/service.deploy.yaml'
+                  region: ${{ matrix.region }}
