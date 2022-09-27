@@ -43,7 +43,7 @@ jobs:
                 project: [ 'App.Function.Banktransaction.Import' ]
                 environment: [ 'beta' ]
         steps:
-            - uses: 'actions/checkout@v2'
+            - uses: 'actions/checkout@v3'
             - id: 'auth'
               name: 'Authenticate to Google Cloud'
               uses: 'google-github-actions/auth@v0'
