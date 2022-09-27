@@ -1,0 +1,4 @@
+{
+  "name": "serverless-personal-finance",
+  "description": "Personal finance application build on serverless cloud functions. Keeping running cost at a minimum while using high end hosting."
+}

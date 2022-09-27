@@ -20,5 +20,6 @@ jobs:
         -   uses: cycjimmy/semantic-release-action@v3
             with:
                 semantic_version: 19
+                working_directory: "./.github"
             env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
