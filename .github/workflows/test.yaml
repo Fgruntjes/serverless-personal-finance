@@ -8,12 +8,42 @@ jobs:
     #########################################################
     test_quality:
         runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                dotnet-version: [ '6.0.x' ]
         steps:
         - uses: actions/checkout@v2
-        - uses: xt0rted/dotnet-format-problem-matcher@v1
-        - uses: xt0rted/dotnet-tool-restore@v1
-        - uses: xt0rted/dotnet-format@v1
+        - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+          uses: actions/setup-dotnet@v2
           with:
-              only-changed-files: "true"
-              fail-fast: "false"
+              dotnet-version: ${{ matrix.dotnet-version }}
+        - uses: kkak10/pr-number-action@v1.3
+          id: PRNUMBER
+        - run: |
+              echo "file_name=FormatReport.${{ matrix.dotnet-version }}.${{steps.PRNUMBER.outputs.pr}}.${{github.run_number}}.json" >> $GITHUB_ENV
+        - run: dotnet format --verify-no-changes
               
+    test_integration:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                dotnet-version: [ '6.0.x' ]
+                project: [ 'App.Function.Banktransaction.Import.Tests' ]
+        steps:
+            - uses: actions/checkout@v2
+            - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+              uses: actions/setup-dotnet@v2
+              with:
+                  dotnet-version: ${{ matrix.dotnet-version }}
+            - uses: kkak10/pr-number-action@v1.3
+              id: PRNUMBER
+            - run: |
+                echo "title=Test Run for PR #${{steps.PRNUMBER.outputs.pr}} (${{github.run_number}})" >> $GITHUB_ENV
+                echo "file_name=TestReport.${{ matrix.dotnet-version }}.${{ matrix.project }}.${{steps.PRNUMBER.outputs.pr}}.${{github.run_number}}.md" >> $GITHUB_ENV  
+            - run: dotnet restore ${{ matrix.project }}
+            - run: dotnet build --no-restore ${{ matrix.project }}
+            - run: dotnet test --no-restore --no-build --logger "liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};" ${{ matrix.project }}
+            - uses: marocchino/sticky-pull-request-comment@v2
+              if: ${{always()}}
+              with:
+                  path: ${{github.workspace}}/${{env.file_name}}
