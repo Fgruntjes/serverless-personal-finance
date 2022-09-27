@@ -21,10 +21,10 @@ public class TestApplicationFactory<TEntryPoint> : WebApplicationFactory<TEntryP
         {
             services.AddLogging(logBuilder => logBuilder
                 .AddConsole()
-                .AddFilter(level => level >= LogLevel.Trace));            
+                .AddFilter(level => level >= LogLevel.Trace));
         });
-        
-        
+
+
         return base.CreateHost(builder);
     }
 }

@@ -6,7 +6,7 @@ public class IntegrationTestFixture<TEntryPoint> : IClassFixture<TestApplication
 {
     protected readonly TestApplicationFactory<TEntryPoint> _factory;
     protected readonly HttpClient _client;
-    
+
     public IntegrationTestFixture(TestApplicationFactory<TEntryPoint> factory)
     {
         _factory = factory;
