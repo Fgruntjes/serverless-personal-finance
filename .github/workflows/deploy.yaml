@@ -59,6 +59,7 @@ jobs:
                   images: ghcr.io/${{ github.repository }}/${{ matrix.project }}
             - uses: mshick/fast-envsubst@v1
               env:
+                  SERVICE: ${{ matrix.project }}
                   DEPLOY_ENV: ${{ github.ref_name }}
                   IMAGE: ${{ steps.docker_meta.outputs.tags }}
               with:
