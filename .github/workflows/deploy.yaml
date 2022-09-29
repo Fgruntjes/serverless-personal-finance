@@ -49,9 +49,10 @@ jobs:
                 ]
                 region: [ 'europe-central2' ]
         steps:
-            - uses: 'actions/checkout@v3'
-            - uses: 'google-github-actions/auth@v0'
+            - uses: actions/checkout@v3
+            - uses: google-github-actions/auth@v0
               with:
+                  token_format: 'access_token'
                   workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
                   service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
             - uses: crazy-max/ghaction-docker-meta@v4
@@ -67,7 +68,11 @@ jobs:
                   registry: ghcr.io
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
-            - run: gcloud auth configure-docker
+            - uses: docker/login-action@v2
+              with:
+                  registry: gcr.io
+                  username: oauth2accesstoken
+                  password: ${{ steps.auth.outputs.access_token }}
             - uses: actions/github-script@v6
               id: environment
               with:
