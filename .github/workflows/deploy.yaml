@@ -62,7 +62,7 @@ jobs:
             - uses: actions/github-script@v6
               id: tag
               with:
-                  script: return context.payload.ref_name.replace(/(\/[a-zA-Z0-9]+)+$/, '');
+                  script: return context.ref_name.replace(/(\/[a-zA-Z0-9]+)+$/, '');
                   result-encoding: string
             - uses: mshick/fast-envsubst@v1
               env:
