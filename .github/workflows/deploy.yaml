@@ -11,7 +11,9 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                project: [ 'App.Function.Banktransaction.Import' ]
+                project: [
+                    { folder: 'App.Function.Banktransaction.Import', service: 'function-banktransaction-import' }
+                ]
         steps:
         -   uses: actions/checkout@v2
         -   uses: crazy-max/ghaction-docker-meta@v4
@@ -43,9 +45,8 @@ jobs:
         strategy:
             matrix:
                 project: [
-                    {folder: 'App.Function.Banktransaction.Import', service: 'function-banktransaction-import'}
+                    { folder: 'App.Function.Banktransaction.Import', service: 'function-banktransaction-import' }
                 ]
-                # TODO convert to branch name when on.pull_request is removed
                 region: [ 'europe-central2' ]
         steps:
             - run: 'echo ${{ github.ref }}'
