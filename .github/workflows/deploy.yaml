@@ -34,11 +34,46 @@ jobs:
                 tags: ${{ steps.docker_meta.outputs.tags }}
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
-                
+    
+    copy_to_google_registry:
+        runs-on: ubuntu-latest
+        needs:
+            - build_images
+        permissions:
+            contents: 'read'
+            id-token: 'write'
+        steps:
+            - uses: actions/checkout@v3
+            - uses: google-github-actions/auth@v0
+              id: google_auth
+              with:
+                  token_format: 'access_token'
+                  workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+                  service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+            - uses: docker/login-action@v2
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+            - uses: docker/login-action@v2
+              with:
+                  registry: gcr.io
+                  username: oauth2accesstoken
+                  password: ${{ steps.google_auth.outputs.access_token }}
+            - uses: crazy-max/ghaction-docker-meta@v4
+              id: docker_meta
+              with:
+                  images: ${{ matrix.region }}.gcr.io/${{ github.repository }}/${{ matrix.project.folder }}
+            - uses: akhilerm/tag-push-action@v2.0.0
+              with:
+                  src: ghcr.io/${{ steps.docker_meta.outputs.tags }}
+                  dst: gcr.io/${{ steps.docker_meta.outputs.tags }}
+    
+    
     deploy:
         runs-on: ubuntu-latest
         needs: 
-            - build_images
+            - copy_to_google_registry
         permissions:
             contents: 'read'
             id-token: 'write'
@@ -50,30 +85,10 @@ jobs:
                 region: [ 'europe-central2' ]
         steps:
             - uses: actions/checkout@v3
-            - uses: google-github-actions/auth@v0
-              id: google_auth
-              with:
-                  token_format: 'access_token'
-                  workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
-                  service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
             - uses: crazy-max/ghaction-docker-meta@v4
-              id: docker_meta_github
+              id: docker_meta
               with:
-                  images: ghcr.io/${{ github.repository }}/${{ matrix.project.folder }}
-            - uses: crazy-max/ghaction-docker-meta@v4
-              id: docker_meta_google
-              with:
-                  images: ${{ matrix.region }}.gcr.io/${{ github.repository }}/${{ matrix.project.folder }}
-            - uses: docker/login-action@v2
-              with:
-                  registry: ghcr.io
-                  username: ${{ github.actor }}
-                  password: ${{ secrets.GITHUB_TOKEN }}
-            - uses: docker/login-action@v2
-              with:
-                  registry: gcr.io
-                  username: oauth2accesstoken
-                  password: ${{ steps.google_auth.outputs.access_token }}
+                  images: ${{ github.repository }}/${{ matrix.project.folder }}
             - uses: actions/github-script@v6
               id: environment
               with:
@@ -87,16 +102,12 @@ jobs:
               env:
                   SERVICE: ${{ matrix.project.service }}
                   DEPLOY_ENV: ${{steps.environment.outputs.result}}
-                  IMAGE: ${{ steps.docker_meta_google.outputs.tags }}
+                  IMAGE: ${{ steps.docker_meta.outputs.tags }}
               with:
                   in-file: ${{ matrix.project.folder }}/service.yaml
                   out-file: ${{ matrix.project.folder }}/service.deploy.yaml
             - run: cat ${{ matrix.project.folder }}/service.deploy.yaml
-            - uses: akhilerm/tag-push-action@v2.0.0
+            - uses: google-github-actions/deploy-cloudrun@v0
               with:
-                  src: ${{ steps.docker_meta_github.outputs.tags }}
-                  dst: ${{ steps.docker_meta_google.outputs.tags }}
-            - uses: 'google-github-actions/deploy-cloudrun@v0'
-              with:
-                  metadata: '${{ matrix.project.folder }}/service.deploy.yaml'
+                  metadata: ${{ matrix.project.folder }}/service.deploy.yaml
                   region: ${{ matrix.region }}
