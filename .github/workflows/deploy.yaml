@@ -52,6 +52,7 @@ jobs:
               with:
                   workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
                   service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+            - run: "gcloud auth list"
             - uses: crazy-max/ghaction-docker-meta@v4
               id: docker_meta
               with:
