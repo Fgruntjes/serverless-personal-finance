@@ -49,7 +49,6 @@ jobs:
                 ]
                 region: [ 'europe-central2' ]
         steps:
-            - run: 'echo ${{ github.ref }}'
             - uses: 'actions/checkout@v3'
             - uses: 'google-github-actions/auth@v0'
               with:
@@ -68,6 +67,7 @@ jobs:
                   registry: ghcr.io
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
+            - run: gcloud auth configure-docker
             - uses: actions/github-script@v6
               id: environment
               with:
