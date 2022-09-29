@@ -44,6 +44,7 @@ jobs:
         strategy:
             matrix:
                 project: [ 'App.Function.Banktransaction.Import' ]
+                # TODO convert to branch name when on.pull_request is removed
                 environment: [ 'beta' ]
                 region: [ 'europe-central2' ]
         steps:
@@ -53,6 +54,7 @@ jobs:
               with:
                   workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
                   service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+                  token_format: 'access_token'
             - uses: crazy-max/ghaction-docker-meta@v4
               id: docker_meta
               with:
