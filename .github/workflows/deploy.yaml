@@ -63,12 +63,11 @@ jobs:
             - uses: crazy-max/ghaction-docker-meta@v4
               id: docker_meta
               with:
-                  images: ${{ matrix.region }}.gcr.io/${{ github.repository }}/${{ matrix.project.folder }}
+                  images: ${{ github.repository }}/${{ matrix.project.folder }}
             - uses: akhilerm/tag-push-action@v2.0.0
               with:
                   src: ghcr.io/${{ steps.docker_meta.outputs.tags }}
                   dst: gcr.io/${{ steps.docker_meta.outputs.tags }}
-    
     
     deploy:
         runs-on: ubuntu-latest
@@ -88,7 +87,7 @@ jobs:
             - uses: crazy-max/ghaction-docker-meta@v4
               id: docker_meta
               with:
-                  images: ${{ github.repository }}/${{ matrix.project.folder }}
+                  images: ${{ matrix.region }}.gcr.io/${{ github.repository }}/${{ matrix.project.folder }}
             - uses: actions/github-script@v6
               id: environment
               with:
