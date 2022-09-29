@@ -19,11 +19,11 @@ jobs:
         -   uses: crazy-max/ghaction-docker-meta@v4
             id: docker_meta
             with:
-                images: ghcr.io/${{ github.repository }}/${{ matrix.project.folder }}
+                images: gcr.io/${{ github.repository }}/${{ matrix.project.folder }}
         -   uses: docker/setup-buildx-action@v2
         -   uses: docker/login-action@v2
             with:
-                registry: ghcr.io
+                registry: gcr.io
                 username: ${{ github.actor }}
                 password: ${{ secrets.GITHUB_TOKEN }}
         -   uses: docker/build-push-action@v2.7.0
@@ -58,7 +58,7 @@ jobs:
             - uses: crazy-max/ghaction-docker-meta@v4
               id: docker_meta
               with:
-                  images: ghcr.io/${{ github.repository }}/${{ matrix.project.folder }}
+                  images: ghr.io/${{ github.repository }}/${{ matrix.project.folder }}
             - uses: actions/github-script@v6
               id: environment
               with:
@@ -72,7 +72,7 @@ jobs:
               env:
                   SERVICE: ${{ matrix.project.service }}
                   DEPLOY_ENV: ${{steps.environment.outputs.result}}
-                  IMAGE: ${{ steps.docker_meta.outputs.tags }}
+                  IMAGE: ${{ matrix.region }}.${{ steps.docker_meta.outputs.tags }}
               with:
                   in-file: ${{ matrix.project.folder }}/service.yaml
                   out-file: ${{ matrix.project.folder }}/service.deploy.yaml
