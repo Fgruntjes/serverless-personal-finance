@@ -54,7 +54,6 @@ jobs:
               with:
                   workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
                   service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
-                  token_format: 'access_token'
             - uses: crazy-max/ghaction-docker-meta@v4
               id: docker_meta
               with:
@@ -71,9 +70,3 @@ jobs:
               with:
                   metadata: '${{ matrix.project }}/service.deploy.yaml'
                   region: ${{ matrix.region }}
-            - uses: actions/upload-artifact@v3
-              if: always()
-              with:
-                  name: access-token-used
-                  path: /home/runner/work/serverless-personal-finance/serverless-personal-finance/gha-creds-*.json
-                  retention-days: 1
