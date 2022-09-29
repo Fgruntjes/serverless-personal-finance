@@ -62,12 +62,12 @@ jobs:
             - uses: actions/github-script@v6
               id: tag
               with:
-                  script: |
-                      return context.payload.ref_name.replace(/(\/[a-zA-Z0-9]+)+$/, '');
+                  script: return context.payload.ref_name.replace(/(\/[a-zA-Z0-9]+)+$/, '');
+                  result-encoding: string
             - uses: mshick/fast-envsubst@v1
               env:
                   SERVICE: ${{ matrix.project.service }}
-                  DEPLOY_ENV: ${{ github.ref_name }}
+                  DEPLOY_ENV: ${{steps.tag.outputs.result}}
                   IMAGE: ${{ steps.docker_meta.outputs.tags }}
               with:
                   in-file: ${{ matrix.project.folder }}/service.yaml
