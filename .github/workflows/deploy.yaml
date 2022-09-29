@@ -59,6 +59,11 @@ jobs:
               id: docker_meta
               with:
                   images: ghcr.io/${{ github.repository }}/${{ matrix.project.folder }}
+            - uses: actions/github-script@v6
+              id: tag
+              with:
+                  script: |
+                      return context.payload.ref_name.replace(/(\/[a-zA-Z0-9]+)+$/, '');
             - uses: mshick/fast-envsubst@v1
               env:
                   SERVICE: ${{ matrix.project.service }}
