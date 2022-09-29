@@ -62,7 +62,7 @@ jobs:
             - uses: crazy-max/ghaction-docker-meta@v4
               id: docker_meta_google
               with:
-                  images: gcr.io/${{ github.repository }}/${{ matrix.project.folder }}
+                  images: ${{ matrix.region }}.gcr.io/${{ github.repository }}/${{ matrix.project.folder }}
             - uses: actions/github-script@v6
               id: environment
               with:
@@ -76,7 +76,7 @@ jobs:
               env:
                   SERVICE: ${{ matrix.project.service }}
                   DEPLOY_ENV: ${{steps.environment.outputs.result}}
-                  IMAGE: ${{ matrix.region }}.${{ steps.docker_meta_google.outputs.tags }}
+                  IMAGE: ${{ steps.docker_meta_google.outputs.tags }}
               with:
                   in-file: ${{ matrix.project.folder }}/service.yaml
                   out-file: ${{ matrix.project.folder }}/service.deploy.yaml
