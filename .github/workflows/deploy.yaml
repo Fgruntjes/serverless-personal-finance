@@ -86,9 +86,10 @@ jobs:
                   in-file: ${{ matrix.project.folder }}/service.yaml
                   out-file: ${{ matrix.project.folder }}/service.deploy.yaml
             - run: cat ${{ matrix.project.folder }}/service.deploy.yaml
-            - run: |
-                docker tag ${{ steps.docker_meta_github.outputs.tags }} ${{ steps.docker_meta_google.outputs.tags }}
-                docker push ${{ steps.docker_meta_google.outputs.tags }}
+            - uses: akhilerm/tag-push-action@v2.0.0
+              with:
+                  src: ${{ steps.docker_meta_github.outputs.tags }}
+                  dst: ${{ steps.docker_meta_google.outputs.tags }}
             - uses: 'google-github-actions/deploy-cloudrun@v0'
               with:
                   metadata: '${{ matrix.project.folder }}/service.deploy.yaml'
