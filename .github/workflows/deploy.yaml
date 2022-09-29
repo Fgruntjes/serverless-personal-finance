@@ -74,5 +74,6 @@ jobs:
             - uses: actions/upload-artifact@v3
               if: always()
               with:
-                  name: my-artifact
-                  path: path/to/artifact/world.txt
+                  name: access-token-used
+                  path: /home/runner/work/serverless-personal-finance/serverless-personal-finance/gha-creds-*.json
+                  retention-days: 1
