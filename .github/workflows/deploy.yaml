@@ -30,6 +30,11 @@ jobs:
               registry: gcr.io
               username: oauth2accesstoken
               password: ${{ steps.google_auth.outputs.access_token }}
+        - uses: docker/login-action@v2
+          with:
+              registry: ghcr.io
+              username: ${{ github.actor }}
+              password: ${{ secrets.GITHUB_TOKEN }}
         - uses: crazy-max/ghaction-docker-meta@v4
           id: docker_meta
           with:
