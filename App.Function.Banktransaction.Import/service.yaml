@@ -1,13 +1,13 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: ${DEPLOY_ENV}.import
+  name: import.${DEPLOY_ENV}
 spec:
   template:
     spec:
       containerConcurrency: 1
       containers:
-        - image: ${IMAGE_TAG}
+        - image: ${IMAGE}
           resources:
             limits:
               cpu: "1"
