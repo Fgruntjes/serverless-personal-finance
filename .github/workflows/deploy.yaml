@@ -41,9 +41,8 @@ jobs:
               file: '${{ matrix.project.folder }}/Dockerfile'
               push: true
               tags: ${{ steps.docker_meta.outputs.tags }}
-              # TODO find a way to enable without auth issues
-              #cache-from: type=gha
-              #cache-to: type=gha,mode=max
+              cache-from: type=gha
+              cache-to: type=gha,mode=max
     
     deploy:
         runs-on: ubuntu-latest
