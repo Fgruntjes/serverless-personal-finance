@@ -62,7 +62,7 @@ jobs:
             - uses: crazy-max/ghaction-docker-meta@v4
               id: docker_meta
               with:
-                  images: gcr.io/${{ github.repository }}/${{ matrix.project.folder }}
+                  images: gcr.io/${{ secrets.GOOGLE_PROJECT_ID }}/${{ matrix.project.folder }}
             - uses: actions/github-script@v6
               id: environment
               with:
