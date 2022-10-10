@@ -42,6 +42,7 @@ jobs:
                 echo "file_name=TestReport.${{ matrix.dotnet-version }}.${{ matrix.project }}.${{steps.PRNUMBER.outputs.pr}}.${{github.run_number}}.md" >> $GITHUB_ENV  
             - run: dotnet restore ${{ matrix.project }}
             - run: dotnet build --no-restore ${{ matrix.project }}
+            - run: (test -f ${{ matrix.project }}/docker-compose.yaml && docker-compose -f ${{ matrix.project }}/docker-compose.yaml up -d) || true 
             - run: dotnet test --no-restore --no-build --logger "liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};" ${{ matrix.project }}
             - uses: marocchino/sticky-pull-request-comment@v2
               if: ${{always()}}
