@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Function.Banktransactio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.TestsLib", "App.TestsLib\App.TestsLib.csproj", "{C29C011B-E135-43FC-AA38-35A1B337140B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.LibDatabase", "App.LibDatabase\App.LibDatabase.csproj", "{0D025F89-999B-4AD7-9F83-A47641FA97A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{C29C011B-E135-43FC-AA38-35A1B337140B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C29C011B-E135-43FC-AA38-35A1B337140B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C29C011B-E135-43FC-AA38-35A1B337140B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D025F89-999B-4AD7-9F83-A47641FA97A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D025F89-999B-4AD7-9F83-A47641FA97A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D025F89-999B-4AD7-9F83-A47641FA97A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D025F89-999B-4AD7-9F83-A47641FA97A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
