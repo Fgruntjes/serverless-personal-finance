@@ -76,6 +76,8 @@ jobs:
                   SERVICE: ${{ matrix.project.service }}
                   DEPLOY_ENV: ${{steps.environment.outputs.result}}
                   IMAGE: ${{ steps.docker_meta.outputs.tags }}
+                  Database__ConnectionString: ${{ secrets.DATABASE__CONNECTIONSTRING }}
+                  Database__DatabaseName: ${{steps.environment.outputs.result}}
               with:
                   in-file: ${{ matrix.project.folder }}/service.yaml
                   out-file: ${{ matrix.project.folder }}/service.deploy.yaml
