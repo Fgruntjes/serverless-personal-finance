@@ -8,7 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\App.LibDatabase\App.LibDatabase.csproj" />
       <ProjectReference Include="..\App.Lib\App.Lib.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MongoDB.Analyzer" Version="1.0.0" />
+      <PackageReference Include="MongoDB.Driver" Version="2.17.1" />
     </ItemGroup>
 
 </Project>

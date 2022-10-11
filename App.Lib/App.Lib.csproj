@@ -20,9 +20,4 @@
         <HintPath>..\..\..\..\..\.nuget\packages\swashbuckle.aspnetcore.swaggergen\6.4.0\lib\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll</HintPath>
       </Reference>
     </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    </ItemGroup>
-
 </Project>
