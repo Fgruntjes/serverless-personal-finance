@@ -10,6 +10,11 @@ spec:
       containerConcurrency: 1
       containers:
         - image: ${IMAGE}
+          env:
+            - name: Database__ConnectionString
+              value: ${Database__ConnectionString}
+            - name: Database__DatabaseName
+              value: ${Database__DatabaseName}
           resources:
             limits:
               cpu: "1"
