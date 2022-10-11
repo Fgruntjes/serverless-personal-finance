@@ -11,10 +11,14 @@ spec:
       containers:
         - image: ${IMAGE}
           env:
+            - name: DOTNET_ENVIRONMENT
+              value: ${DEPLOY_ENV}
             - name: Database__ConnectionString
               value: ${Database__ConnectionString}
             - name: Database__DatabaseName
               value: ${Database__DatabaseName}
+            - name: Sentry__DSN
+              value: ${Sentry__DSN} 
           resources:
             limits:
               cpu: "1"
