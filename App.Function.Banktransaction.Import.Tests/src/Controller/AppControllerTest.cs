@@ -148,7 +148,7 @@ public class AppControllerTest : IntegrationTestFixture<Program>
         (await dbContext.GetCollection<PayeeDocument>().CountDocumentsAsync(d => true)).Should().Be(1);
         (await dbContext.GetCollection<CurrencyDocument>().CountDocumentsAsync(d => true)).Should().Be(1);
     }
-    
+
     [Fact]
     public async void ThrowBadRequestOnZeroTransactions()
     {
@@ -158,7 +158,7 @@ public class AppControllerTest : IntegrationTestFixture<Program>
         (await response.Content.ReadAsStringAsync()).Should().Contain("at least 1 transaction");
         await WaitForTransactions(transactionsUpdate);
     }
-    
+
     private async Task<IList<BankTransaction>> GetDatabaseTransactions()
     {
         var dbContext = _factory.Services.GetRequiredService<DbContext>();
