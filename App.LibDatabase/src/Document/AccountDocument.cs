@@ -6,4 +6,9 @@ public class AccountDocument
 {
     public ObjectId Id { get; set; }
     public string AccountNumber { get; set; }
+    
+    public AccountDocument(string accountNumber)
+    {
+        AccountNumber = accountNumber;
+    }
 }

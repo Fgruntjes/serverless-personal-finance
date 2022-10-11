@@ -88,7 +88,7 @@ public class BankTransactionImportService
             .BulkWriteAsync(operations);
     }
 
-    private async Task<Dictionary<string, AccountDocument>> GetAccountMap(BankTransaction[] transactions)
+    private async Task<Dictionary<string, AccountDocument>> GetAccountMap(IEnumerable<BankTransaction> transactions)
     {
         var searchValues = transactions
             .AsQueryable()
@@ -97,10 +97,10 @@ public class BankTransactionImportService
 
         return await _documentMapFactory.Get<string, AccountDocument>()
             .Load(d => searchValues.Contains(d.AccountNumber), d => d.AccountNumber)
-            .Fill(searchValues, v => new AccountDocument { AccountNumber = v });
+            .Fill(searchValues, v => new AccountDocument(v));
     }
 
-    private async Task<Dictionary<string, CategoryDocument>> GetCategoryMap(BankTransaction[] transactions)
+    private async Task<Dictionary<string, CategoryDocument>> GetCategoryMap(IEnumerable<BankTransaction> transactions)
     {
         var searchValues = transactions
             .AsQueryable()
@@ -109,10 +109,10 @@ public class BankTransactionImportService
 
         return await _documentMapFactory.Get<string, CategoryDocument>()
             .Load(d => searchValues.Contains(d.Name), d => d.Name)
-            .Fill(searchValues, v => new CategoryDocument { Name = v });
+            .Fill(searchValues, v => new CategoryDocument(v));
     }
 
-    private async Task<Dictionary<string, PayeeDocument>> GetPayeeMap(BankTransaction[] transactions)
+    private async Task<Dictionary<string, PayeeDocument>> GetPayeeMap(IEnumerable<BankTransaction> transactions)
     {
         var searchValues = transactions
             .AsQueryable()
@@ -121,10 +121,10 @@ public class BankTransactionImportService
 
         return await _documentMapFactory.Get<string, PayeeDocument>()
             .Load(d => searchValues.Contains(d.Name), d => d.Name)
-            .Fill(searchValues, v => new PayeeDocument { Name = v });
+            .Fill(searchValues, v => new PayeeDocument(v));
     }
 
-    private async Task<Dictionary<string, CurrencyDocument>> GetCurrencyMap(BankTransaction[] transactions)
+    private async Task<Dictionary<string, CurrencyDocument>> GetCurrencyMap(IEnumerable<BankTransaction> transactions)
     {
         var searchValues = transactions
             .AsQueryable()
@@ -133,6 +133,6 @@ public class BankTransactionImportService
 
         return await _documentMapFactory.Get<string, CurrencyDocument>()
             .Load(d => searchValues.Contains(d.CurrencyCode), d => d.CurrencyCode)
-            .Fill(searchValues, v => new CurrencyDocument { CurrencyCode = v });
+            .Fill(searchValues, v => new CurrencyDocument(v));
     }
 }

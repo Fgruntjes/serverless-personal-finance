@@ -20,15 +20,14 @@ public class AppControllerTest : IntegrationTestFixture<Program>
     {
         var values = new BankTransaction[]
         {
-            new()
-            {
-                AccountNumber = "NL83INGB0123123",
-                Category = "Clothing",
-                Date = new DateTime(2022, 10, 4),
-                PayeeName = "SomeStore",
-                Amount = 220,
-                CurrencyCode = "EUR",
-            }
+            new(
+                new DateTime(2022, 10, 4),
+                "Clothing",
+                "SomeStore",
+                "NL83INGB0123123",
+                "EUR",
+                220
+            )
         };
         var response = await _client.PostAsJsonAsync("/", values);
         response.Should().HaveStatusCode(HttpStatusCode.Accepted);
@@ -42,15 +41,16 @@ public class AppControllerTest : IntegrationTestFixture<Program>
     {
         var transactionsInsert = new BankTransaction[]
         {
-            new()
+            new(
+                new DateTime(2022, 10, 4),
+                "Clothing",
+                "SomeStore",
+                "NL83INGB0123123",
+                "EUR",
+                220
+            )
             {
                 TransactionId = "asdfasdf",
-                AccountNumber = "NL83INGB0123123",
-                Category = "Clothing",
-                Date = new DateTime(2022, 10, 4),
-                PayeeName = "SomeStore",
-                Amount = 220,
-                CurrencyCode = "EUR",
             }
         };
         await _client.PostAsJsonAsync("/", transactionsInsert);
@@ -58,25 +58,27 @@ public class AppControllerTest : IntegrationTestFixture<Program>
 
         var transactionsUpdate = new BankTransaction[]
         {
-            new()
+            new(
+                new DateTime(2022, 10, 4),
+                "Clothing",
+                "SomeStore",
+                "NL83INGB0123123",
+                "EUR",
+                220
+            )
             {
                 TransactionId = "asdfasdf",
-                AccountNumber = "NL83INGB0123123",
-                Category = "Working",
-                Date = new DateTime(2022, 10, 4),
-                PayeeName = "SomeStore",
-                Amount = 220,
-                CurrencyCode = "EUR",
             },
-            new()
+            new(
+                new DateTime(2022, 10, 4),
+                "Clothing",
+                "SomeStore",
+                "NL83INGB0123123",
+                "EUR",
+                220
+            )
             {
                 TransactionId = "asdfasdf2",
-                AccountNumber = "NL83INGB0123123",
-                Category = "Clothing",
-                Date = new DateTime(2022, 10, 4),
-                PayeeName = "SomeStore",
-                Amount = 200,
-                CurrencyCode = "EUR",
             }
         };
         await _client.PostAsJsonAsync("/", transactionsUpdate);
@@ -88,30 +90,28 @@ public class AppControllerTest : IntegrationTestFixture<Program>
     {
         var transactionsInsert = new BankTransaction[]
         {
-            new()
-            {
-                AccountNumber = "NL83INGB0123123",
-                Category = "Clothing",
-                Date = new DateTime(2022, 10, 4),
-                PayeeName = "SomeStore",
-                Amount = 220,
-                CurrencyCode = "EUR",
-            }
+            new(
+                new DateTime(2022, 10, 4),
+                "Clothing",
+                "SomeStore",
+                "NL83INGB0123123",
+                "EUR",
+                220
+            )
         };
         await _client.PostAsJsonAsync("/", transactionsInsert);
         await WaitForTransactions(transactionsInsert);
 
         var transactionsUpdate = new BankTransaction[]
         {
-            new()
-            {
-                AccountNumber = "NL83INGB0123123",
-                Category = "Working",
-                Date = new DateTime(2022, 10, 4),
-                PayeeName = "SomeStore",
-                Amount = 220,
-                CurrencyCode = "EUR",
-            }
+            new(
+                new DateTime(2022, 10, 4),
+                "Working",
+                "SomeStore",
+                "NL83INGB0123123",
+                "EUR",
+                220
+            )
         };
         await _client.PostAsJsonAsync("/", transactionsUpdate);
         await WaitForTransactions(transactionsUpdate);
@@ -122,24 +122,22 @@ public class AppControllerTest : IntegrationTestFixture<Program>
     {
         var transactionsUpdate = new BankTransaction[]
         {
-            new()
-            {
-                AccountNumber = "NL83INGB0123123",
-                Category = "Working",
-                Date = new DateTime(2022, 10, 4),
-                PayeeName = "SomeStore",
-                Amount = 220,
-                CurrencyCode = "EUR",
-            },
-            new()
-            {
-                AccountNumber = "NL83INGB0123123",
-                Category = "Working",
-                Date = new DateTime(2022, 10, 4),
-                PayeeName = "SomeStore",
-                Amount = 200,
-                CurrencyCode = "EUR",
-            }
+            new(
+                new DateTime(2022, 10, 4),
+                "Working",
+                "SomeStore",
+                "NL83INGB0123123",
+                "EUR",
+                220
+            ),
+            new(
+                new DateTime(2022, 10, 4),
+                "Working",
+                "SomeStore",
+                "NL83INGB0123123",
+                "EUR",
+                200
+            )
         };
         await _client.PostAsJsonAsync("/", transactionsUpdate);
         await WaitForTransactions(transactionsUpdate);
@@ -172,15 +170,16 @@ public class AppControllerTest : IntegrationTestFixture<Program>
             var payee = await payeeCollection.Find(d => d.Id.Equals(transaction.PayeeId))
                 .FirstOrDefaultAsync();
 
-            list.Add(new BankTransaction()
+            list.Add(new BankTransaction(
+                transaction.Date,
+                category.Name,
+                payee.Name,
+                account.AccountNumber,
+                currency.CurrencyCode,
+                transaction.Amount           
+            )
             {
-                Amount = transaction.Amount,
-                Date = transaction.Date,
-                Category = category.Name,
-                AccountNumber = account.AccountNumber,
-                CurrencyCode = currency.CurrencyCode,
                 PayeeDescription = transaction.PayeeDescription,
-                PayeeName = payee.Name,
                 TransactionId = transaction.TransactionId
             });
         }
