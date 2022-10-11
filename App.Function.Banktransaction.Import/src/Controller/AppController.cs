@@ -20,13 +20,13 @@ public class AppController : Microsoft.AspNetCore.Mvc.Controller
     {
         try
         {
-            await _importService.Import(transactions);            
+            await _importService.Import(transactions);
         }
         catch (ArgumentException exception)
         {
             return BadRequest(exception.Message);
         }
-        
+
         return Accepted();
     }
 }
