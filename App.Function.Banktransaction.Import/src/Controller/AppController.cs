@@ -18,7 +18,15 @@ public class AppController : Microsoft.AspNetCore.Mvc.Controller
     [HttpPost(Name = "Import")]
     public async Task<ActionResult> Import([FromBody] BankTransaction[] transactions)
     {
-        await _importService.Import(transactions);
+        try
+        {
+            await _importService.Import(transactions);            
+        }
+        catch (ArgumentException exception)
+        {
+            return BadRequest(exception.Message);
+        }
+        
         return Accepted();
     }
 }

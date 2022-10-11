@@ -21,7 +21,7 @@ public class BankTransactionImportService
     public async Task Import(BankTransaction[] transactions)
     {
         if (transactions.Length == 0)
-            throw new ArgumentOutOfRangeException(nameof(transactions), "Need to import art least 1 transaction.");
+            throw new ArgumentOutOfRangeException(nameof(transactions), "Need to import at least 1 transaction.");
 
         var accountMap = await GetAccountMap(transactions);
         var categoryMap = await GetCategoryMap(transactions);
