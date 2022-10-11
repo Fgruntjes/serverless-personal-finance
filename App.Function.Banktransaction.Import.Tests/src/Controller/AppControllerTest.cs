@@ -176,7 +176,7 @@ public class AppControllerTest : IntegrationTestFixture<Program>
                 payee.Name,
                 account.AccountNumber,
                 currency.CurrencyCode,
-                transaction.Amount           
+                transaction.Amount
             )
             {
                 PayeeDescription = transaction.PayeeDescription,
