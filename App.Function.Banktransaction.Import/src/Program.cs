@@ -10,8 +10,14 @@ builder.Services.AddHealthChecks();
 builder.Services.Configure<DbSettings>(builder.Configuration.GetSection("Database"));
 builder.Services.AddDatabase();
 builder.Services.AddScoped<BankTransactionImportService>();
+builder.Services.AddSentry();
 
 var app = builder.Build();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseSentryTracing();
+}
+
 app.MapControllers();
 app.Run();
 

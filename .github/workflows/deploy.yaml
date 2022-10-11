@@ -78,6 +78,7 @@ jobs:
                   IMAGE: ${{ steps.docker_meta.outputs.tags }}
                   Database__ConnectionString: ${{ secrets.DATABASE__CONNECTIONSTRING }}
                   Database__DatabaseName: ${{steps.environment.outputs.result}}
+                  Sentry__DSN: ${{ secrets.SENTRY__DSN }}
               with:
                   in-file: ${{ matrix.project.folder }}/service.yaml
                   out-file: ${{ matrix.project.folder }}/service.deploy.yaml
