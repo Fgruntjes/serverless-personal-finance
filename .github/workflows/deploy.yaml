@@ -64,12 +64,10 @@ jobs:
             id: environment
             with:
                 script: |
-                    if (context.ref.includes('alpha')) {
-                      return 'alpha';
-                    } else if (context.ref.includes('beta')) {
-                      return 'beta';
+                    if (context.ref.includes('beta')) {
+                      return 'Staging';
                     }
-                    return 'production';
+                    return 'Production';
                 result-encoding: string
         -   uses: mshick/fast-envsubst@v1
             env:
