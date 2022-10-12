@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using App.Lib.Dto;
 using App.LibDatabase;
 using App.LibDatabase.Document;
-using App.TestsLib;
+using App.LibTests;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 

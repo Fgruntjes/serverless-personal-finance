@@ -22,7 +22,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\App.Function.Banktransaction.Import\App.Function.Banktransaction.Import.csproj" />
-      <ProjectReference Include="..\App.TestsLib\App.TestsLib.csproj" />
+      <ProjectReference Include="..\App.LibTests\App.LibTests.csproj" />
     </ItemGroup>
 
 </Project>

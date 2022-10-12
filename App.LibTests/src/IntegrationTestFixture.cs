@@ -4,7 +4,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Xunit;
 
-namespace App.TestsLib;
+namespace App.LibTests;
 
 public class IntegrationTestFixture<TEntryPoint> :
     IDisposable,
