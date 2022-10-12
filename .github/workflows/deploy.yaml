@@ -8,9 +8,8 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                project: [
-                    { folder: 'App.Function.Banktransaction.Import', service: 'function-banktransaction-import' }
-                ]
+                project:
+                - { folder: 'App.Function.Banktransaction.Import', service: 'function-banktransaction-import' }
         permissions:
             contents: 'read'
             id-token: 'write'
