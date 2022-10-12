@@ -41,7 +41,7 @@ jobs:
                 file: '${{ matrix.project.name }}/Dockerfile'
                 push: true
                 build-args: DOTNET_VERSION=${{ matrix.project.dotnet-version }}
-                tags: gcr.io/${{ secrets.GOOGLE_PROJECT_ID }}/${{ matrix.project.name }}:${{ steps.slug.outputs.sha7 }}
+                tags: gcr.io/${{ secrets.GOOGLE_PROJECT_ID }}/${{ matrix.project.service }}:${{ steps.slug.outputs.sha7 }}
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
     
@@ -79,7 +79,7 @@ jobs:
             env:
                 SERVICE: ${{ matrix.project.service }}
                 DEPLOY_ENV: ${{steps.environment.outputs.result}}
-                IMAGE: gcr.io/${{ secrets.GOOGLE_PROJECT_ID }}/${{ matrix.project.name }}:${{ steps.slug.outputs.sha7 }}
+                IMAGE: gcr.io/${{ secrets.GOOGLE_PROJECT_ID }}/${{ matrix.project.service }}:${{ steps.slug.outputs.sha7 }}
                 Database__ConnectionString: ${{ secrets.DATABASE__CONNECTIONSTRING }}
                 Database__DatabaseName: ${{steps.environment.outputs.result}}
                 Sentry__DSN: ${{ secrets.SENTRY__DSN }}
