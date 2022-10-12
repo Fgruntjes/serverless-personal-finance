@@ -73,7 +73,8 @@ jobs:
         -   uses: mshick/fast-envsubst@v1
             env:
                 SERVICE: ${{ matrix.project.service }}-${{ env.environment_lowercase }}
-                DEPLOY_ENV: ${{ steps.environment.outputs.result }}
+                DEPLOY_ENV: ${{ env.environment_lowercase }}
+                DOTNET_ENVIRONMENT: ${{ steps.environment.outputs.result }}
                 IMAGE: gcr.io/${{ secrets.GOOGLE_PROJECT_ID }}/${{ matrix.project.service }}:${{env.slug}}
                 Database__ConnectionString: ${{ secrets.DATABASE__CONNECTIONSTRING }}
                 Database__DatabaseName: ${{steps.environment.outputs.result}}
