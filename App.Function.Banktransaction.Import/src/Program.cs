@@ -2,7 +2,6 @@ using App.Function.Banktransaction.Import.Service;
 using App.LibDatabase;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddSentry();
 builder.Services.AddControllers();
 builder.Services.AddHealthChecks();
 builder.Services.AddSwaggerGen();
@@ -11,6 +10,8 @@ builder.Services.AddDatabase();
 builder.Services.Configure<DbSettings>(builder.Configuration.GetSection("Database"));
 
 builder.Services.AddScoped<BankTransactionImportService>();
+
+builder.WebHost.UseSentry();
 
 var app = builder.Build();
 app.MapControllers();
