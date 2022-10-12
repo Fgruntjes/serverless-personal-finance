@@ -37,6 +37,7 @@ jobs:
                 context: .
                 file: '${{ matrix.project.folder }}/Dockerfile'
                 push: true
+                build-args: DOTNET_VERSION=
                 tags: ${{ steps.docker_meta.outputs.tags }}
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
