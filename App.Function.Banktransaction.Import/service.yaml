@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: ${SERVICE}-${DEPLOY_ENV}
   labels:
-    environment: ${DEPLOY_ENV}
+    app/environment: ${DEPLOY_ENV}
 spec:
   template:
     spec:
@@ -17,8 +17,8 @@ spec:
               value: ${Database__ConnectionString}
             - name: Database__DatabaseName
               value: ${Database__DatabaseName}
-            - name: Sentry__DSN
-              value: ${Sentry__DSN} 
+            - name: Sentry__Dsn
+              value: ${Sentry__Dsn} 
           resources:
             limits:
               cpu: "1"
