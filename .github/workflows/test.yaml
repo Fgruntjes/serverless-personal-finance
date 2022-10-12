@@ -10,7 +10,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                dotnet-version: [ '6.0.x' ]
+                dotnet-version: [ '6.0' ]
         steps:
         - uses: actions/checkout@v3
         - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
@@ -23,8 +23,10 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                dotnet-version: [ '6.0.x' ]
-                project: [ 'App.Function.Banktransaction.Import.Tests' ]
+                project:
+                - name: 'App.Function.Banktransaction.Import'
+                  service: 'function-banktransaction-import'
+                  dotnet-version: '6.0'
         steps:
             - uses: actions/checkout@v3
             - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
@@ -33,11 +35,11 @@ jobs:
                   dotnet-version: ${{ matrix.dotnet-version }}
             - run: |
                 echo "title=Test Run for PR #${{github.event.number}} Run #${{github.run_number}}" >> $GITHUB_ENV
-                echo "file_name=TestReport.${{ matrix.dotnet-version }}.${{ matrix.project }}.${{github.sha}}.md" >> $GITHUB_ENV  
-            - run: dotnet restore ${{ matrix.project }}
-            - run: dotnet build --no-restore ${{ matrix.project }}
-            - run: (test -f ${{ matrix.project }}/docker-compose.yaml && docker-compose -f ${{ matrix.project }}/docker-compose.yaml up -d) || true 
-            - run: dotnet test --no-restore --no-build --logger "liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};" ${{ matrix.project }}
+                echo "file_name=TestReport.${{ matrix.project.dotnet-version }}.${{ matrix.project.name }}.${{github.sha}}.md" >> $GITHUB_ENV  
+            - run: dotnet restore ${{ matrix.project.name }}.Tests
+            - run: dotnet build --no-restore ${{ matrix.project.name }}.Tests
+            - run: (test -f ${{ matrix.project.name }}.Tests/docker-compose.yaml && docker-compose -f ${{ matrix.project.name }}.Tests/docker-compose.yaml up -d) || true 
+            - run: dotnet test --no-restore --no-build --logger "liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};" ${{ matrix.project.name }}.Tests
             - uses: marocchino/sticky-pull-request-comment@v2
               if: ${{always()}}
               with:
