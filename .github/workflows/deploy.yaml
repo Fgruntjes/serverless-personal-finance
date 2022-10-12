@@ -69,10 +69,11 @@ jobs:
                     }
                     return 'Production';
                 result-encoding: string
+        -   run: echo "environment_lowercase=$(echo ${{ steps.environment.outputs.result }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
         -   uses: mshick/fast-envsubst@v1
             env:
-                SERVICE: ${{ matrix.project.service }}
-                DEPLOY_ENV: ${{steps.environment.outputs.result}}
+                SERVICE: ${{ matrix.project.service }}-${{ env.environment_lowercase }}
+                DEPLOY_ENV: ${{ steps.environment.outputs.result }}
                 IMAGE: gcr.io/${{ secrets.GOOGLE_PROJECT_ID }}/${{ matrix.project.service }}:${{env.slug}}
                 Database__ConnectionString: ${{ secrets.DATABASE__CONNECTIONSTRING }}
                 Database__DatabaseName: ${{steps.environment.outputs.result}}
