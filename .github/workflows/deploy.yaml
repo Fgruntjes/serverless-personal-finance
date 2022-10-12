@@ -72,7 +72,7 @@ jobs:
         -   run: echo "environment_lowercase=$(echo ${{ steps.environment.outputs.result }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
         -   uses: mshick/fast-envsubst@v1
             env:
-                SERVICE: ${{ matrix.project.service }}-${{ env.environment_lowercase }}
+                SERVICE: ${{ matrix.project.service }}
                 DEPLOY_ENV: ${{ env.environment_lowercase }}
                 DOTNET_ENVIRONMENT: ${{ steps.environment.outputs.result }}
                 IMAGE: gcr.io/${{ secrets.GOOGLE_PROJECT_ID }}/${{ matrix.project.service }}:${{env.slug}}
