@@ -1,8 +1,6 @@
-using System.Diagnostics.Contracts;
 using App.Lib.Dto;
 using App.LibDatabase;
 using App.LibDatabase.Document;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace App.Function.Banktransaction.Import.Service;
