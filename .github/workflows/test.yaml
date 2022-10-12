@@ -6,7 +6,7 @@ jobs:
     #########################################################
     # Code quality and unit tests
     #########################################################
-    test_quality:
+    test_quality_dotnet:
         runs-on: ubuntu-latest
         strategy:
             matrix:
@@ -18,8 +18,26 @@ jobs:
           with:
               dotnet-version: ${{ matrix.dotnet-version }}
         - run: dotnet format --verify-no-changes
+          
+          
+    test_quality_terraform:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                project:
+                -   name: 'App.Function.Banktransaction.Import'
+                    service: 'function-banktransaction-import'
+                    dotnet-version: '6.0'
+        steps:
+        -   uses: actions/checkout@v3
+        -   uses: hashicorp/setup-terraform@v2
+        -   run: |
+                test -d ${{ matrix.project.name }}/terraform || exit 0
+                cd ${{ matrix.project.name }}/terraform
+                terraform init
+                terraform validate
               
-    test_integration:
+    test_unit:
         runs-on: ubuntu-latest
         strategy:
             matrix:

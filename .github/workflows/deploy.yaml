@@ -59,6 +59,12 @@ jobs:
                 region: [ 'europe-central2' ]
         steps:
         -   uses: actions/checkout@v3
+        -   uses: google-github-actions/auth@v0
+            id: google_auth
+            with:
+                workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+                service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+        # Deploy function
         -   run: echo "slug=$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_ENV
         -   uses: actions/github-script@v6
             id: environment
@@ -77,18 +83,24 @@ jobs:
                 DOTNET_ENVIRONMENT: ${{ steps.environment.outputs.result }}
                 IMAGE: gcr.io/${{ secrets.GOOGLE_PROJECT_ID }}/${{ matrix.project.service }}:${{env.slug}}
                 Database__ConnectionString: ${{ secrets.DATABASE__CONNECTIONSTRING }}
-                Database__DatabaseName: ${{steps.environment.outputs.result}}
+                Database__DatabaseName: ${{ steps.environment.outputs.result }}
                 Sentry__Dsn: ${{ secrets.SENTRY__DSN }}
             with:
                 in-file: ${{ matrix.project.name }}/service.yaml
                 out-file: ${{ matrix.project.name }}/service.deploy.yaml
         -   run: cat ${{ matrix.project.name }}/service.deploy.yaml
-        -   uses: google-github-actions/auth@v0
-            id: google_auth
-            with:
-                workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
-                service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
         -   uses: google-github-actions/deploy-cloudrun@v0
+            id: cloudrun
             with:
                 metadata: ${{ matrix.project.name }}/service.deploy.yaml
                 region: ${{ matrix.region }}
+        # Deploy infra (terraform)
+        -   uses: hashicorp/setup-terraform@v2
+        -   run: |
+                test -d ${{ matrix.project.name }}/terraform || exit 0
+                cd ${{ matrix.project.name }}/terraform
+                terraform init
+                terraform plan \
+                    -var "environment=${{ env.environment_lowercase }}" \
+                    -var "cloudrun_url=${{ steps.cloudrun.outputs.url }}"
+                terraform apply
