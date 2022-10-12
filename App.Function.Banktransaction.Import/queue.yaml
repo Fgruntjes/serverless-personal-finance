@@ -1,8 +1,0 @@
-queue:
-  - name: queue-banktransaction-import
-    max_concurrent_requests: 100
-    retry_parameters:
-      target: queue-banktransaction-import
-      min_backoff_seconds: 10
-      max_backoff_seconds: 3600
-      task_retry_limit: 7

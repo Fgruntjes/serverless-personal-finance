@@ -2,5 +2,7 @@ bin/
 obj/
 /packages/
 riderModule.iml
+terraform.tfstate
+.terraform/
 /_ReSharper.Caches/
 /.idea
