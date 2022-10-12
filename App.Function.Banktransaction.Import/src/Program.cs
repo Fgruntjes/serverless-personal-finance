@@ -19,10 +19,10 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseSentryTracing();
 }
-if (!app.Environment.IsProduction())
+else
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI();    
 }
 
 app.Run();
