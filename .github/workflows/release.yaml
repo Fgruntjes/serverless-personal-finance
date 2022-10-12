@@ -20,4 +20,4 @@ jobs:
                 semantic_version: 19
                 working_directory: "./.github"
             env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
+                GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
