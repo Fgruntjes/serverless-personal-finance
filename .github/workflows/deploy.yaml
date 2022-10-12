@@ -82,7 +82,7 @@ jobs:
                 IMAGE: gcr.io/${{ secrets.GOOGLE_PROJECT_ID }}/${{ matrix.project.service }}:${{ steps.slug.outputs.sha7 }}
                 Database__ConnectionString: ${{ secrets.DATABASE__CONNECTIONSTRING }}
                 Database__DatabaseName: ${{steps.environment.outputs.result}}
-                Sentry__DSN: ${{ secrets.SENTRY__DSN }}
+                Sentry__Dsn: ${{ secrets.SENTRY__DSN }}
             with:
                 in-file: ${{ matrix.project.name }}/service.yaml
                 out-file: ${{ matrix.project.name }}/service.deploy.yaml
