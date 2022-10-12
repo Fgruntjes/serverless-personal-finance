@@ -13,12 +13,11 @@ builder.Services.AddScoped<BankTransactionImportService>();
 builder.Services.AddSentry();
 
 var app = builder.Build();
+app.MapControllers();
 if (!app.Environment.IsDevelopment())
 {
     app.UseSentryTracing();
 }
-
-app.MapControllers();
 app.Run();
 
 public partial class Program

@@ -17,16 +17,6 @@ jobs:
           uses: actions/setup-dotnet@v2
           with:
               dotnet-version: ${{ matrix.dotnet-version }}
-        - uses: actions/github-script@v6
-          id: environment
-          with:
-            script: |
-              return context.ref
-                .replace(/^refs\//, '')
-                .replace(/\/merge$/, '')
-                .replace(/\//, '-')
-        - run: |
-              echo "file_name=FormatReport.${{ matrix.dotnet-version }}.${{steps.environment.outputs.result}}.${{github.run_number}}.json" >> $GITHUB_ENV
         - run: dotnet format --verify-no-changes
               
     test_integration:
@@ -41,17 +31,9 @@ jobs:
               uses: actions/setup-dotnet@v2
               with:
                   dotnet-version: ${{ matrix.dotnet-version }}
-            - uses: actions/github-script@v6
-              id: environment
-              with:
-                script: |
-                  return context.ref
-                    .replace(/^refs\//, '')
-                    .replace(/\/merge$/, '')
-                    .replace(/\//, '-')
             - run: |
-                echo "title=Test Run for PR #${{steps.environment.outputs.result}} (${{github.run_number}})" >> $GITHUB_ENV
-                echo "file_name=TestReport.${{ matrix.dotnet-version }}.${{ matrix.project }}.${{steps.environment.outputs.result}}.${{github.run_number}}.md" >> $GITHUB_ENV  
+                echo "title=Test Run for PR #${{github.event.number}} Run #${{github.run_number}}" >> $GITHUB_ENV
+                echo "file_name=TestReport.${{ matrix.dotnet-version }}.${{ matrix.project }}.${{github.sha}}.md" >> $GITHUB_ENV  
             - run: dotnet restore ${{ matrix.project }}
             - run: dotnet build --no-restore ${{ matrix.project }}
             - run: (test -f ${{ matrix.project }}/docker-compose.yaml && docker-compose -f ${{ matrix.project }}/docker-compose.yaml up -d) || true 
