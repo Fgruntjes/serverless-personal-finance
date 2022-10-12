@@ -7,9 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Reference Include="Microsoft.OpenApi">
-        <HintPath>..\..\..\..\..\.nuget\packages\microsoft.openapi\1.2.3\lib\netstandard2.0\Microsoft.OpenApi.dll</HintPath>
-      </Reference>
       <Reference Include="Swashbuckle.AspNetCore.SwaggerGen">
         <HintPath>..\..\..\..\..\.nuget\packages\swashbuckle.aspnetcore.swaggergen\6.4.0\lib\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll</HintPath>
       </Reference>
