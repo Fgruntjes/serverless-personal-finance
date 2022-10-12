@@ -1,7 +1,7 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: ${SERVICE}
+  name: ${SERVICE}-${DEPLOY_ENV}
   labels:
     environment: ${DEPLOY_ENV}
 spec:
@@ -12,7 +12,7 @@ spec:
         - image: ${IMAGE}
           env:
             - name: DOTNET_ENVIRONMENT
-              value: ${DEPLOY_ENV}
+              value: ${DOTNET_ENVIRONMENT}
             - name: Database__ConnectionString
               value: ${Database__ConnectionString}
             - name: Database__DatabaseName
