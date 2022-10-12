@@ -2,6 +2,7 @@ name: Deploy
 on:
     push:
         tags:
+        - v*
 
 jobs:
     build:
@@ -63,17 +64,12 @@ jobs:
             id: environment
             with:
                 script: |
-                    const refName = context.ref.substr(context.ref.lastIndexOf('/') + 1);
-                    if (refName.match(/^v/) {
-                      if (refName.includes('beta')) {
-                        return 'beta';
-                      } else {
-                        return 'production';
-                      }
-                    } else {
-                      return refName;
+                    if (context.ref.includes('alpha')) {
+                      return 'alpha';
+                    } else if (context.ref.includes('beta')) {
+                      return 'beta';
                     }
-                    return context.ref.includes('beta') ? 'beta' : context.ref.includes('alpha') ? 'alpha' : 'production'
+                    return 'production';
                 result-encoding: string
         -   uses: mshick/fast-envsubst@v1
             env:
