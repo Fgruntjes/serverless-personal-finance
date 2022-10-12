@@ -103,4 +103,4 @@ jobs:
                 terraform plan \
                     -var "environment=${{ env.environment_lowercase }}" \
                     -var "cloudrun_url=${{ steps.cloudrun.outputs.url }}"
-                terraform apply
+                terraform apply -auto-approve
