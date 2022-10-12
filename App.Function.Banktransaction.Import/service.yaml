@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: ${SERVICE}-${DEPLOY_ENV}
   labels:
-    app/environment: ${DEPLOY_ENV}
+    environment: ${DEPLOY_ENV}
 spec:
   template:
     spec:
