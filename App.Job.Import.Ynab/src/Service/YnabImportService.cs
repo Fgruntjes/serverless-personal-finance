@@ -10,7 +10,7 @@ public class YnabImportService
     {
         _bus = bus;
     }
-    
+
     public async Task Import()
     {
         throw new NotImplementedException();
