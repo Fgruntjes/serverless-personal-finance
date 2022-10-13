@@ -1,8 +1,9 @@
 import React from "react";
 import {RouteObject} from "react-router-dom";
 import App from "./components/App";
-import ErrorPage from "./pages/ErrorPage";
-import RequireAuth from "./components/RequireAuth";
+import AuthRequired from "./components/AuthRequired";
+import RouteErrorPage from "./pages/RouteErrorPage";
+import LoginPage from "./pages/LoginPage";
 
 export const paths = {
     home: '/',
@@ -12,14 +13,14 @@ export const paths = {
 export const routes: RouteObject[] = [
     {
         path: paths.home,
-        element:  <RequireAuth><App /></RequireAuth>,
-        errorElement: <ErrorPage />,
+        element:  <AuthRequired><App /></AuthRequired>,
+        errorElement: <RouteErrorPage />,
         children: [],
     },
     {
-        path: "/",
-        element:  <App />,
-        errorElement: <ErrorPage />,
+        path: paths.login,
+        element:  <LoginPage />,
+        errorElement: <RouteErrorPage />,
         children: [],
     },
 ];

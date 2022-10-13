@@ -1,16 +1,17 @@
 import React from 'react';
-import {GoogleLogin} from "@react-oauth/google";
+import {useAuth} from "../atoms/auth";
+import {Navigate} from "react-router-dom";
+import {paths} from "../routes";
 
 function LoginPage() {
+    const {user, signIn} = useAuth();
+    if (user) {
+        // TODO send status message already logged in
+        return <Navigate to={paths.home} replace />;
+    }
+    
     return (
-        <GoogleLogin
-            onSuccess={credentialResponse => {
-                console.log(credentialResponse);
-            }}
-            onError={() => {
-                console.log('Login Failed');
-            }}
-        />
+        <button onClick={() => signIn()}>Login</button>
     );
 }
 

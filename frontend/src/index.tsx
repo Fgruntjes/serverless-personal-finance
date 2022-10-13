@@ -7,11 +7,11 @@ import {
 import {ThemeProvider} from "@mui/material/styles";
 import CssBaseline from '@mui/material/CssBaseline';
 import {RecoilRoot} from "recoil";
-import {GoogleOAuthProvider} from "@react-oauth/google";
 
 import reportWebVitals from './reportWebVitals';
 import {routes} from "./routes";
 import theme from './theme';
+import AuthProvider from "./components/AuthProvider";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -21,14 +21,14 @@ const router = createBrowserRouter(routes);
 
 root.render(
     <React.StrictMode>
-        <ThemeProvider theme={theme}>
-            <CssBaseline/>
-            <RecoilRoot>
-                <GoogleOAuthProvider clientId="<your_client_id>">
+        <RecoilRoot>
+            <ThemeProvider theme={theme}>
+                <CssBaseline/>
+                <AuthProvider>
                     <RouterProvider router={router}/>
-                </GoogleOAuthProvider>
-            </RecoilRoot>
-        </ThemeProvider>
+                </AuthProvider>
+            </ThemeProvider>
+        </RecoilRoot>
     </React.StrictMode>
 );
 

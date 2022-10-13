@@ -1,31 +1,35 @@
-import React from "react";
 import {atom, useRecoilState} from "recoil";
+import {googleLogout, useGoogleLogin} from "@react-oauth/google";
 
-type User = {
-    email: string;
+type AuthState = {
     token: string;
 }
 
-type AuthContext = {
-    user: User|null;
-    signIn: () => void;
-    signOut: () => void;
-}
-
-const authState = atom<User|null>({
+const authState = atom<AuthState|null>({
     key: 'authState',
+    default: null,
 });
 
 export function useAuth() {
     const [user, setUser] = useRecoilState(authState);
+    const login = useGoogleLogin({
+        onSuccess: tokenResponse => {
+            setUser({
+                token: tokenResponse.access_token,
+            })
+        },
+    });
     
     return {
         user: user,
         signIn: () => {
-            
+            login();
         },
         signOut: () => {
-            setUser(null)
+            setUser(() => {
+                googleLogout();
+                return null;
+            });
         },
     }
 }
