@@ -36,7 +36,30 @@ jobs:
                 cd ${{ matrix.project.name }}/terraform
                 terraform init
                 terraform validate
-              
+        -   uses: reviewdog/action-tflint@master
+            with:
+                github_token: ${{ secrets.github_token }}
+                working_directory: ${{ matrix.project.name }}/terraform
+                reporter: github-pr-check
+    
+    test_quality_typescript:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                project:
+                -   name: 'frontend'
+                    nodejs-version: '18.10'
+        steps:
+        -   uses: actions/checkout@v3
+        -   uses: actions/setup-node@v3
+            with:
+                node-version: ${{ matrix.project.nodejs-version }}
+        -   run: cd ${{ matrix.project.name }} && npm ci 
+        -   uses: reviewdog/action-eslint@v1
+            with:
+                reporter: github-pr-check
+                eslint_flags: '${{ matrix.project.name }}/src/'    
+    
     test_unit:
         runs-on: ubuntu-latest
         strategy:
