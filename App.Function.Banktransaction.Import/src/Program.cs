@@ -4,10 +4,11 @@ using App.LibDatabase;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddHealthChecks();
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDatabase();
-builder.Services.Configure<DbSettings>(builder.Configuration.GetSection("Database"));
+builder.Services.Configure<DatabaseOptions>(builder.Configuration.GetSection("Database"));
 
 builder.Services.AddScoped<BankTransactionImportService>();
 

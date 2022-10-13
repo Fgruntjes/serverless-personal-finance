@@ -6,7 +6,7 @@ public static class DependencyInject
 {
     public static void AddDatabase(this IServiceCollection services)
     {
-        services.AddSingleton<DbContext>();
+        services.AddSingleton<DatabaseContext>();
         services.AddSingleton<DocumentMapFactory>();
     }
 }

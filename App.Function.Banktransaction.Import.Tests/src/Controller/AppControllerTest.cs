@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using App.Lib.Dto;
+using App.Lib.Message;
 using App.LibDatabase;
 using App.LibDatabase.Document;
 using App.LibTests;
@@ -18,7 +19,7 @@ public class AppControllerTest : IntegrationTestFixture<Program>
     [Fact]
     public async void PostAndWaitForDatabase()
     {
-        var values = new BankTransaction[]
+        var values = new BankTransactionImportMessage(new BankTransaction[]
         {
             new(
                 new DateTime(2022, 10, 4),
@@ -28,7 +29,7 @@ public class AppControllerTest : IntegrationTestFixture<Program>
                 "EUR",
                 220
             )
-        };
+        });
         var response = await _client.PostAsJsonAsync("/", values);
         response.Should().HaveStatusCode(HttpStatusCode.Accepted);
 
@@ -39,7 +40,7 @@ public class AppControllerTest : IntegrationTestFixture<Program>
     [Fact]
     public async void OnlyCreatesTransactionOncePerTransactionId()
     {
-        var transactionsInsert = new BankTransaction[]
+        var transactionsInsert = new BankTransactionImportMessage(new BankTransaction[]
         {
             new(
                 new DateTime(2022, 10, 4),
@@ -52,11 +53,11 @@ public class AppControllerTest : IntegrationTestFixture<Program>
             {
                 TransactionId = "asdfasdf",
             }
-        };
+        });
         await _client.PostAsJsonAsync("/", transactionsInsert);
         await WaitForTransactions(transactionsInsert);
 
-        var transactionsUpdate = new BankTransaction[]
+        var transactionsUpdate = new BankTransactionImportMessage(new BankTransaction[]
         {
             new(
                 new DateTime(2022, 10, 4),
@@ -80,7 +81,7 @@ public class AppControllerTest : IntegrationTestFixture<Program>
             {
                 TransactionId = "asdfasdf2",
             }
-        };
+        });
         await _client.PostAsJsonAsync("/", transactionsUpdate);
         await WaitForTransactions(transactionsUpdate);
     }
@@ -88,7 +89,7 @@ public class AppControllerTest : IntegrationTestFixture<Program>
     [Fact]
     public async void OnlyCreatesTransactionOncePerValues()
     {
-        var transactionsInsert = new BankTransaction[]
+        var transactionsInsert = new BankTransactionImportMessage(new BankTransaction[]
         {
             new(
                 new DateTime(2022, 10, 4),
@@ -98,11 +99,11 @@ public class AppControllerTest : IntegrationTestFixture<Program>
                 "EUR",
                 220
             )
-        };
+        });
         await _client.PostAsJsonAsync("/", transactionsInsert);
         await WaitForTransactions(transactionsInsert);
 
-        var transactionsUpdate = new BankTransaction[]
+        var transactionsUpdate = new BankTransactionImportMessage(new BankTransaction[]
         {
             new(
                 new DateTime(2022, 10, 4),
@@ -112,7 +113,7 @@ public class AppControllerTest : IntegrationTestFixture<Program>
                 "EUR",
                 220
             )
-        };
+        });
         await _client.PostAsJsonAsync("/", transactionsUpdate);
         await WaitForTransactions(transactionsUpdate);
     }
@@ -120,7 +121,7 @@ public class AppControllerTest : IntegrationTestFixture<Program>
     [Fact]
     public async void OnlyCreatesReferencesOnce()
     {
-        var transactionsUpdate = new BankTransaction[]
+        var transactionsUpdate = new BankTransactionImportMessage(new BankTransaction[]
         {
             new(
                 new DateTime(2022, 10, 4),
@@ -138,11 +139,11 @@ public class AppControllerTest : IntegrationTestFixture<Program>
                 "EUR",
                 200
             )
-        };
+        });
         await _client.PostAsJsonAsync("/", transactionsUpdate);
         await WaitForTransactions(transactionsUpdate);
 
-        var dbContext = _factory.Services.GetRequiredService<DbContext>();
+        var dbContext = _factory.Services.GetRequiredService<DatabaseContext>();
         (await dbContext.GetCollection<AccountDocument>().CountDocumentsAsync(d => true)).Should().Be(1);
         (await dbContext.GetCollection<CategoryDocument>().CountDocumentsAsync(d => true)).Should().Be(1);
         (await dbContext.GetCollection<PayeeDocument>().CountDocumentsAsync(d => true)).Should().Be(1);
@@ -152,7 +153,7 @@ public class AppControllerTest : IntegrationTestFixture<Program>
     [Fact]
     public async void ThrowBadRequestOnZeroTransactions()
     {
-        var transactionsUpdate = Array.Empty<BankTransaction>();
+        var transactionsUpdate = new BankTransactionImportMessage(Array.Empty<BankTransaction>());
         var response = await _client.PostAsJsonAsync("/", transactionsUpdate);
         response.Should().HaveClientError();
         (await response.Content.ReadAsStringAsync()).Should().Contain("at least 1 transaction");
@@ -161,7 +162,7 @@ public class AppControllerTest : IntegrationTestFixture<Program>
 
     private async Task<IList<BankTransaction>> GetDatabaseTransactions()
     {
-        var dbContext = _factory.Services.GetRequiredService<DbContext>();
+        var dbContext = _factory.Services.GetRequiredService<DatabaseContext>();
         var transactionCollection = dbContext.GetCollection<BankTransactionDocument>();
         var accountCollection = dbContext.GetCollection<AccountDocument>();
         var categoryCollection = dbContext.GetCollection<CategoryDocument>();
@@ -197,7 +198,7 @@ public class AppControllerTest : IntegrationTestFixture<Program>
         return list;
     }
 
-    private async Task WaitForTransactions(BankTransaction[] values)
+    private async Task WaitForTransactions(BankTransactionImportMessage importMessage)
     {
         var test = async () =>
         {
@@ -205,9 +206,9 @@ public class AppControllerTest : IntegrationTestFixture<Program>
             do
             {
                 list = await GetDatabaseTransactions();
-            } while (list.Count != values.Length);
+            } while (list.Count != importMessage.Transactions.Length);
 
-            list.Should().BeEquivalentTo(values);
+            list.Should().BeEquivalentTo(importMessage.Transactions);
         };
         await test.Should().CompleteWithinAsync(TimeSpan.FromSeconds(5));
     }

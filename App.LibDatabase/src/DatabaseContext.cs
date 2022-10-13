@@ -4,11 +4,11 @@ using MongoDB.Driver;
 
 namespace App.LibDatabase;
 
-public class DbContext
+public class DatabaseContext
 {
     public IMongoDatabase Database { get; init; }
 
-    public DbContext(IOptions<DbSettings> configuration)
+    public DatabaseContext(IOptions<DatabaseOptions> configuration)
     {
         var client = new MongoClient(configuration.Value.ConnectionString);
         Database = client.GetDatabase(configuration.Value.DatabaseName);

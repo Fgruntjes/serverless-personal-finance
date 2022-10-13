@@ -1,5 +1,5 @@
 using App.Function.Banktransaction.Import.Service;
-using App.Lib.Dto;
+using App.Lib.Message;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.Function.Banktransaction.Import.Controller;
@@ -16,11 +16,11 @@ public class AppController : Microsoft.AspNetCore.Mvc.Controller
     }
 
     [HttpPost(Name = "Import")]
-    public async Task<ActionResult> Import([FromBody] BankTransaction[] transactions)
+    public async Task<ActionResult> Import([FromBody] BankTransactionImportMessage request)
     {
         try
         {
-            await _importService.Import(transactions);
+            await _importService.Import(request.Transactions);
         }
         catch (ArgumentException exception)
         {

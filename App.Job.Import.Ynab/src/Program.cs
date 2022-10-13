@@ -1,18 +1,31 @@
-﻿using App.Job.Import.Ynab.Command;
-using Microsoft.Extensions.DependencyInjection;
-using Spectre.Cli.Extensions.DependencyInjection;
-using Spectre.Console.Cli;
+using App.LibQueue;
 
-var services = new ServiceCollection();
-services.AddLogging();
+var builder = WebApplication.CreateBuilder(args);
 
-var app = new CommandApp<ImportTransactionsCommand>(new DependencyInjectionRegistrar(services));
-app.Configure(config =>
+// Add services to the container.
+
+builder.Services.AddControllers();
+builder.Services.AddHealthChecks();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddQueue(builder.Configuration["GoogleProjectId"]);
+
+builder.WebHost.UseSentry();
+
+var app = builder.Build();
+app.MapControllers();
+if (!app.Environment.IsDevelopment())
 {
-#if DEBUG
-    config.PropagateExceptions();
-    config.ValidateExamples();
-#endif
-});
+    app.UseSentryTracing();
+}
+else
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
-return app.Run(args);
+app.Run();
+
+public partial class Program
+{
+}

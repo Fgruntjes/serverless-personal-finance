@@ -26,7 +26,7 @@ public class IntegrationTestFixture<TEntryPoint> :
 
     private void ClearDatabase()
     {
-        var dbContext = _factory.Services.GetService<DbContext>();
+        var dbContext = _factory.Services.GetService<DatabaseContext>();
         if (dbContext == null)
         {
             return;

@@ -2,15 +2,15 @@ namespace App.LibDatabase;
 
 public class DocumentMapFactory
 {
-    private readonly DbContext _dbContext;
+    private readonly DatabaseContext _databaseContext;
 
-    public DocumentMapFactory(DbContext dbContext)
+    public DocumentMapFactory(DatabaseContext databaseContext)
     {
-        _dbContext = dbContext;
+        _databaseContext = databaseContext;
     }
 
     public DocumentMap<TKey, TDocument> Get<TKey, TDocument>() where TKey : notnull
     {
-        return new DocumentMap<TKey, TDocument>(_dbContext.GetCollection<TDocument>());
+        return new DocumentMap<TKey, TDocument>(_databaseContext.GetCollection<TDocument>());
     }
 }

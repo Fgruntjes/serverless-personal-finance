@@ -7,12 +7,12 @@ namespace App.Function.Banktransaction.Import.Service;
 
 public class BankTransactionImportService
 {
-    private readonly DbContext _dbContext;
+    private readonly DatabaseContext _databaseContext;
     private readonly DocumentMapFactory _documentMapFactory;
 
-    public BankTransactionImportService(DbContext dbContext, DocumentMapFactory documentMapFactory)
+    public BankTransactionImportService(DatabaseContext databaseContext, DocumentMapFactory documentMapFactory)
     {
-        _dbContext = dbContext;
+        _databaseContext = databaseContext;
         _documentMapFactory = documentMapFactory;
     }
 
@@ -82,7 +82,7 @@ public class BankTransactionImportService
             operations.Add(operation);
         }
 
-        await _dbContext.GetCollection<BankTransactionDocument>()
+        await _databaseContext.GetCollection<BankTransactionDocument>()
             .BulkWriteAsync(operations);
     }
 
