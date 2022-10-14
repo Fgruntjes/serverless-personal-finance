@@ -2,10 +2,11 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import './i18n';
 
-import CssBaseline from '@mui/material/CssBaseline';
-import {ThemeProvider} from "@mui/material/styles";
-import React from 'react';
+import CssBaseline from '@mui/joy/CssBaseline';
+import {CssVarsProvider} from "@mui/joy/styles";
+import React, {Suspense} from 'react';
 import ReactDOM from 'react-dom/client';
 import {
     createBrowserRouter,
@@ -26,14 +27,16 @@ const router = createBrowserRouter(routes);
 
 root.render(
     <React.StrictMode>
-        <RecoilRoot>
-            <ThemeProvider theme={theme}>
-                <CssBaseline/>
-                <AuthProvider>
-                    <RouterProvider router={router}/>
-                </AuthProvider>
-            </ThemeProvider>
-        </RecoilRoot>
+        <Suspense fallback="Loading">
+            <RecoilRoot>
+                <CssVarsProvider theme={theme}>
+                    <CssBaseline/>
+                    <AuthProvider>
+                        <RouterProvider router={router}/>
+                    </AuthProvider>
+                </CssVarsProvider>
+            </RecoilRoot>
+        </Suspense>
     </React.StrictMode>
 );
 

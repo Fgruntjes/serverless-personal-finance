@@ -1,8 +1,8 @@
+import {Modal, ModalDialog, Typography} from "@mui/joy";
 import React from 'react';
 import {Navigate} from "react-router-dom";
 
 import {useAuth} from "../atoms/auth";
-import OnePageLayout from "../layouts/OnePageLayout";
 import {paths} from "../paths";
 
 function LoginPage() {
@@ -12,9 +12,13 @@ function LoginPage() {
     }
     
     return (
-        <OnePageLayout>
-            <button onClick={() => signIn()}>Login</button>
-        </OnePageLayout>
+        <Modal open={true}>
+            <ModalDialog>
+                <Typography>
+                    <button onClick={() => signIn()}>Login</button>
+                </Typography>
+            </ModalDialog>
+        </Modal>
     );
 }
 

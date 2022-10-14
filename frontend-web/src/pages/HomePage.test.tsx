@@ -1,9 +1,9 @@
 import {render, screen} from "@testing-library/react";
 import React from "react";
 
-import App from "./App";
+import HomePage from "./HomePage";
 
 test('Render page without error', async () => {
-    render(<App />);
+    render(<HomePage />);
     expect(await screen.findByText('Learn React')).toBeInTheDocument();
 });

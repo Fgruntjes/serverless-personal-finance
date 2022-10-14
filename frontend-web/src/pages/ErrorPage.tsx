@@ -1,3 +1,4 @@
+import {Sheet, Typography} from "@mui/joy";
 import React from 'react';
 
 type ErrorPageProps = {
@@ -29,13 +30,12 @@ function ErrorPage({error}: ErrorPageProps) {
     
     const errorString = getErrorString(error);
     return (
-        <div id="error-page">
-            <h1>Oops!</h1>
-            <p>Sorry, an unexpected error has occurred.</p>
-            <p>
-                <i>{errorString}</i>
-            </p>
-        </div>
+        <Sheet variant="outlined">
+            <Typography component="h2" level="h4">Oops!</Typography>
+            <Typography id="modal-desc" textColor="text.tertiary">
+                {errorString}
+            </Typography>
+        </Sheet>
     );
 }
 

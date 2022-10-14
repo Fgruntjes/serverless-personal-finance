@@ -58,7 +58,6 @@ jobs:
             with:
                 reporter: github-pr-check
                 workdir: ${{ matrix.project.name }}
-                eslint_flags: './src --ext .ts --ext .tsx'
     
     test_unit:
         runs-on: ubuntu-latest
