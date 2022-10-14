@@ -1,17 +1,20 @@
 import React from 'react';
 import {Navigate, useLocation} from "react-router-dom";
-import {paths} from "../paths";
+
 import {useAuth} from "../atoms/auth";
+import {paths} from "../paths";
 
-function AuthRequired({ children }: { children: JSX.Element }) {
-  let {authState} = useAuth();
-  let location = useLocation();
+function AuthRequired({children}: { children: JSX.Element }) {
+    let {authState} = useAuth();
+    let location = useLocation();
   
-  if (!authState) {
-    return <Navigate to={paths.login} state={{ from: location }} replace />;
-  }
+    if (!authState) {
+        return <Navigate to={paths.login} state={{
+            from: location 
+        }} replace />;
+    }
 
-  return children;
+    return children;
 }
 
 export default AuthRequired;

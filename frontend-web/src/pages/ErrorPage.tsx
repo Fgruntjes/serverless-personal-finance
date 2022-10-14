@@ -24,7 +24,7 @@ function getErrorString(error: any): string {
     return `Unknown error missing field statusText or message: ` + JSON.stringify(error);
 }
 
-function ErrorPage({ error }: ErrorPageProps) {
+function ErrorPage({error}: ErrorPageProps) {
     console.error(error);
     
     const errorString = getErrorString(error);

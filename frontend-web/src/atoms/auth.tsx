@@ -1,5 +1,5 @@
-import {atom, useRecoilState} from "recoil";
 import {googleLogout, useGoogleLogin} from "@react-oauth/google";
+import {atom, useRecoilState} from "recoil";
 
 export type AuthState = {
     token: string;

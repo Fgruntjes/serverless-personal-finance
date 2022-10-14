@@ -1,6 +1,6 @@
 import React from "react";
 
-function OnePageLayout({ children }: { children: JSX.Element }) {
+function OnePageLayout({children}: { children: JSX.Element }) {
     return (
         <>
             {children}

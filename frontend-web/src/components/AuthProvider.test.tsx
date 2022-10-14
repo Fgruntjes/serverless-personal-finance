@@ -1,7 +1,8 @@
-import React from 'react';
-import {render} from "@testing-library/react";
-import {GoogleOAuthProvider} from "@react-oauth/google";
 import {jest} from "@jest/globals";
+import {GoogleOAuthProvider} from "@react-oauth/google";
+import {render} from "@testing-library/react";
+import React from 'react';
+
 import ErrorPage from "../pages/ErrorPage";
 import AuthProvider from "./AuthProvider";
 

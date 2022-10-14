@@ -15,6 +15,7 @@
     "@types/node": "^16.11.65",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
     "jest-mock-console": "^2.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -36,7 +37,12 @@
       "react-app",
       "react-app/jest"
     ],
+    "plugins": ["simple-import-sort"],
     "rules": {
+      "indent": ["error", 4],
+      "object-curly-spacing": ["error", "never"],
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
       "react-hooks/exhaustive-deps": [
         "warn",
         {

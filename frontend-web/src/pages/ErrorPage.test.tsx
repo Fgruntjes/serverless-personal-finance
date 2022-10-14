@@ -1,6 +1,6 @@
+import {render, screen} from '@testing-library/react';
+import mockConsole, {RestoreConsole} from "jest-mock-console";
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import mockConsole, { RestoreConsole } from "jest-mock-console";
 
 import ErrorPage from "./ErrorPage";
 
@@ -33,7 +33,9 @@ test('Render page with Error string', () => {
 });
 
 test('Render page with Error statusText', () => {
-    render(<ErrorPage error={({statusText: "Some other thing"})} />);
+    render(<ErrorPage error={({
+        statusText: "Some other thing"
+    })} />);
     const linkElement = screen.getByText(/Some other thing/i);
     expect(linkElement).toBeInTheDocument();
 });

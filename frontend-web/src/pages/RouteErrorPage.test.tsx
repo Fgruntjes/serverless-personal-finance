@@ -1,7 +1,7 @@
-import { jest } from '@jest/globals';
+import {jest} from '@jest/globals';
+import {render, screen} from '@testing-library/react';
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { useRouteError } from "react-router-dom";
+import {useRouteError} from "react-router-dom";
 
 import RouteErrorPage from "./RouteErrorPage";
 

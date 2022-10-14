@@ -1,5 +1,9 @@
-import React from 'react';
+import {render, screen} from "@testing-library/react";
+import React from "react";
 
-test('Render page without error', () => {
-  fail('Not implemented')
+import App from "./App";
+
+test('Render page without error', async () => {
+    render(<App />);
+    expect(await screen.findByText('Learn React')).toBeInTheDocument();
 });

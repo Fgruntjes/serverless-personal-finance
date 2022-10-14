@@ -1,8 +1,9 @@
-import React from 'react';
 import {jest} from "@jest/globals";
-import {useAuth} from "../atoms/auth";
 import {render, screen} from "@testing-library/react";
+import React from 'react';
 import {Navigate} from "react-router-dom";
+
+import {useAuth} from "../atoms/auth";
 import AuthRequired from "./AuthRequired";
 
 jest.mock('../atoms/auth');
@@ -24,13 +25,15 @@ test('Redirect when not logged in', () => {
     expect(Navigate).toHaveBeenCalledTimes(1);
 });
 
-test('Redirect when not logged in', () => {
+test('Render children when logged in', async () => {
     mockedUseAuth.mockReturnValue({
-        authState: {token: "fake"},
+        authState: {
+            token: "fake"
+        },
         signIn: mockedSignIn,
         signOut: mockedSignOut,
     });
 
     render(<AuthRequired><p data-testid="loggedin">logged in</p></AuthRequired>);
-    expect(screen.findByTestId('loggedin')).toBeInTheDocument();
+    expect(await screen.findByTestId('loggedin')).toBeInTheDocument();
 });

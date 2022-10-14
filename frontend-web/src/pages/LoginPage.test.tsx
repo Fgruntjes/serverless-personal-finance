@@ -1,9 +1,12 @@
-import React from 'react';
-import {act, render, screen} from "@testing-library/react";
-import LoginPage from "./LoginPage";
 import {jest} from "@jest/globals";
-import {useAuth} from "../atoms/auth";
+import {
+    act, render, screen
+} from "@testing-library/react";
+import React from 'react';
 import {Simulate} from "react-dom/test-utils";
+
+import {useAuth} from "../atoms/auth";
+import LoginPage from "./LoginPage";
 import click = Simulate.click;
 import {Navigate} from "react-router-dom";
 
@@ -34,7 +37,9 @@ test('Call signIn when Login is pressed', () => {
 
 test('Redirect when logged in', () => {
     mockedUseAuth.mockReturnValue({
-        authState: { token: 'fake' },
+        authState: {
+            token: 'fake' 
+        },
         signIn: mockedSignIn,
         signOut: mockedSignOut,
     });

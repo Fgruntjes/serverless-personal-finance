@@ -1,8 +1,9 @@
 import React from 'react';
-import {useAuth} from "../atoms/auth";
 import {Navigate} from "react-router-dom";
-import {paths} from "../paths";
+
+import {useAuth} from "../atoms/auth";
 import OnePageLayout from "../layouts/OnePageLayout";
+import {paths} from "../paths";
 
 function LoginPage() {
     const {authState, signIn} = useAuth();
