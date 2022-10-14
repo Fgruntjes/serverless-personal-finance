@@ -3,7 +3,7 @@ import React from "react";
 
 import HomePage from "./HomePage";
 
-test('Render page without error', async () => {
+test("Render page without error", async () => {
     render(<HomePage />);
-    expect(await screen.findByText('Learn React')).toBeInTheDocument();
+    expect(await screen.findByText("Learn React")).toBeInTheDocument();
 });

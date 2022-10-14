@@ -4,7 +4,7 @@ import {MemoryRouter, Route, Routes} from "react-router-dom";
 
 import AppRoot from "./AppRoot";
 
-test('Render current page without error', () => {
+test("Render current page without error", () => {
     render(
         <MemoryRouter>
             <Routes>

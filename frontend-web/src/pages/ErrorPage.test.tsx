@@ -1,41 +1,51 @@
-import {render, screen} from '@testing-library/react';
-import mockConsole, {RestoreConsole} from "jest-mock-console";
-import React from 'react';
+import {jest} from "@jest/globals";
+import {render, screen} from "@testing-library/react";
+import React from "react";
 
 import ErrorPage from "./ErrorPage";
 
-let restoreConsole: RestoreConsole;
-
 beforeEach(() => {
-    restoreConsole = mockConsole();
-})
+    jest.spyOn(console, "error").mockImplementation(() => {});
+});
 
-afterEach(() => {
-    restoreConsole();
-})
-
-test('Render page without error', () => {
+test("Render page without error", () => {
     render(<ErrorPage />);
-    expect(screen.getByText(/an unexpected error has occurred/i)).toBeInTheDocument();
+    expect(screen.getByText(/Oops!/i)).toBeInTheDocument();
     expect(console.error).toHaveBeenCalled();
 });
 
-test('Render page with Error object', () => {
+test("Render page with Error object", () => {
     render(<ErrorPage error={new Error("Some other thing")} />);
     const linkElement = screen.getByText(/Some other thing/i);
     expect(linkElement).toBeInTheDocument();
 });
 
-test('Render page with Error string', () => {
+test("Render page with Error string", () => {
     render(<ErrorPage error="Some other thing" />);
     const linkElement = screen.getByText(/Some other thing/i);
     expect(linkElement).toBeInTheDocument();
 });
 
-test('Render page with Error statusText', () => {
+test("Render page with Error statusText and statusCode", () => {
     render(<ErrorPage error={({
-        statusText: "Some other thing"
+        statusText: "Some other thing",
+        statusCode: 500,
     })} />);
-    const linkElement = screen.getByText(/Some other thing/i);
-    expect(linkElement).toBeInTheDocument();
+    expect(screen.getByText(/Some other thing/i)).toBeInTheDocument();
+    expect(screen.getByText(/500/i)).toBeInTheDocument();
+});
+
+test("Render page with 404", () => {
+    render(<ErrorPage error={({
+        statusText: "Page not found",
+        status: 404,
+    })} />);
+    expect(screen.getByText(/Page not found/i)).toBeInTheDocument();
+    expect(screen.getByText(/404/i)).toBeInTheDocument();
+});
+
+test("Render page with unknown error", () => {
+    render(<ErrorPage error={({other: "things"})} />);
+    expect(screen.getByText(/things/i)).toBeInTheDocument();
+    expect(screen.getByText(/Unknown error/i)).toBeInTheDocument();
 });

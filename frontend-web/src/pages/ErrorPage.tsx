@@ -1,5 +1,8 @@
-import {Sheet, Typography} from "@mui/joy";
-import React from 'react';
+import WarningIcon from "@mui/icons-material/Warning";
+import {Alert, Typography} from "@mui/joy";
+import React from "react";
+
+import Layout from "../components/Layout"
 
 type ErrorPageProps = {
     error?: any
@@ -22,20 +25,56 @@ function getErrorString(error: any): string {
         return error.message;
     }
     
-    return `Unknown error missing field statusText or message: ` + JSON.stringify(error);
+    return "Unknown error: " + JSON.stringify(error);
+}
+
+function getErrorCode(error: any): string|null {
+    if (typeof error !== "object") {
+        return null;
+    }
+
+    if (error.code) {
+        return "" + error.code;
+    }
+
+    if (error.statusCode) {
+        return "" + error.statusCode;
+    }
+
+    if (error.status) {
+        return "" + error.status;
+    }
+
+    return null;
 }
 
 function ErrorPage({error}: ErrorPageProps) {
     console.error(error);
     
     const errorString = getErrorString(error);
+    const errorCode = getErrorCode(error);
     return (
-        <Sheet variant="outlined">
-            <Typography component="h2" level="h4">Oops!</Typography>
-            <Typography id="modal-desc" textColor="text.tertiary">
-                {errorString}
-            </Typography>
-        </Sheet>
+        <Layout.Root>
+            <Layout.OnePage>
+                <Alert
+                    startDecorator={<WarningIcon sx={{mx: 0.5}} />}
+                    variant="soft"
+                    color="danger"
+                    size="lg"
+                    sx={{alignItems: "flex-start"}}
+                    endDecorator={errorCode && `(${errorCode})`}
+                >
+                    <div>
+                        <Typography color="danger" fontWeight="lg" mt={0.25}>
+                            Oops!
+                        </Typography>
+                        <Typography fontSize="sm" sx={{opacity: 0.8}}>
+                            {errorString}
+                        </Typography>
+                    </div>
+                </Alert>
+            </Layout.OnePage>
+        </Layout.Root>
     );
 }
 

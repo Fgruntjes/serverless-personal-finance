@@ -1,10 +1,9 @@
 import {GoogleOAuthProvider} from "@react-oauth/google";
-import React from 'react';
+import React from "react";
 
 import ErrorPage from "../pages/ErrorPage";
 
-function AuthProvider({children}: { children: JSX.Element }) {
-    const clientId = process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID;
+function AuthProvider({children, clientId}: { children: JSX.Element, clientId?: string }) {
     if (!clientId) {
         return <ErrorPage error="REACT_APP_GOOGLE_AUTH_CLIENT_ID not set"></ErrorPage>
     }

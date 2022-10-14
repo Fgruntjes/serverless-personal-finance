@@ -1,26 +1,27 @@
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
-import './i18n';
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+import "./i18n";
 
-import CssBaseline from '@mui/joy/CssBaseline';
+import CssBaseline from "@mui/joy/CssBaseline";
 import {CssVarsProvider} from "@mui/joy/styles";
-import React, {Suspense} from 'react';
-import ReactDOM from 'react-dom/client';
+import React, {Suspense} from "react";
+import ReactDOM from "react-dom/client";
 import {
     createBrowserRouter,
     RouterProvider,
 } from "react-router-dom";
+import {ToastContainer} from "react-toastify";
 import {RecoilRoot} from "recoil";
 
 import AuthProvider from "./components/AuthProvider";
-import reportWebVitals from './reportWebVitals';
+import reportWebVitals from "./reportWebVitals";
 import {routes} from "./routes";
-import theme from './theme';
+import theme from "./theme";
 
 const root = ReactDOM.createRoot(
-    document.getElementById('root') as HTMLElement
+    document.getElementById("root") as HTMLElement
 );
 
 const router = createBrowserRouter(routes);
@@ -31,9 +32,10 @@ root.render(
             <RecoilRoot>
                 <CssVarsProvider theme={theme}>
                     <CssBaseline/>
-                    <AuthProvider>
+                    <AuthProvider clientId={process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID}>
                         <RouterProvider router={router}/>
                     </AuthProvider>
+                    <ToastContainer />
                 </CssVarsProvider>
             </RecoilRoot>
         </Suspense>

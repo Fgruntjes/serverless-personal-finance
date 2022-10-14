@@ -40,14 +40,14 @@ jobs:
             with:
                 github_token: ${{ secrets.github_token }}
                 working_directory: ${{ matrix.project.name }}/terraform
-                reporter: github-pr-check
+                reporter: github-pr-review
     
     test_quality_typescript:
         runs-on: ubuntu-latest
         strategy:
             matrix:
                 project:
-                -   name: 'frontend'
+                -   name: 'frontend-web'
                     nodejs-version: '18.10'
         steps:
         -   uses: actions/checkout@v3
@@ -56,10 +56,44 @@ jobs:
                 node-version: ${{ matrix.project.nodejs-version }}
         -   uses: reviewdog/action-eslint@v1
             with:
-                reporter: github-pr-check
+                reporter: github-pr-review
                 workdir: ${{ matrix.project.name }}
+                fail_on_error: true
     
-    test_unit:
+    test_unit_typescript_ensure:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                project:
+                -   name: 'frontend-web'
+                    nodejs-version: '18.10'
+        steps:
+        -   uses: actions/checkout@v3
+        -   run: cd ${{ matrix.project.name }} && ../.github/ensure_frontend_tests.sh
+            
+    test_unit_typescript:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                project:
+                -   name: 'frontend-web'
+                    nodejs-version: '18.10'
+        steps:
+        -   uses: actions/checkout@v3
+        -   uses: actions/setup-node@v3
+            with:
+                node-version: ${{ matrix.project.nodejs-version }}
+        -   run: |
+                cd ${{ matrix.project.name }}
+                npm ci
+                npm run test -- --reporters="default" --reporters="jest-md-dashboard"
+        -   uses: marocchino/sticky-pull-request-comment@v2
+            if: always()
+            with:
+                path: ${{ matrix.project.name }}/test-dashboard.md
+                header: unit_typescript
+
+    test_unit_dotnet:
         runs-on: ubuntu-latest
         strategy:
             matrix:
@@ -81,6 +115,7 @@ jobs:
             - run: (test -f ${{ matrix.project.name }}.Tests/docker-compose.yaml && docker-compose -f ${{ matrix.project.name }}.Tests/docker-compose.yaml up -d) || true 
             - run: dotnet test --no-restore --no-build --logger "liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};" ${{ matrix.project.name }}.Tests
             - uses: marocchino/sticky-pull-request-comment@v2
-              if: ${{always()}}
+              if: always()
               with:
                   path: ${{github.workspace}}/${{env.file_name}}
+                  header: unit_dotnet
