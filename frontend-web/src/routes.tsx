@@ -4,11 +4,7 @@ import App from "./components/App";
 import AuthRequired from "./components/AuthRequired";
 import RouteErrorPage from "./pages/RouteErrorPage";
 import LoginPage from "./pages/LoginPage";
-
-export const paths = {
-    home: '/',
-    login: '/login',
-}
+import {paths} from "./paths";
 
 export const routes: RouteObject[] = [
     {

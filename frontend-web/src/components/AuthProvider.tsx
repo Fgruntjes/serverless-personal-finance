@@ -5,7 +5,7 @@ import ErrorPage from "../pages/ErrorPage";
 function AuthProvider({ children }: { children: JSX.Element }) {
     const clientId = process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID;
     if (!clientId) {
-        return <ErrorPage error={new Error("REACT_APP_GOOGLE_AUTH_CLIENT_ID not set")}></ErrorPage>
+        return <ErrorPage error="REACT_APP_GOOGLE_AUTH_CLIENT_ID not set"></ErrorPage>
     }
     
     return (

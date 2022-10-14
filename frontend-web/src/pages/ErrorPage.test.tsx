@@ -31,3 +31,9 @@ test('Render page with Error string', () => {
     const linkElement = screen.getByText(/Some other thing/i);
     expect(linkElement).toBeInTheDocument();
 });
+
+test('Render page with Error statusText', () => {
+    render(<ErrorPage error={({statusText: "Some other thing"})} />);
+    const linkElement = screen.getByText(/Some other thing/i);
+    expect(linkElement).toBeInTheDocument();
+});
