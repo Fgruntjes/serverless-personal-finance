@@ -1,97 +1,166 @@
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import Box, {BoxProps} from "@mui/joy/Box";
-import Grid, {GridProps} from "@mui/joy/Grid";
+import {GridProps} from "@mui/joy/Grid";
+import IconButton from "@mui/joy/IconButton";
+import List from "@mui/joy/List";
+import Typography from "@mui/joy/Typography";
 import React from "react";
+import {Trans, useTranslation} from "react-i18next";
 
-const Root = (props: BoxProps) => (
+import {menu} from "../menu";
+import {LogoutButton} from "./LogoutButton";
+import AppMenuItem from "./MenuItem";
+
+const RootCenter = (props: BoxProps) => (
     <Box
-        {...props}
-        sx={[
-            {
-                bgcolor: "background.body",
-                minHeight: "100vh",
-            },
-            ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
-        ]}
-    />
-);
-
-const OnePage = (props: GridProps) => (
-    <Grid
-        container
-        spacing={0}
+        display="flex"
         alignItems="center"
         justifyContent="center"
-        direction="column"
-        mx={{minHeight: "100vh"}}
+        sx={{
+            bgcolor: "background.body",
+            minHeight: "100vh",
+        }}
     >
-        <Grid md={3} {...props} sx={[
-            {
-                bgcolor: "background.body",
-                minHeight: "100vh",
-            },
-            ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
-        ]} />
-    </Grid>
+        <Box
+            {...props}
+            sx={[
+                {
+                    width: "auto",
+                    bgcolor: "background.surface",
+                },
+                ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+            ]}
+        />
+    </Box>
 );
 
-const Header = (props: BoxProps) => (
+const RootDefault = (props: GridProps) => (
     <Box
-        component="header"
-        className="Header"
         {...props}
         sx={[
             {
-                p: 2,
-                gap: 2,
-                bgcolor: "background.componentBg",
+                bgcolor: "background.body",
+                minHeight: "100vh",
                 display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gridColumn: "1 / -1",
-                borderBottom: "1px solid",
-                borderColor: "divider",
-                position: "sticky",
-                top: 0,
-                zIndex: 1100,
+                flexDirection: "column"
             },
             ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
         ]}
     />
 );
+
+const Header = (props: GridProps) => {
+    const {t} = useTranslation();
+    
+    return (
+        <Box
+            component="header"
+            alignItems="center"
+            {...props}
+            sx={[
+                {
+                    padding: 2,
+                    gap: 2,
+                    bgcolor: "background.surface",
+                    borderBottom: "1px solid",
+                    borderColor: "divider",
+                    display: "flex",
+                },
+                ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+            ]}
+        >
+            <IconButton
+                size="sm"
+                variant="solid"
+                sx={{display: {sm: "inline-flex"}}}
+            >
+                <MonetizationOnIcon/>
+            </IconButton>
+            <Typography component="h1" fontWeight="xl" sx={{flexGrow: 1}}>
+                {t("appTitle")}
+            </Typography>
+
+            <LogoutButton/>
+        </Box>
+    );
+}
 
 const SideNav = (props: BoxProps) => (
     <Box
         component="nav"
-        className="Navigation"
         {...props}
         sx={[
             {
-                p: 2,
-                bgcolor: "background.componentBg",
+                padding: 2,
+                bgcolor: "background.surface",
                 borderRight: "1px solid",
                 borderColor: "divider",
             },
             ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
         ]}
+    >
+        <List>
+            {menu.map(item => <AppMenuItem key={item.path} item={item}/>)}
+        </List>
+    </Box>
+);
+
+const MainWrapper = (props: BoxProps) => (
+    <Box
+        justifyContent="flex-start"
+        sx={[
+            {
+                flexGrow: "1",
+                display: "flex",
+                flexDirection: "row-reverse",
+            },
+            ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+        ]}
+        {...props}
     />
 );
 
 const Main = (props: BoxProps) => (
     <Box
-        component="main"
-        className="Main"
+        sx={[
+            {
+                flexGrow: "1",
+                paddingLeft: 1,
+            },
+            ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+        ]}
         {...props}
-        sx={[{p: 2}, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]}
     />
 );
 
+const Footer = (props: BoxProps) => (
+    <Box
+        component="footer"
+        {...props}
+        sx={[
+            {
+                padding: 2,
+                bgcolor: "background.surface",
+                borderTop: "1px solid",
+                borderColor: "divider",
+            },
+            ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+        ]}
+    >
+        <small>
+            <Trans i18nKey="runMode" values={{mode: process.env.NODE_ENV}} components={{bold: <strong />}} />
+        </small>
+    </Box>
+);
+
 const Layout = {
-    Root,
-    OnePage,
+    RootCenter,
+    RootDefault,
     Header,
     SideNav,
+    MainWrapper,
     Main,
+    Footer,
 };
 
 export default Layout;

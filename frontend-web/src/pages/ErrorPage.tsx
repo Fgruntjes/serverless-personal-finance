@@ -57,27 +57,25 @@ function ErrorPage({error}: ErrorPageProps) {
     const errorString = getErrorString(error);
     const errorCode = getErrorCode(error);
     return (
-        <Layout.Root>
-            <Layout.OnePage>
-                <Alert
-                    startDecorator={<WarningIcon sx={{mx: 0.5}} />}
-                    variant="soft"
-                    color="danger"
-                    size="lg"
-                    sx={{alignItems: "flex-start"}}
-                    endDecorator={`(${errorCode})`}
-                >
-                    <div>
-                        <Typography color="danger" fontWeight="lg" mt={0.25}>
-                            Oops!
-                        </Typography>
-                        <Typography fontSize="sm" sx={{opacity: 0.8}}>
-                            {errorString}
-                        </Typography>
-                    </div>
-                </Alert>
-            </Layout.OnePage>
-        </Layout.Root>
+        <Layout.RootCenter>
+            <Alert
+                startDecorator={<WarningIcon sx={{mx: 0.5}} />}
+                variant="soft"
+                color="danger"
+                size="lg"
+                sx={{alignItems: "flex-start", minWidth: 400}}
+                endDecorator={`(${errorCode})`}
+            >
+                <div>
+                    <Typography color="danger" fontWeight="lg" mt={0.25}>
+                        Oops!
+                    </Typography>
+                    <Typography fontSize="sm" sx={{opacity: 0.8}}>
+                        {errorString}
+                    </Typography>
+                </div>
+            </Alert>
+        </Layout.RootCenter>
     );
 }
 

@@ -20,22 +20,19 @@ function LoginPage() {
     }
     
     return (
-        <Layout.Root>
-            <Layout.OnePage>
-                <Box sx={{
-                    bgcolor: "background.surface",
-                    padding: 1,
-                    border: 1,
-                }}>
-                    <Typography color="primary" fontWeight="lg" mt={0.25}>
-                        {t("title")}
-                    </Typography>
-                    <Button startDecorator={<IconGoogle />} variant="outlined" onClick={signIn} size="lg">
-                        {t("button.login")}
-                    </Button>
-                </Box>
-            </Layout.OnePage>
-        </Layout.Root>
+        <Layout.RootCenter>
+            <Box sx={{
+                padding: 1,
+                border: 1,
+            }}>
+                <Typography color="primary" fontWeight="lg" mt={0.25}>
+                    {t("title")}
+                </Typography>
+                <Button startDecorator={<IconGoogle />} variant="outlined" onClick={signIn} size="lg">
+                    {t("button.login")}
+                </Button>
+            </Box>
+        </Layout.RootCenter>
     );
 }
 
