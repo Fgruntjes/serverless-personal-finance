@@ -1,4 +1,5 @@
 {
   "appTitle": "Serverless Personal Finance",
+  "runMode": "Your application is running in <bold>{{mode}}</bold> mode.",
   "button.logout": "Logout"
 }

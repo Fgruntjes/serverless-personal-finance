@@ -17,7 +17,7 @@ i18n
         debug: process.env.NODE_ENV === "development",
         lng: "en",
         fallbackLng: "en",
-        interpolation: {escapeValue: false}
+        interpolation: {escapeValue: false},
     });
 
 export default i18n;

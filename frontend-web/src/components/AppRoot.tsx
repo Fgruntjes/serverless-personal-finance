@@ -7,7 +7,7 @@ import {
     Typography
 } from "@mui/joy";
 import React from "react";
-import {useTranslation} from "react-i18next";
+import {Trans, useTranslation} from "react-i18next";
 import {Outlet} from "react-router-dom";
 
 import {useAuth} from "../hooks/auth";
@@ -53,7 +53,9 @@ function AppRoot() {
                 <Layout.Main>
                     <Outlet />
                 </Layout.Main>
-                <small>You are running this application in <b>{process.env.NODE_ENV}</b> mode.</small>
+                <small>
+                    <Trans i18nKey="runMode" values={{mode: process.env.NODE_ENV}} components={{bold: <strong />}} />
+                </small>
             </Layout.Root>
         </AuthGuard>
     );
