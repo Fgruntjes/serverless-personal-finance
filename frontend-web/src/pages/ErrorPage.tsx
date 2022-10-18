@@ -1,5 +1,8 @@
 import WarningIcon from "@mui/icons-material/Warning";
-import {Alert, Typography} from "@mui/joy";
+import {
+    Alert,
+    Typography
+} from "@mui/joy";
 import React from "react";
 
 import Layout from "../components/Layout"
@@ -28,9 +31,9 @@ function getErrorString(error: any): string {
     return "Unknown error: " + JSON.stringify(error);
 }
 
-function getErrorCode(error: any): string|null {
+function getErrorCode(error: any): string {
     if (typeof error !== "object") {
-        return null;
+        return "000";
     }
 
     if (error.code) {
@@ -45,7 +48,7 @@ function getErrorCode(error: any): string|null {
         return "" + error.status;
     }
 
-    return null;
+    return "000";
 }
 
 function ErrorPage({error}: ErrorPageProps) {
@@ -62,7 +65,7 @@ function ErrorPage({error}: ErrorPageProps) {
                     color="danger"
                     size="lg"
                     sx={{alignItems: "flex-start"}}
-                    endDecorator={errorCode && `(${errorCode})`}
+                    endDecorator={`(${errorCode})`}
                 >
                     <div>
                         <Typography color="danger" fontWeight="lg" mt={0.25}>

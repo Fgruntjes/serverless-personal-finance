@@ -20,8 +20,8 @@ const theme = extendTheme({
         },
     },
     fontFamily: {
-        // display: "'Inter', var(--joy-fontFamily-fallback)",s
-        // body: "'Inter', var(--joy-fontFamily-fallback)",
+        display: "'Inter', var(--joy-fontFamily-fallback)",
+        body: "'Inter', var(--joy-fontFamily-fallback)",
     },
 });
 

@@ -1,32 +1,28 @@
+import "../hooks/auth.mock";
+
 import {jest} from "@jest/globals";
 import {
-    act, render, screen
+    act,
+    render,
+    screen
 } from "@testing-library/react";
 import React from "react";
 import {Simulate} from "react-dom/test-utils";
 
-import {useAuth} from "../atoms/auth";
 import LoginPage from "./LoginPage";
 import click = Simulate.click;
 import {Navigate} from "react-router-dom";
 
-jest.mock("../atoms/auth");
+import {mockedSignIn, mockLoggedIn, mockLoggedOut} from "../hooks/auth.mock";
+
 jest.mock("react-router-dom")
 
-const mockedUseAuth = jest.mocked(useAuth);
-const mockedSignIn = jest.fn();
-const mockedSignOut = jest.fn();
-
 test("Call signIn when Login is pressed", () => {
-    mockedUseAuth.mockReturnValue({
-        authState: null,
-        signIn: mockedSignIn,
-        signOut: mockedSignOut,
-    });
+    mockLoggedOut();
     
     render(<LoginPage />);
     
-    const loginButton = screen.getByText(/Login/i);
+    const loginButton = screen.getByText("button.login");
     expect(loginButton).toBeInTheDocument();
     act(() => {
         click(loginButton);
@@ -36,13 +32,7 @@ test("Call signIn when Login is pressed", () => {
 });
 
 test("Redirect when logged in", () => {
-    mockedUseAuth.mockReturnValue({
-        authState: {
-            token: "fake" 
-        },
-        signIn: mockedSignIn,
-        signOut: mockedSignOut,
-    });
+    mockLoggedIn();
 
     render(<LoginPage />);
 

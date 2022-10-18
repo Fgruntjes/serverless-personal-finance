@@ -1,17 +1,25 @@
-import BookRoundedIcon from "@mui/icons-material/BookRounded";
+import LogoutIcon from "@mui/icons-material/Logout";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import {Box, IconButton, Typography} from "@mui/joy";
-import React, {Suspense} from "react";
+import {
+    Box,
+    Button,
+    IconButton,
+    Typography
+} from "@mui/joy";
+import React from "react";
 import {useTranslation} from "react-i18next";
 import {Outlet} from "react-router-dom";
 
+import {useAuth} from "../hooks/auth";
+import AuthGuard from "./AuthGuard";
 import Layout from "./Layout"
 
 function AppRoot() {
     const {t} = useTranslation();
+    const {signOut} = useAuth();
     
     return (
-        <Suspense fallback="Loading...">
+        <AuthGuard>
             <Layout.Root>
                 <Layout.Header>
                     <Box
@@ -34,8 +42,12 @@ function AppRoot() {
                         </Typography>
                     </Box>
                     
-                    <Box sx={{display: "flex", flexDirection: "row", gap: 1.5}}>
-                        <BookRoundedIcon />
+                    <Box sx={{
+                        display: "flex", flexDirection: "row", gap: 1.5
+                    }}>
+                        <Button aria-label="Like" variant="outlined" color="neutral" onClick={() => signOut()}>
+                            <LogoutIcon />{t("button.logout")}
+                        </Button>
                     </Box>
                 </Layout.Header>
                 <Layout.Main>
@@ -43,7 +55,7 @@ function AppRoot() {
                 </Layout.Main>
                 <small>You are running this application in <b>{process.env.NODE_ENV}</b> mode.</small>
             </Layout.Root>
-        </Suspense>
+        </AuthGuard>
     );
 }
 

@@ -21,18 +21,16 @@ const OnePage = (props: GridProps) => (
         spacing={0}
         alignItems="center"
         justifyContent="center"
+        direction="column"
         mx={{minHeight: "100vh"}}
     >
-        <Grid 
-            md={3}
-            justifyContent="center" {...props}
-            sx={[
-                {
-                    bgcolor: "background.body",
-                    minHeight: "100vh",
-                },
-                ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
-            ]} />
+        <Grid md={3} {...props} sx={[
+            {
+                bgcolor: "background.body",
+                minHeight: "100vh",
+            },
+            ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+        ]} />
     </Grid>
 );
 

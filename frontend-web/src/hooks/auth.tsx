@@ -1,15 +1,26 @@
-import {googleLogout, useGoogleLogin} from "@react-oauth/google";
+import {
+    googleLogout,
+    useGoogleLogin
+} from "@react-oauth/google";
+import {useEffect} from "react";
 import {useTranslation} from "react-i18next";
 import {toast} from "react-toastify";
 import {atom, useRecoilState} from "recoil";
+import {recoilPersist} from "recoil-persist";
+
+import {LoginError} from "../errors/LoginError";
+
+const {persistAtom} = recoilPersist()
 
 export type AuthState = {
     token: string;
+    expiresAt: number;
 }|null;
 
 const authState = atom<AuthState>({
     key: "authState",
     default: null,
+    effects: [persistAtom],
 });
 
 export function useAuth(): {authState: AuthState, signIn: VoidFunction, signOut: VoidFunction} {
@@ -17,14 +28,26 @@ export function useAuth(): {authState: AuthState, signIn: VoidFunction, signOut:
     const [currentAuthState, setAuthState] = useRecoilState(authState);
     const login = useGoogleLogin({
         flow: "implicit",
-        onError: console.error,
+        onError: (error) => {
+            throw new LoginError(
+                error.error || "unknown",
+                error.error_description || "Unknown error thrown"
+            );
+        },
         onSuccess: (tokenResponse) => {
             toast.success(t("loggedInSuccessful"))
             setAuthState({
                 token: tokenResponse.access_token,
+                expiresAt: Date.now() + (tokenResponse.expires_in * 1000)
             });
         },
     });
+    
+    useEffect(() => {
+        if (currentAuthState && currentAuthState.expiresAt < Date.now()) {
+            setAuthState(null);
+        }
+    }, [currentAuthState, setAuthState]);
     
     return {
         authState: currentAuthState,
@@ -37,10 +60,8 @@ export function useAuth(): {authState: AuthState, signIn: VoidFunction, signOut:
         },
         signOut: () => {
             if (currentAuthState) {
-                setAuthState(() => {
-                    googleLogout();
-                    return null;
-                });
+                setAuthState(null);
+                googleLogout();
             } else {
                 toast.warning(t("notLoggedIn"))
             }
