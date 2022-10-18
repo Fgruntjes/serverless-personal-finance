@@ -31,7 +31,7 @@ public class BankTransactionImportService
             {
                 TransactionId = t.TransactionId,
                 AccountId = accountMap[t.AccountNumber].Id,
-                CategoryId = categoryMap[t.Category].Id,
+                CategoryId = !string.IsNullOrWhiteSpace(t.Category) ? categoryMap[t.Category].Id : null,
                 Date = t.Date,
                 PayeeId = payeeMap[t.PayeeName].Id,
                 PayeeDescription = t.PayeeDescription,
@@ -100,10 +100,11 @@ public class BankTransactionImportService
 
     private async Task<Dictionary<string, CategoryDocument>> GetCategoryMap(IEnumerable<BankTransaction> transactions)
     {
-        var searchValues = transactions
+        string[] searchValues = transactions
             .AsQueryable()
             .Select(t => t.Category)
-            .ToArray();
+            .Where(v => !string.IsNullOrWhiteSpace(v))
+            .ToArray()!;
 
         return await _documentMapFactory.Get<string, CategoryDocument>()
             .Load(d => searchValues.Contains(d.Name), d => d.Name)

@@ -23,7 +23,6 @@ public class AppControllerTest : IntegrationTestFixture<Program>
         {
             new(
                 new DateTime(2022, 10, 4),
-                "Clothing",
                 "SomeStore",
                 "NL83INGB0123123",
                 "EUR",
@@ -44,7 +43,6 @@ public class AppControllerTest : IntegrationTestFixture<Program>
         {
             new(
                 new DateTime(2022, 10, 4),
-                "Clothing",
                 "SomeStore",
                 "NL83INGB0123123",
                 "EUR",
@@ -61,7 +59,6 @@ public class AppControllerTest : IntegrationTestFixture<Program>
         {
             new(
                 new DateTime(2022, 10, 4),
-                "Clothing",
                 "SomeStore",
                 "NL83INGB0123123",
                 "EUR",
@@ -72,7 +69,6 @@ public class AppControllerTest : IntegrationTestFixture<Program>
             },
             new(
                 new DateTime(2022, 10, 4),
-                "Clothing",
                 "SomeStore",
                 "NL83INGB0123123",
                 "EUR",
@@ -93,7 +89,6 @@ public class AppControllerTest : IntegrationTestFixture<Program>
         {
             new(
                 new DateTime(2022, 10, 4),
-                "Clothing",
                 "SomeStore",
                 "NL83INGB0123123",
                 "EUR",
@@ -107,7 +102,6 @@ public class AppControllerTest : IntegrationTestFixture<Program>
         {
             new(
                 new DateTime(2022, 10, 4),
-                "Working",
                 "SomeStore",
                 "NL83INGB0123123",
                 "EUR",
@@ -125,7 +119,6 @@ public class AppControllerTest : IntegrationTestFixture<Program>
         {
             new(
                 new DateTime(2022, 10, 4),
-                "Working",
                 "SomeStore",
                 "NL83INGB0123123",
                 "EUR",
@@ -133,7 +126,6 @@ public class AppControllerTest : IntegrationTestFixture<Program>
             ),
             new(
                 new DateTime(2022, 10, 4),
-                "Working",
                 "SomeStore",
                 "NL83INGB0123123",
                 "EUR",
@@ -172,8 +164,6 @@ public class AppControllerTest : IntegrationTestFixture<Program>
         var list = new List<BankTransaction>();
         foreach (var transaction in await transactionCollection.AsQueryable().ToListAsync())
         {
-            var category = await categoryCollection.Find(d => d.Id.Equals(transaction.CategoryId))
-                .FirstOrDefaultAsync();
             var account = await accountCollection.Find(d => d.Id.Equals(transaction.AccountId))
                 .FirstOrDefaultAsync();
             var currency = await currencyCollection.Find(d => d.Id.Equals(transaction.CurrencyId))
@@ -183,7 +173,6 @@ public class AppControllerTest : IntegrationTestFixture<Program>
 
             list.Add(new BankTransaction(
                 transaction.Date,
-                category.Name,
                 payee.Name,
                 account.AccountNumber,
                 currency.CurrencyCode,

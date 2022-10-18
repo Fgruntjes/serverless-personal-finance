@@ -11,8 +11,7 @@ public class BankTransaction
     [BindRequired]
     public DateTime Date { get; set; }
 
-    [BindRequired]
-    public string Category { get; set; }
+    public string? Category { get; set; }
 
     [Description("Owner name of the other account")]
     [BindRequired]
@@ -32,10 +31,9 @@ public class BankTransaction
     [BindRequired]
     public Decimal Amount { get; set; }
 
-    public BankTransaction(DateTime date, string category, string payeeName, string accountNumber, string currencyCode, decimal amount)
+    public BankTransaction(DateTime date, string payeeName, string accountNumber, string currencyCode, decimal amount)
     {
         Date = date;
-        Category = category;
         PayeeName = payeeName;
         AccountNumber = accountNumber;
         CurrencyCode = currencyCode;
