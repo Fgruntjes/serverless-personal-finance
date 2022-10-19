@@ -3,5 +3,5 @@
   "runMode": "Your application is running in <bold>{{mode}}</bold> mode.",
   "button.logout": "Logout",
   
-  "menu.imports": "Imports"
+  "menu.integrations": "Integrations"
 }

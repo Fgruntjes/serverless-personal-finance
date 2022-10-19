@@ -91,7 +91,7 @@ const SideNav = (props: BoxProps) => (
         {...props}
         sx={[
             {
-                padding: 2,
+                padding: 0,
                 bgcolor: "background.surface",
                 borderRight: "1px solid",
                 borderColor: "divider",
@@ -99,7 +99,7 @@ const SideNav = (props: BoxProps) => (
             ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
         ]}
     >
-        <List>
+        <List sx={{padding: 0}}>
             {menu.map(item => <AppMenuItem key={item.path} item={item}/>)}
         </List>
     </Box>
@@ -125,7 +125,9 @@ const Main = (props: BoxProps) => (
         sx={[
             {
                 flexGrow: "1",
-                paddingLeft: 1,
+                paddingLeft: 2,
+                paddingRight: 2,
+                paddingTop: 2
             },
             ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
         ]}

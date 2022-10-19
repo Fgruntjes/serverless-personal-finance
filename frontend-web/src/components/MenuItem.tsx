@@ -22,8 +22,8 @@ const AppMenuItem = (props: AppMenuItemProps) => {
     const {t} = useTranslation();
     
     return (
-        <ListItem key={props.key}>
-            <ListItemButton onClick={() => navigate(path)}>
+        <ListItem key={props.key} sx={{padding: 0}}>
+            <ListItemButton onClick={() => navigate(path)} sx={{margin: 0}}>
                 <ListItemDecorator>
                     {icon}
                 </ListItemDecorator>
