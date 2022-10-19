@@ -16,6 +16,7 @@ import {mockLoggedInToken} from "./auth.mock";
 jest.mock("@react-oauth/google");
 jest.mock("recoil");
 jest.mock("react-toastify");
+jest.unmock("./auth");
 
 type useGoogleLoginSpy = (options: UseGoogleLoginOptionsImplicitFlow) => (overrideConfig?: OverridableTokenClientConfig) => void;
 

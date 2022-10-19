@@ -1,4 +1,4 @@
-import SyncIcon from "@mui/icons-material/Sync";
+import SyncAltIcon from "@mui/icons-material/SyncAlt";
 import React from "react";
 
 import {paths} from "./paths";
@@ -11,8 +11,8 @@ export type MenuItem = {
 
 export const menu: MenuItem[] = [
     {
-        label: "menu.imports",
-        path: paths.imports,
-        icon: <SyncIcon />,
+        label: "menu.integrations",
+        path: paths.integrations,
+        icon: <SyncAltIcon />,
     }
 ]

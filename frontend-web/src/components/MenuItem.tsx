@@ -9,7 +9,7 @@ import {MenuItem} from "../menu";
 
 type AppMenuItemProps = {
     item: MenuItem,
-    key: string|null|undefined,
+    key?: string|null|undefined,
 }
 
 const AppMenuItem = (props: AppMenuItemProps) => {

@@ -1,5 +1,3 @@
-import "../hooks/auth.mock";
-
 import {jest} from "@jest/globals";
 import {
     act,
