@@ -137,7 +137,6 @@ public class AppControllerTest : IntegrationTestFixture<Program>
 
         var dbContext = _factory.Services.GetRequiredService<DatabaseContext>();
         (await dbContext.GetCollection<AccountDocument>().CountDocumentsAsync(d => true)).Should().Be(1);
-        (await dbContext.GetCollection<CategoryDocument>().CountDocumentsAsync(d => true)).Should().Be(1);
         (await dbContext.GetCollection<PayeeDocument>().CountDocumentsAsync(d => true)).Should().Be(1);
         (await dbContext.GetCollection<CurrencyDocument>().CountDocumentsAsync(d => true)).Should().Be(1);
     }
