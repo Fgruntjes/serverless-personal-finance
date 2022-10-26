@@ -6,17 +6,15 @@
         <Nullable>enable</Nullable>
 
         <IsPackable>false</IsPackable>
-
-        <OutputType>Library</OutputType>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\App.Function.Banktransaction.Import\App.Function.Banktransaction.Import.csproj" />
-      <ProjectReference Include="..\App.Lib.Tests\App.Lib.Tests.csproj" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+      <ProjectReference Include="..\App.Function.Integration.Ynab\App.Function.Integration.Ynab.csproj" />
+      <ProjectReference Include="..\App.Lib.Tests\App.Lib.Tests.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,30 +1,12 @@
-using App.LibQueue;
+using App.Lib;
+using App.Lib.Queue;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-builder.Services.AddHealthChecks();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddQueue(builder.Configuration["GoogleProjectId"]);
-
-builder.WebHost.UseSentry();
-
-var app = builder.Build();
-app.MapControllers();
-if (!app.Environment.IsDevelopment())
-{
-    app.UseSentryTracing();
-}
-else
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.Run();
+await AppWebApplication.CreateAndRun(
+    args,
+    builder =>
+    {
+        builder.Services.AddQueue(builder.Configuration["GoogleProjectId"]);
+    });
 
 public partial class Program
 {

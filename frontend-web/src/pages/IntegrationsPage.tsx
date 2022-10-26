@@ -7,6 +7,7 @@ const IntegrationsPage = () => {
     return (
         <>
             <PageTitle>{t("title")}</PageTitle>
+            
         </>
     );
 }

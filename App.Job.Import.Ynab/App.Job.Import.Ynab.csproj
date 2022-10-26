@@ -8,18 +8,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Sentry.AspNetCore" Version="3.22.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Reference Include="Rebus">
         <HintPath>..\..\..\..\..\.nuget\packages\rebus\6.5.5\lib\netstandard2.1\Rebus.dll</HintPath>
       </Reference>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\App.LibQueue\App.LibQueue.csproj" />
+      <ProjectReference Include="..\App.Lib.Queue\App.Lib.Queue.csproj" />
+      <ProjectReference Include="..\App.Lib\App.Lib.csproj" />
     </ItemGroup>
 
 </Project>

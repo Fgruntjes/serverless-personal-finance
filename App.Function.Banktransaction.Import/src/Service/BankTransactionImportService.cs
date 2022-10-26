@@ -1,6 +1,7 @@
 using App.Lib.Dto;
-using App.LibDatabase;
-using App.LibDatabase.Document;
+using App.Lib.Database;
+using App.Lib.Database.Document;
+using App.Lib.Dto.Backend;
 using MongoDB.Driver;
 
 namespace App.Function.Banktransaction.Import.Service;
@@ -19,7 +20,7 @@ public class BankTransactionImportService
     public async Task Import(BankTransaction[] transactions)
     {
         if (transactions.Length == 0)
-            throw new ArgumentOutOfRangeException(nameof(transactions), "Need to import at least 1 transaction.");
+            throw new ArgumentException("Need to import at least 1 transaction.", nameof(transactions));
 
         var accountMap = await GetAccountMap(transactions);
         var categoryMap = await GetCategoryMap(transactions);

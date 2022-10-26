@@ -12,14 +12,14 @@ jobs:
             matrix:
                 dotnet-version: [ '6.0' ]
         steps:
-        - uses: actions/checkout@v3
-        - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
-          uses: actions/setup-dotnet@v2
-          with:
-              dotnet-version: ${{ matrix.dotnet-version }}
-        - run: dotnet format --verify-no-changes
-          
-          
+        -   uses: actions/checkout@v3
+        -   name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+            uses: actions/setup-dotnet@v2
+            with:
+                dotnet-version: ${{ matrix.dotnet-version }}
+        -   run: dotnet format --verify-no-changes
+    
+    
     test_quality_terraform:
         runs-on: ubuntu-latest
         strategy:
@@ -70,7 +70,7 @@ jobs:
         steps:
         -   uses: actions/checkout@v3
         -   run: cd ${{ matrix.project.name }} && ../.github/ensure_frontend_tests.sh
-            
+    
     test_unit_typescript:
         runs-on: ubuntu-latest
         strategy:
@@ -98,24 +98,27 @@ jobs:
         strategy:
             matrix:
                 project:
-                - name: 'App.Function.Banktransaction.Import'
-                  service: 'function-banktransaction-import'
-                  dotnet-version: '6.0'
+                -   name: 'App.Function.Banktransaction.Import'
+                    dotnet-version: '6.0'
+                -   name: 'App.Function.Integration.Ynab'
+                    dotnet-version: '6.0'
+                -   name: 'App.Lib.Database'
+                    dotnet-version: '6.0'
         steps:
-            - uses: actions/checkout@v3
-            - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
-              uses: actions/setup-dotnet@v2
-              with:
-                  dotnet-version: ${{ matrix.dotnet-version }}
-            - run: |
+        -   uses: actions/checkout@v3
+        -   name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+            uses: actions/setup-dotnet@v2
+            with:
+                dotnet-version: ${{ matrix.dotnet-version }}
+        -   run: |
                 echo "title=Test Run for PR #${{github.event.number}} Run #${{github.run_number}}" >> $GITHUB_ENV
                 echo "file_name=TestReport.${{ matrix.project.dotnet-version }}.${{ matrix.project.name }}.${{github.sha}}.md" >> $GITHUB_ENV  
-            - run: dotnet restore ${{ matrix.project.name }}.Tests
-            - run: dotnet build --no-restore ${{ matrix.project.name }}.Tests
-            - run: (test -f ${{ matrix.project.name }}.Tests/docker-compose.yaml && docker-compose -f ${{ matrix.project.name }}.Tests/docker-compose.yaml up -d) || true 
-            - run: dotnet test --no-restore --no-build --logger "liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};" ${{ matrix.project.name }}.Tests
-            - uses: marocchino/sticky-pull-request-comment@v2
-              if: always()
-              with:
-                  path: ${{github.workspace}}/${{env.file_name}}
-                  header: unit_dotnet
+        -   run: dotnet restore ${{ matrix.project.name }}.Tests
+        -   run: dotnet build --no-restore ${{ matrix.project.name }}.Tests
+        -   run: docker-compose -f App.Lib.Tests/docker-compose.yaml up -d
+        -   run: dotnet test --no-restore --no-build --logger "liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};" ${{ matrix.project.name }}.Tests
+        -   uses: marocchino/sticky-pull-request-comment@v2
+            if: always()
+            with:
+                path: ${{github.workspace}}/${{env.file_name}}
+                header: unit_dotnet

@@ -1,10 +1,9 @@
 using System.Net;
-using System.Net.Http.Json;
-using App.Lib.Dto;
 using App.Lib.Message;
-using App.LibDatabase;
-using App.LibDatabase.Document;
-using App.LibTests;
+using App.Lib.Database;
+using App.Lib.Database.Document;
+using App.Lib.Dto.Backend;
+using App.Lib.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 
@@ -156,7 +155,6 @@ public class AppControllerTest : IntegrationTestFixture<Program>
         var dbContext = _factory.Services.GetRequiredService<DatabaseContext>();
         var transactionCollection = dbContext.GetCollection<BankTransactionDocument>();
         var accountCollection = dbContext.GetCollection<AccountDocument>();
-        var categoryCollection = dbContext.GetCollection<CategoryDocument>();
         var currencyCollection = dbContext.GetCollection<CurrencyDocument>();
         var payeeCollection = dbContext.GetCollection<PayeeDocument>();
 
