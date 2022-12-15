@@ -8,15 +8,11 @@ jobs:
     #########################################################
     test_quality_dotnet:
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                dotnet-version: [ '7.0' ]
         steps:
         -   uses: actions/checkout@v3
-        -   name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
-            uses: actions/setup-dotnet@v2
+        -   uses: actions/setup-dotnet@v3
             with:
-                dotnet-version: ${{ matrix.dotnet-version }}
+                global-json-file: global.json
         -   run: dotnet format --verify-no-changes
     
     
@@ -27,7 +23,6 @@ jobs:
                 project:
                 -   name: 'App.Function.Banktransaction.Import'
                     service: 'function-banktransaction-import'
-                    dotnet-version: '7.0'
         steps:
         -   uses: actions/checkout@v3
         -   uses: hashicorp/setup-terraform@v2
@@ -99,22 +94,17 @@ jobs:
             matrix:
                 project:
                 -   name: 'App.Function.Banktransaction.Import'
-                    dotnet-version: '7.0'
                 -   name: 'App.Function.Integration.Ynab'
-                    dotnet-version: '7.0'
                 -   name: 'App.Lib.Database'
-                    dotnet-version: '7.0'
                 -   name: 'App.Lib.Ynab'
-                    dotnet-version: '7.0'
         steps:
         -   uses: actions/checkout@v3
-        -   name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
-            uses: actions/setup-dotnet@v2
+        -   uses: actions/setup-dotnet@v3
             with:
-                dotnet-version: ${{ matrix.dotnet-version }}
+                global-json-file: global.json
         -   run: |
                 echo "title=Test Run for PR #${{github.event.number}} Run #${{github.run_number}}" >> $GITHUB_ENV
-                echo "file_name=TestReport.${{ matrix.project.dotnet-version }}.${{ matrix.project.name }}.${{github.sha}}.md" >> $GITHUB_ENV  
+                echo "file_name=TestReport.${{ matrix.project.name }}.${{github.sha}}.md" >> $GITHUB_ENV  
         -   run: dotnet restore ${{ matrix.project.name }}.Tests
         -   run: dotnet build --no-restore ${{ matrix.project.name }}.Tests
         -   run: docker-compose -f App.Lib.Tests/docker-compose.yaml up -d
