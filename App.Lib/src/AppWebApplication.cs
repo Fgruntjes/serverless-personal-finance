@@ -1,8 +1,11 @@
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace App.Lib;
@@ -109,6 +112,12 @@ public static class AppWebApplication
         Func<WebApplication, Task> configureApp)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Configuration
+            .AddEnvironmentVariables()
+            .AddUserSecrets(Assembly.GetExecutingAssembly(), true);
+
+        
+        builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
         builder.Services.AddControllers().AddNewtonsoftJson(options =>
         {
             options.SerializerSettings.Converters.Add(new StringEnumConverter());
@@ -121,7 +130,7 @@ public static class AppWebApplication
 
         await configureBuilder(builder);
 
-        builder.WebHost.UseSentry();
+        builder.WebHost.UseSentry();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
 
         var app = builder.Build();
         app.MapControllers();

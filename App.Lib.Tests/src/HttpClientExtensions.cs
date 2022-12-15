@@ -6,8 +6,11 @@ namespace App.Lib.Tests;
 
 public static class HttpClientExtensions
 {
-    public static async Task<T?> GetFromJsonAsync<T>(this HttpClient httpClient, string uri,
-        JsonSerializerSettings? settings = null, CancellationToken cancellationToken = default)
+    public static async Task<T?> GetFromJsonAsync<T>(
+        this HttpClient httpClient,
+        string uri,
+        JsonSerializerSettings? settings = null,
+        CancellationToken cancellationToken = default)
     {
         ThrowIfInvalidParams(httpClient, uri);
 
@@ -17,9 +20,7 @@ public static class HttpClientExtensions
             throw new FailException("Server did not return valid response");
         }
 
-        var json = await response.Content.ReadAsStringAsync(cancellationToken);
-
-        return JsonConvert.DeserializeObject<T>(json, settings);
+        return await response.Content.ReadFromJsonAsync<T>(settings, cancellationToken);
     }
 
     public static async Task<HttpResponseMessage> PostAsJsonAsync<T>(this HttpClient httpClient, string uri, T value,

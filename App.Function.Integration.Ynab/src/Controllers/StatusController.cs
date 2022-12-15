@@ -1,5 +1,7 @@
 using App.Lib.Dto.Frontend;
 using App.Lib.Ynab;
+using App.Lib.Ynab.Exception;
+using App.Lib.Ynab.Rest;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.Function.Integration.Ynab.Controllers;
@@ -16,18 +18,18 @@ public class StatusController : ControllerBase
     }
 
     [HttpGet(Name = "Status")]
-    public async Task<ApiResponse<IntegrationStatus>> Status()
+    public async Task<Lib.Dto.Frontend.ApiResponse<IntegrationStatus>> Status()
     {
         try
         {
             var connectedUser = await _client.GetUser();
-            return new ApiResponse<IntegrationStatus>(
+            return new Lib.Dto.Frontend.ApiResponse<IntegrationStatus>(
                 new IntegrationStatus(true, connectedUser.Data.Id)
             );
         }
         catch (TokenException httpException)
         {
-            return new ApiResponse<IntegrationStatus>(new IntegrationStatus(false))
+            return new Lib.Dto.Frontend.ApiResponse<IntegrationStatus>(new IntegrationStatus(false))
             {
                 Errors = new[] { new ApiError(ErrorType.Integration, httpException.Message) }
             };

@@ -25,7 +25,7 @@ public class EncryptedString
 
         if (value.EncryptedValue == null)
         {
-            throw new ArgumentException("Value did not contain a decrypted or encrypted value.", nameof(value));
+            return null;
         }
 
         if (value._dataProtector == null)

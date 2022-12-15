@@ -2,7 +2,10 @@ namespace App.Lib.Ynab;
 
 public class YnabOptions
 {
-    public string BaseAddress => "https://api.youneedabudget.com/";
-    public string ClientId => null!;
-    public string ClientSecret => null!;
+    public const string OptionsKey = "Ynab";
+    
+    public string BaseAddress { get; set; }
+    public string AppAddress { get; set; }
+    public string ClientId { get; set; }
+    public string ClientSecret { get; set; }
 }

@@ -13,7 +13,7 @@ public class OAuthTokenStorage
         _dbContext = dbContext;
     }
 
-    public async Task<OAuthTokenDocument> Get(string name)
+    public async Task<IOAuthToken> Get(string name)
     {
         var tokenCollection = _dbContext.GetCollection<OAuthTokenDocument>();
         var token = await tokenCollection
@@ -37,8 +37,14 @@ public class OAuthTokenStorage
         return token;
     }
 
-    public async Task Store(OAuthTokenDocument token)
+    public async Task Store(IOAuthToken token)
     {
+        if (string.IsNullOrEmpty(token.AccessToken))
+        {
+            await _dbContext.GetCollection<OAuthTokenDocument>().DeleteOneAsync(filter => filter.Name == token.Name);
+            return;
+        }
+        
         await _dbContext.GetCollection<OAuthTokenDocument>().UpdateOneAsync(
             filter => filter.Name == token.Name,
             Builders<OAuthTokenDocument>.Update

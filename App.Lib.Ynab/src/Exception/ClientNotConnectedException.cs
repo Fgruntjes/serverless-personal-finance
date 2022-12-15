@@ -1,4 +1,4 @@
-namespace App.Lib.Ynab;
+namespace App.Lib.Ynab.Exception;
 
 public class ClientNotConnectedException
 {

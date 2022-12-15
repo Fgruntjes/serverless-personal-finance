@@ -1,6 +1,6 @@
 namespace App.Lib.Dto.Frontend;
 
-public class ApiResponse<T> where T : new()
+public class ApiResponse<T>
 {
     public T? Data { get; init; }
 

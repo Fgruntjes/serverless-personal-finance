@@ -3,7 +3,7 @@
   &lt;Assembly Path="/home/freek/.nuget/packages/sentry.extensions.logging/3.22.0/lib/net6.0/Sentry.Extensions.Logging.dll" /&gt;
   &lt;Assembly Path="/home/freek/.nuget/packages/ynab.rest/0.7.0/lib/netstandard2.0/YNAB.Rest.dll" /&gt;
 &lt;/AssemblyExplorer&gt;</s:String>
-	<s:String x:Key="/Default/Environment/Highlighting/HighlightingSourceSnapshotLocation/@EntryValue">/home/freek/.cache/JetBrains/Rider2022.2/resharper-host/temp/Rider/vAny/CoverageData/_serverless-personal-finance.665371887/Snapshot/snapshot.utdcvr</s:String>
+	
 	
 	
 	

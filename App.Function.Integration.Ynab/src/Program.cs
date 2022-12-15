@@ -4,7 +4,7 @@ using App.Lib.Ynab;
 
 await AppWebApplication.CreateAndRun(args, builder =>
 {
-    builder.Services.AddYnabClient();
+    builder.Services.AddYnabClient(builder.Configuration);
     builder.Services.AddDatabase(builder.Configuration);
 });
 

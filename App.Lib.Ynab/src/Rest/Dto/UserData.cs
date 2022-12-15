@@ -1,4 +1,4 @@
-namespace App.Lib.Ynab;
+namespace App.Lib.Ynab.Rest.Dto;
 
 public class UserData
 {

@@ -1,6 +1,6 @@
-namespace App.Lib.Ynab;
+namespace App.Lib.Ynab.Dto;
 
-public class YnabTokenResponse
+public class TokenResponse
 {
     public string AccessToken => null!;
     public string TokenType => null!;

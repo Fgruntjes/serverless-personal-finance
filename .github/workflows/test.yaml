@@ -10,7 +10,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                dotnet-version: [ '6.0' ]
+                dotnet-version: [ '7.0' ]
         steps:
         -   uses: actions/checkout@v3
         -   name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
@@ -27,7 +27,7 @@ jobs:
                 project:
                 -   name: 'App.Function.Banktransaction.Import'
                     service: 'function-banktransaction-import'
-                    dotnet-version: '6.0'
+                    dotnet-version: '7.0'
         steps:
         -   uses: actions/checkout@v3
         -   uses: hashicorp/setup-terraform@v2
@@ -99,11 +99,13 @@ jobs:
             matrix:
                 project:
                 -   name: 'App.Function.Banktransaction.Import'
-                    dotnet-version: '6.0'
+                    dotnet-version: '7.0'
                 -   name: 'App.Function.Integration.Ynab'
-                    dotnet-version: '6.0'
+                    dotnet-version: '7.0'
                 -   name: 'App.Lib.Database'
-                    dotnet-version: '6.0'
+                    dotnet-version: '7.0'
+                -   name: 'App.Lib.Ynab'
+                    dotnet-version: '7.0'
         steps:
         -   uses: actions/checkout@v3
         -   name: Setup .NET Core SDK ${{ matrix.dotnet-version }}

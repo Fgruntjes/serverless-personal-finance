@@ -1,16 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    </PropertyGroup>
+      <UserSecretsId>8c161ac8-a197-4f07-a48e-0e1ec50a55ed</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\App.Lib.Database\App.Lib.Database.csproj" />
       <ProjectReference Include="..\App.Lib.Ynab\App.Lib.Ynab.csproj" />
       <ProjectReference Include="..\App.Lib\App.Lib.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="App.Lib">
+        <HintPath>..\App.Function.Integration.Ynab.Tests\bin\Debug\net6.0\App.Lib.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>
