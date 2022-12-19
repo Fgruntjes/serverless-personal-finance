@@ -18,6 +18,11 @@ public class EncryptedString
 
     public static implicit operator string(EncryptedString value)
     {
+        if (value == null)
+        {
+            return null;
+        }
+        
         if (value.DecryptedValue != null)
         {
             return value.DecryptedValue;

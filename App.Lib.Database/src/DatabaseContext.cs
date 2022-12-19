@@ -6,11 +6,11 @@ namespace App.Lib.Database;
 
 public class DatabaseContext
 {
-    public IMongoDatabase Database { get; init; }
+    public IMongoDatabase Database { get; }
 
     public DatabaseContext(IOptions<DatabaseOptions> configuration)
     {
-        var client = new MongoClient(configuration.Value.ConnectionString);
+        var client = new MongoClient(MongoClientSettings.FromConnectionString(configuration.Value.ConnectionString));
         Database = client.GetDatabase(configuration.Value.DatabaseName);
     }
 

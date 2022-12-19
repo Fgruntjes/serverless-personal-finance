@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using System.Text.Json;
 using App.Lib.Database;
 using App.Lib.Ynab.Dto;
 using App.Lib.Ynab.Exception;
@@ -44,7 +45,14 @@ public class ConnectService : IConnectService
 
 		if (TokenIsExpired(token))
 		{
-			await RefreshToken(token);
+			return await FetchToken(new
+			{
+				client_id = _options.Value.ClientId,
+				client_secret = _options.Value.ClientSecret,
+				redirect_uri = GetReturnUrl(),
+				refresh_token = token.RefreshToken,
+				grant_type = "refresh_token",
+			});
 		}
 
 		return token;
@@ -80,18 +88,6 @@ public class ConnectService : IConnectService
 		var token = await _tokenStorage.Get(TokenName);
 		return !string.IsNullOrEmpty(token.AccessToken) && !TokenIsExpired(token);
 	}
-	
-	private async Task RefreshToken(IOAuthToken token)
-	{
-		FetchToken(new
-		{
-			client_id = _options.Value.ClientId,
-			client_secret = _options.Value.ClientSecret,
-			redirect_uri = GetReturnUrl(),
-			refresh_token = token.RefreshToken,
-			grant_type = "refresh_token",
-		});
-	}
 
 	private object GetReturnUrl()
 	{
@@ -101,7 +97,7 @@ public class ConnectService : IConnectService
 		return urlHelper.Action("Return", "Return", new { }, actionContext.HttpContext.Request.Scheme);
 	}
 
-	private async Task StoreToken(TokenResponse token)
+	private async Task<IOAuthToken> StoreToken(TokenResponse token)
 	{
 		var newToken = new OAuthToken
 		{
@@ -111,21 +107,26 @@ public class ConnectService : IConnectService
 			ExpiresAt = DateTime.UtcNow.AddSeconds(token.ExpiresIn),
 		};
 		await _tokenStorage.Store(newToken);
+		return newToken;
 	}
 
-	private async Task FetchToken<TRequestParams>(TRequestParams requestParams)
+	private async Task<IOAuthToken> FetchToken<TRequestParams>(TRequestParams requestParams)
 	{
 		var tokenUrl = _options.Value.AppAddress.AppendPathSegment("/oauth/token");
 		TokenResponse newToken;
-		
+
 		try
 		{
 			var tokenResponse = await _httpClient.PostAsJsonAsync(tokenUrl, requestParams);
 			newToken = await tokenResponse.Content.ReadFromJsonAsync<TokenResponse>();
 		}
-		catch (HttpRequestException requestException)
+		catch (HttpRequestException exception)
 		{
-			throw new TokenException(requestException.Message, requestException);
+			throw new TokenException(exception.Message, exception);
+		}
+		catch (JsonException exception)
+		{
+			throw new TokenException(exception.Message, exception);
 		}
 		
 		if (newToken == null)
@@ -133,7 +134,7 @@ public class ConnectService : IConnectService
 			throw new TokenException("Could not retrieve new access token.");
 		}
 		
-		await StoreToken(newToken);
+		return await StoreToken(newToken);
 	}
 
 	private bool TokenIsExpired(IOAuthToken token)
