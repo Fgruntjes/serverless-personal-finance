@@ -66,7 +66,7 @@ public class DistributedLock : IDisposable
     private async void Unlock()
     {
         await LockCollection.DeleteManyAsync(filter => filter.Name == _name);
-        _logger.LogTrace("Lock {name} released", _name, _timeout);
+        _logger.LogTrace("Lock {name} released", _name);
     }
 
     public void Dispose()
