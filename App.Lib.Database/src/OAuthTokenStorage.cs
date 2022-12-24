@@ -44,7 +44,7 @@ public class OAuthTokenStorage
             await _dbContext.GetCollection<OAuthTokenDocument>().DeleteOneAsync(filter => filter.Name == token.Name);
             return;
         }
-        
+
         await _dbContext.GetCollection<OAuthTokenDocument>().UpdateOneAsync(
             filter => filter.Name == token.Name,
             Builders<OAuthTokenDocument>.Update

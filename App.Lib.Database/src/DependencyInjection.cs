@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Bson.Serialization;
+using MongoDB.Extensions.Migration;
 
 namespace App.Lib.Database;
 
@@ -13,6 +13,13 @@ public static class DependencyInject
 
         services.AddSingleton<DatabaseContext>();
         services.AddSingleton<DocumentMapFactory>();
+        services.AddSingleton<DistributedLockFactory>();
+
         services.AddScoped<OAuthTokenStorage>();
+    }
+
+    public static void UseDatabaseMigrations(this IApplicationBuilder app)
+    {
+        app.UseMongoMigration(m => m);
     }
 }

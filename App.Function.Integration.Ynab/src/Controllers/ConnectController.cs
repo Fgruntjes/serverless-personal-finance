@@ -17,7 +17,7 @@ public class ConnectController : ControllerBase
 
     [HttpGet(Name = "Connect")]
     [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType( StatusCodes.Status302Found)]
+    [ProducesResponseType(StatusCodes.Status302Found)]
     public async Task<ActionResult> Connect()
     {
         if (await _connectService.IsConnected())

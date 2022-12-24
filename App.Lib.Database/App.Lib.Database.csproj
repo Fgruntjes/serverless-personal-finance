@@ -9,5 +9,6 @@
     <ItemGroup>
       <FrameworkReference Include="Microsoft.AspNetCore.App" />
       <PackageReference Include="MongoDB.Driver" Version="2.18.0" />
+      <PackageReference Include="MongoDB.Extensions.Migration" Version="1.7.1" />
     </ItemGroup>
 </Project>

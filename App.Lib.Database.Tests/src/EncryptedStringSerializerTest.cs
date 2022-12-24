@@ -1,4 +1,3 @@
-using System.Text;
 using Microsoft.AspNetCore.DataProtection;
 using MongoDB.Bson.IO;
 using MongoDB.Bson.Serialization;

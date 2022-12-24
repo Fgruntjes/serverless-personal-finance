@@ -8,6 +8,10 @@ await AppWebApplication.CreateAndRun(
     {
         builder.Services.AddDatabase(builder.Configuration);
         builder.Services.AddScoped<BankTransactionImportService>();
+    },
+    app =>
+    {
+        app.UseDatabaseMigrations();
     });
 
 public partial class Program

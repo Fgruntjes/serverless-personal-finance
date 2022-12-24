@@ -10,6 +10,8 @@ public class OAuthTokenDocument : IOAuthToken
     public EncryptedString? AccessToken { get; set; }
     public DateTime? ExpiresAt { get; set; }
 
+    public DateTime? LockedUntil { get; set; }
+
     public OAuthTokenDocument(string name)
     {
         Name = name;

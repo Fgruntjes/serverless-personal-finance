@@ -22,7 +22,7 @@ public class EncryptedString
         {
             return null;
         }
-        
+
         if (value.DecryptedValue != null)
         {
             return value.DecryptedValue;

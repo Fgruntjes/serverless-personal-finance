@@ -26,7 +26,7 @@ public class ReturnControllerTest : IntegrationTestFixture<Program>
             builder.ConfigureTestServices(s => s.AddScoped(_ => _mockedConnectService.Object));
         }).CreateClient();
     }
-        
+
     [Fact]
     public async void MissingCode()
     {
@@ -39,7 +39,7 @@ public class ReturnControllerTest : IntegrationTestFixture<Program>
     public async void ValidCode()
     {
         const string returnCode = "123";
-            
+
         _mockedConnectService
             .Setup(c => c.ProcessReturn(returnCode));
 
@@ -53,21 +53,21 @@ public class ReturnControllerTest : IntegrationTestFixture<Program>
         _mockedClient
             .Setup(c => c.GetUser())
             .ReturnsAsync(apiClientUserResponse);
-            
+
         (await _client.GetFromJsonAsync<Lib.Dto.Frontend.ApiResponse<IntegrationStatus>>($"/return?code={returnCode}"))
             .Should()
             .BeEquivalentTo(new Lib.Dto.Frontend.ApiResponse<IntegrationStatus>(new IntegrationStatus(true, apiClientUserResponse.Data.Id)));
-            
+
         _mockedConnectService.Verify(c => c.ProcessReturn(returnCode), Times.Once());
     }
-        
+
     [Fact]
     public async void ProcessException()
     {
         _mockedConnectService
             .Setup(c => c.ProcessReturn(It.IsAny<string>()))
             .Throws(new TokenException("Some token failure."));
-            
+
         (await _client.GetFromJsonAsync<Lib.Dto.Frontend.ApiResponse<IntegrationStatus>>("/return?code=123"))
             .Should()
             .BeEquivalentTo(new Lib.Dto.Frontend.ApiResponse<IntegrationStatus>(new IntegrationStatus(false))
@@ -75,7 +75,7 @@ public class ReturnControllerTest : IntegrationTestFixture<Program>
                 Errors = new[] { new ApiError(ErrorType.Integration, "Some token failure.") }
             });
     }
-        
+
     [Fact]
     public async void GetUserException()
     {
@@ -85,7 +85,7 @@ public class ReturnControllerTest : IntegrationTestFixture<Program>
         _mockedClient
             .Setup(c => c.GetUser())
             .Throws(new TokenException("Some token failure."));
-            
+
         (await _client.GetFromJsonAsync<Lib.Dto.Frontend.ApiResponse<IntegrationStatus>>("/return?code=123"))
             .Should()
             .BeEquivalentTo(new Lib.Dto.Frontend.ApiResponse<IntegrationStatus>(new IntegrationStatus(false))

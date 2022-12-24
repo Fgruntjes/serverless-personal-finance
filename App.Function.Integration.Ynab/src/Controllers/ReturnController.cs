@@ -19,7 +19,7 @@ public class ReturnController : ControllerBase
         _connectService = connectService;
         _client = client;
     }
-    
+
     [HttpGet(Name = "Return")]
     [ProducesResponseType(typeof(Lib.Dto.Frontend.ApiResponse<IntegrationStatus>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Lib.Dto.Frontend.ApiResponse<IntegrationStatus>), StatusCodes.Status400BadRequest)]

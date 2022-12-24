@@ -38,12 +38,12 @@ public class OAuthTokenStorageTest : DatabaseTest
     public async void Get_Existing()
     {
         var databaseToken = await CreateDatabaseToken();
-        
+
         var token = await _tokenStorage.Get(TestTokenName);
         token.Name.Should().Be(TestTokenName);
         token.ExpiresAt.Should().Be(databaseToken.ExpiresAt);
-        ((string) token.AccessToken).Should().Be(TestAccessToken);
-        ((string) token.RefreshToken).Should().Be(TestRefreshToken);
+        ((string)token.AccessToken).Should().Be(TestAccessToken);
+        ((string)token.RefreshToken).Should().Be(TestRefreshToken);
     }
 
     [Fact]
@@ -54,16 +54,16 @@ public class OAuthTokenStorageTest : DatabaseTest
             Name = TestTokenName,
             AccessToken = EncryptedString.FromDecryptedValue(TestAccessToken),
             RefreshToken = EncryptedString.FromDecryptedValue(TestRefreshToken),
-            ExpiresAt = _testTokenExpiresAt, 
+            ExpiresAt = _testTokenExpiresAt,
         });
 
         var token = await GetDatabaseToken();
         token.Name.Should().Be(TestTokenName);
         token.ExpiresAt.Should().Be(_testTokenExpiresAt);
-        ((string) token.AccessToken).Should().Be(TestAccessToken);
-        ((string) token.RefreshToken).Should().Be(TestRefreshToken);
+        ((string)token.AccessToken).Should().Be(TestAccessToken);
+        ((string)token.RefreshToken).Should().Be(TestRefreshToken);
     }
-    
+
     [Fact]
     public async void Store_UpdateExisting()
     {
@@ -75,20 +75,20 @@ public class OAuthTokenStorageTest : DatabaseTest
             Name = TestTokenName,
             AccessToken = EncryptedString.FromDecryptedValue("new_access_token"),
             RefreshToken = EncryptedString.FromDecryptedValue("new_refresh_token"),
-            ExpiresAt = newExpiresAt, 
+            ExpiresAt = newExpiresAt,
         });
 
         var newToken = await GetDatabaseToken();
         newToken.ExpiresAt.Should().Be(newExpiresAt);
-        ((string) newToken.AccessToken).Should().Be("new_access_token");
-        ((string) newToken.RefreshToken).Should().Be("new_refresh_token");
+        ((string)newToken.AccessToken).Should().Be("new_access_token");
+        ((string)newToken.RefreshToken).Should().Be("new_refresh_token");
     }
-    
+
     [Fact]
     public async void Store_Delete()
     {
         await CreateDatabaseToken();
-        
+
         await _tokenStorage.Store(new OAuthToken()
         {
             Name = TestTokenName

@@ -38,7 +38,7 @@ public class ConnectControllerTest : IntegrationTestFixture<Program>
         _mockedConnectService
             .Setup(c => c.GetRedirectUrl())
             .Returns(redirectUri);
-            
+
         var response = await _client.GetAsync("/connect");
         response
             .Should()
@@ -48,19 +48,19 @@ public class ConnectControllerTest : IntegrationTestFixture<Program>
             .Should()
             .BeEquivalentTo(redirectUri);
     }
-        
+
     [Fact]
     public async void ConnectWhenConnected()
     {
         _mockedConnectService
             .Setup(c => c.IsConnected())
             .ReturnsAsync(true);
-            
+
         var connectResponse = await _client.GetAsync("/connect");
         connectResponse
             .Should()
             .HaveStatusCode(HttpStatusCode.BadRequest);
-            
+
         var apiResponse = await connectResponse.Content.ReadFromJsonAsync<ApiResponse<bool>>();
         apiResponse.Should()
             .BeEquivalentTo(new ApiResponse<bool>(false)

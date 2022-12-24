@@ -22,8 +22,8 @@ public class RefreshTokenHandler : DelegatingHandler
             request.Headers.Add("Authorization", "BEARER " + token.AccessToken);
         }
         catch (TokenException)
-        {}
-        
+        { }
+
         return await base.SendAsync(request, cancellationToken);
     }
 }

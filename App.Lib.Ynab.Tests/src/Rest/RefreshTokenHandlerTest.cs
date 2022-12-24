@@ -8,59 +8,59 @@ namespace App.Lib.Ynab.Tests.Rest;
 
 public class RefreshTokenHandlerTest
 {
-	private readonly Mock<IConnectService> _connectServiceMock;
+    private readonly Mock<IConnectService> _connectServiceMock;
 
-	public RefreshTokenHandlerTest()
-	{
-		_connectServiceMock = new Mock<IConnectService>();
-	}
-	
-	[Fact]
-	public async void ValidTokenWithHeader()
-	{
-		_connectServiceMock.Setup(s => s.GetValidAccessToken())
-			.ReturnsAsync(new OAuthToken
-			{
-				AccessToken = EncryptedString.FromDecryptedValue("sometoken")
-			});
+    public RefreshTokenHandlerTest()
+    {
+        _connectServiceMock = new Mock<IConnectService>();
+    }
 
-		var testHandler = await InvokeHandler();
-		testHandler.Requests.Should().HaveCount(1);
-		testHandler.Requests
-			.First()
-			.Headers
-			.GetValues("Authorization")
-			.First()
-			.Should()
-			.Be("BEARER sometoken");
-	}
+    [Fact]
+    public async void ValidTokenWithHeader()
+    {
+        _connectServiceMock.Setup(s => s.GetValidAccessToken())
+            .ReturnsAsync(new OAuthToken
+            {
+                AccessToken = EncryptedString.FromDecryptedValue("sometoken")
+            });
 
-	[Fact]
-	public async void IgnoreTokenException()
-	{
-		_connectServiceMock.Setup(s => s.GetValidAccessToken())
-			.Throws(new TokenException("Some token error"));
+        var testHandler = await InvokeHandler();
+        testHandler.Requests.Should().HaveCount(1);
+        testHandler.Requests
+            .First()
+            .Headers
+            .GetValues("Authorization")
+            .First()
+            .Should()
+            .Be("BEARER sometoken");
+    }
 
-		var testHandler = await InvokeHandler();
-		testHandler.Requests.Should().HaveCount(1);
-		testHandler.Requests
-			.First()
-			.Headers
-			.Contains("Authorization")
-			.Should()
-			.BeFalse();
-	}
+    [Fact]
+    public async void IgnoreTokenException()
+    {
+        _connectServiceMock.Setup(s => s.GetValidAccessToken())
+            .Throws(new TokenException("Some token error"));
 
-	private async Task<TestHandler> InvokeHandler()
-	{
-		var testHandler = new TestHandler();
-		var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "https://example.com/");
-		var invoker = new HttpMessageInvoker(new RefreshTokenHandler(_connectServiceMock.Object)
-		{
-			InnerHandler = testHandler
-		});
-		await invoker.SendAsync(httpRequestMessage, new CancellationToken());
+        var testHandler = await InvokeHandler();
+        testHandler.Requests.Should().HaveCount(1);
+        testHandler.Requests
+            .First()
+            .Headers
+            .Contains("Authorization")
+            .Should()
+            .BeFalse();
+    }
 
-		return testHandler;
-	}
+    private async Task<TestHandler> InvokeHandler()
+    {
+        var testHandler = new TestHandler();
+        var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "https://example.com/");
+        var invoker = new HttpMessageInvoker(new RefreshTokenHandler(_connectServiceMock.Object)
+        {
+            InnerHandler = testHandler
+        });
+        await invoker.SendAsync(httpRequestMessage, new CancellationToken());
+
+        return testHandler;
+    }
 }

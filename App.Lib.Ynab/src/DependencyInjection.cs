@@ -14,7 +14,7 @@ public static class DependencyInjection
     public static void AddYnabClient(this IServiceCollection servicesCollection, IConfiguration configuration)
     {
         servicesCollection.Configure<YnabOptions>(configuration.GetSection(YnabOptions.OptionsKey));
-        
+
         servicesCollection.AddScoped<IConnectService, ConnectService>();
         servicesCollection.AddScoped<RefreshTokenHandler>();
 
