@@ -4,7 +4,7 @@ using MongoDB.Driver.Linq;
 
 namespace App.Lib.Database;
 
-public class OAuthTokenStorage
+public class OAuthTokenStorage : IOAuthTokenStorage
 {
     private readonly DatabaseContext _dbContext;
 

@@ -1,61 +1,72 @@
-using System.Net.Http.Json;
-using System.Text.Json;
 using App.Lib.Database;
+using App.Lib.Net.Http;
 using App.Lib.Ynab.Dto;
 using App.Lib.Ynab.Exception;
+using App.Lib.Ynab.Rest.Dto;
 using Flurl;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using JsonException = System.Text.Json.JsonException;
 
 namespace App.Lib.Ynab.Rest;
 
 public class ConnectService : IConnectService
 {
-    private const string TokenName = "YNAB";
+    public const string TokenName = "YNAB";
 
-    private readonly OAuthTokenStorage _tokenStorage;
+    private readonly IOAuthTokenStorage _tokenStorage;
     private readonly IOptions<YnabOptions> _options;
     private readonly HttpClient _httpClient;
     private readonly IUrlHelperFactory _urlHelperFactory;
     private readonly IActionContextAccessor _actionContextAccessor;
+    private readonly ILogger<ConnectService> _logger;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public ConnectService(
-        OAuthTokenStorage tokenStorage,
+        IOAuthTokenStorage tokenStorage,
         IOptions<YnabOptions> options,
         HttpClient httpClient,
         IUrlHelperFactory urlHelperFactory,
-        IActionContextAccessor actionContextAccessor)
+        IActionContextAccessor actionContextAccessor,
+        ILogger<ConnectService> logger,
+        IDateTimeProvider dateTimeProvider)
     {
         _tokenStorage = tokenStorage;
         _options = options;
         _httpClient = httpClient;
         _urlHelperFactory = urlHelperFactory;
         _actionContextAccessor = actionContextAccessor;
+        _logger = logger;
+        _dateTimeProvider = dateTimeProvider;
     }
+
 
     public async Task<IOAuthToken> GetValidAccessToken()
     {
         var token = await _tokenStorage.Get(TokenName);
-        if (string.IsNullOrEmpty((string)token.AccessToken))
+        if (
+            string.IsNullOrEmpty((string)token.AccessToken) ||
+            string.IsNullOrEmpty((string)token.RefreshToken))
         {
+            _logger.LogTrace("GetValidAccessToken failed, no previous refresh or access token set");
             throw new TokenNotSetException();
         }
 
-        if (TokenIsExpired(token))
-        {
-            return await FetchToken(new
-            {
-                client_id = _options.Value.ClientId,
-                client_secret = _options.Value.ClientSecret,
-                redirect_uri = GetReturnUrl(),
-                refresh_token = token.RefreshToken,
-                grant_type = "refresh_token",
-            });
-        }
+        if (!TokenIsExpired(token)) return token;
 
-        return token;
+        return await FetchToken(new TokenRequestParams
+        {
+            ClientId = _options.Value.ClientId,
+            ClientSecret = _options.Value.ClientSecret,
+            RedirectUri = GetReturnUrl(),
+            GrantType = "refresh_token",
+            RefreshToken = token.RefreshToken
+        });
+
     }
 
     public string GetRedirectUrl()
@@ -73,13 +84,13 @@ public class ConnectService : IConnectService
 
     public async Task ProcessReturn(string code)
     {
-        FetchToken(new
+        await FetchToken(new TokenRequestParams
         {
-            client_id = _options.Value.ClientId,
-            client_secret = _options.Value.ClientSecret,
-            redirect_uri = GetReturnUrl(),
-            grant_type = "authorization_code",
-            code
+            ClientId = _options.Value.ClientId,
+            ClientSecret = _options.Value.ClientSecret,
+            RedirectUri = GetReturnUrl(),
+            GrantType = "authorization_code",
+            Code = code
         });
     }
 
@@ -89,7 +100,7 @@ public class ConnectService : IConnectService
         return !string.IsNullOrEmpty(token.AccessToken) && !TokenIsExpired(token);
     }
 
-    private object GetReturnUrl()
+    private string GetReturnUrl()
     {
         var actionContext = _actionContextAccessor.ActionContext;
         var urlHelper = _urlHelperFactory.GetUrlHelper(actionContext);
@@ -104,13 +115,13 @@ public class ConnectService : IConnectService
             Name = TokenName,
             RefreshToken = EncryptedString.FromDecryptedValue(token.RefreshToken),
             AccessToken = EncryptedString.FromDecryptedValue(token.AccessToken),
-            ExpiresAt = DateTime.UtcNow.AddSeconds(token.ExpiresIn),
+            ExpiresAt = _dateTimeProvider.UtcNow.AddSeconds(token.ExpiresIn),
         };
         await _tokenStorage.Store(newToken);
         return newToken;
     }
 
-    private async Task<IOAuthToken> FetchToken<TRequestParams>(TRequestParams requestParams)
+    private async Task<IOAuthToken> FetchToken(TokenRequestParams requestParams)
     {
         var tokenUrl = _options.Value.AppAddress.AppendPathSegment("/oauth/token");
         TokenResponse newToken;
@@ -118,18 +129,24 @@ public class ConnectService : IConnectService
         try
         {
             var tokenResponse = await _httpClient.PostAsJsonAsync(tokenUrl, requestParams);
+            tokenResponse.EnsureSuccessStatusCode();
+
             newToken = await tokenResponse.Content.ReadFromJsonAsync<TokenResponse>();
         }
         catch (HttpRequestException exception)
         {
-            throw new TokenException(exception.Message, exception);
+            throw CreateFetchTokenException(requestParams, exception);
         }
         catch (JsonException exception)
         {
-            throw new TokenException(exception.Message, exception);
+            throw CreateFetchTokenException(requestParams, exception);
+        }
+        catch (JsonReaderException exception)
+        {
+            throw CreateFetchTokenException(requestParams, exception);
         }
 
-        if (newToken == null)
+        if (newToken == null || string.IsNullOrWhiteSpace(newToken.AccessToken) || string.IsNullOrWhiteSpace(newToken.RefreshToken))
         {
             throw new TokenException("Could not retrieve new access token.");
         }
@@ -137,8 +154,19 @@ public class ConnectService : IConnectService
         return await StoreToken(newToken);
     }
 
+    private TokenException CreateFetchTokenException(TokenRequestParams requestParams, System.Exception exception)
+    {
+        _logger.LogWarning(
+            exception,
+            "Failed fetching new token with client_id: {client_id}, redirect_uri: {redirect_uri}, type: {type}",
+            requestParams.ClientId,
+            requestParams.RedirectUri,
+            requestParams.GrantType);
+        return new TokenException(exception.Message, exception);
+    }
+
     private bool TokenIsExpired(IOAuthToken token)
     {
-        return token.ExpiresAt < DateTime.UtcNow;
+        return token.ExpiresAt < _dateTimeProvider.UtcNow;
     }
 }

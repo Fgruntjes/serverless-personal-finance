@@ -15,7 +15,7 @@ public static class DependencyInject
         services.AddSingleton<DocumentMapFactory>();
         services.AddSingleton<DistributedLockFactory>();
 
-        services.AddScoped<OAuthTokenStorage>();
+        services.AddScoped<IOAuthTokenStorage, OAuthTokenStorage>();
     }
 
     public static void UseDatabaseMigrations(this IApplicationBuilder app)

@@ -26,5 +26,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\App.Lib.Database\App.Lib.Database.csproj" />
+      <ProjectReference Include="..\App.Lib\App.Lib.csproj" />
     </ItemGroup>
 </Project>

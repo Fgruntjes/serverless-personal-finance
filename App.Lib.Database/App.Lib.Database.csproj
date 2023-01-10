@@ -11,4 +11,10 @@
       <PackageReference Include="MongoDB.Driver" Version="2.18.0" />
       <PackageReference Include="MongoDB.Extensions.Migration" Version="1.7.1" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.Extensions.Options">
+        <HintPath>..\..\..\..\..\..\..\usr\share\dotnet\shared\Microsoft.AspNetCore.App\7.0.1\Microsoft.Extensions.Options.dll</HintPath>
+      </Reference>
+    </ItemGroup>
 </Project>

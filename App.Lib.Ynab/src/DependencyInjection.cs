@@ -23,7 +23,7 @@ public static class DependencyInjection
             .ConfigureHttpClient((serviceProvider, client) =>
             {
                 var options = serviceProvider.GetRequiredService<IOptions<YnabOptions>>();
-                client.BaseAddress = new Uri(options.Value.BaseAddress);
+                client.BaseAddress = new Uri(options.Value.ApiAddress);
             })
             .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(10)))
             .AddTransientHttpErrorPolicy(builder =>
