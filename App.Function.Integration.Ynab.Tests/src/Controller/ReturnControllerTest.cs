@@ -72,7 +72,7 @@ public class ReturnControllerTest : IntegrationTestFixture<Program>
             .Should()
             .BeEquivalentTo(new Lib.Dto.Frontend.ApiResponse<IntegrationStatus>(new IntegrationStatus(false))
             {
-                Errors = new[] { new ApiError(ErrorType.Integration, "Some token failure.") }
+                Errors = new[] { new AppApiError(ErrorType.Integration, "Some token failure.") }
             });
     }
 
@@ -90,7 +90,7 @@ public class ReturnControllerTest : IntegrationTestFixture<Program>
             .Should()
             .BeEquivalentTo(new Lib.Dto.Frontend.ApiResponse<IntegrationStatus>(new IntegrationStatus(false))
             {
-                Errors = new[] { new ApiError(ErrorType.Integration, "Some token failure.") }
+                Errors = new[] { new AppApiError(ErrorType.Integration, "Some token failure.") }
             });
     }
 }

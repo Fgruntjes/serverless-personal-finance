@@ -9,6 +9,7 @@ import CssBaseline from "@mui/joy/CssBaseline";
 import {CssVarsProvider} from "@mui/joy/styles";
 import React, {Suspense} from "react";
 import ReactDOM from "react-dom/client";
+import {QueryClient, QueryClientProvider} from "react-query"
 import {
     createBrowserRouter,
     RouterProvider,
@@ -19,26 +20,36 @@ import {RecoilRoot} from "recoil";
 import AuthProvider from "./components/AuthProvider";
 import reportWebVitals from "./reportWebVitals";
 import {routes} from "./routes";
+import {setup} from "./setup";
 import theme from "./theme";
 
+setup();
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
 );
 
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {useErrorBoundary: true},
+        mutations: {useErrorBoundary: true}
+    }
+});
 const router = createBrowserRouter(routes);
 
 root.render(
     <React.StrictMode>
         <Suspense fallback="Loading">
-            <RecoilRoot>
-                <CssVarsProvider theme={theme}>
-                    <CssBaseline/>
-                    <AuthProvider clientId={process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID}>
-                        <RouterProvider router={router}/>
-                    </AuthProvider>
-                    <ToastContainer />
-                </CssVarsProvider>
-            </RecoilRoot>
+            <QueryClientProvider client={queryClient}>
+                <RecoilRoot>
+                    <CssVarsProvider theme={theme}>
+                        <CssBaseline/>
+                        <AuthProvider clientId={process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID}>
+                            <RouterProvider router={router}/>
+                        </AuthProvider>
+                        <ToastContainer />
+                    </CssVarsProvider>
+                </RecoilRoot>
+            </QueryClientProvider>
         </Suspense>
     </React.StrictMode>
 );

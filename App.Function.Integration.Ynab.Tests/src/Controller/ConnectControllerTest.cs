@@ -21,10 +21,7 @@ public class ConnectControllerTest : IntegrationTestFixture<Program>
             {
                 builder.ConfigureTestServices(s => s.AddScoped(_ => _mockedConnectService.Object));
             })
-            .CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false
-            });
+            .CreateClient();
     }
 
     [Fact]
@@ -40,13 +37,10 @@ public class ConnectControllerTest : IntegrationTestFixture<Program>
             .Returns(redirectUri);
 
         var response = await _client.GetAsync("/connect");
-        response
+        var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
+        apiResponse
             .Should()
-            .BeRedirection();
-        response.Headers.Location
-            .ToString()
-            .Should()
-            .BeEquivalentTo(redirectUri);
+            .BeEquivalentTo(new ApiResponse<string>(redirectUri));
     }
 
     [Fact]
@@ -61,11 +55,11 @@ public class ConnectControllerTest : IntegrationTestFixture<Program>
             .Should()
             .HaveStatusCode(HttpStatusCode.BadRequest);
 
-        var apiResponse = await connectResponse.Content.ReadFromJsonAsync<ApiResponse<bool>>();
+        var apiResponse = await connectResponse.Content.ReadFromJsonAsync<ApiResponse<string>>();
         apiResponse.Should()
-            .BeEquivalentTo(new ApiResponse<bool>(false)
+            .BeEquivalentTo(new ApiResponse<string>()
             {
-                Errors = new[] { new ApiError(ErrorType.BadRequest, "Already connected.") }
+                Errors = new[] { new AppApiError(ErrorType.BadRequest, "Already connected.") }
             });
     }
 }

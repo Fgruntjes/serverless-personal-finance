@@ -1,3 +1,9 @@
 {
-  "title": "Integrations"
+  "title": "Integrations",
+  "name.ynab": "You need a budget",
+  "label.disconnected": "Disconnected",
+  "label.connected": "Connected",
+  "label.loading": "Loading...",
+  "button.connect": "Connect",
+  "button.disconnect": "Disconnect"
 }

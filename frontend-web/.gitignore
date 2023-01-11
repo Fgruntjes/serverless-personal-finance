@@ -8,6 +8,10 @@
 # testing
 /coverage
 
+# App generated code
+src/generated/*
+!src/generated/.gitkeep
+
 # production
 /build
 

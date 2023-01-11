@@ -52,7 +52,7 @@ public class StatusControllerTest : IntegrationTestFixture<Program>
             .Should()
             .BeEquivalentTo(new Lib.Dto.Frontend.ApiResponse<IntegrationStatus>(new IntegrationStatus())
             {
-                Errors = new[] { new ApiError(ErrorType.Integration, "YNAB access token not set.") }
+                Errors = new[] { new AppApiError(ErrorType.Integration, "YNAB access token not set.") }
             });
     }
 }

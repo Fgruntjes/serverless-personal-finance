@@ -11,6 +11,9 @@ namespace App.Lib;
 
 public static class AppWebApplication
 {
+    private const string CORSDevelopmentPolicy = "CORSDevelopmentPolicy";
+    private const string CORSProductionPolicy = "CORSProductionPolicy";
+    
     public static async Task CreateAndRun(string[] args)
     {
         await CreateAndRun(args, _ => { }, _ => { });
@@ -126,6 +129,15 @@ public static class AppWebApplication
         builder.Services.AddSwaggerGen();
         builder.Services.AddSwaggerGenNewtonsoftSupport();
         builder.Services.AddLogging();
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(name: CORSDevelopmentPolicy,
+                policy  =>
+                {
+                    policy.WithOrigins("http://localhost:3000");
+                });
+            options.AddPolicy(name: CORSProductionPolicy,_  => { });
+        });
 
         await configureBuilder(builder);
         builder.WebHost.UseSentry();
@@ -135,11 +147,13 @@ public static class AppWebApplication
         if (!app.Environment.IsDevelopment())
         {
             app.UseSentryTracing();
+            app.UseCors(CORSProductionPolicy);
         }
         else
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseCors(CORSDevelopmentPolicy);
         }
 
         await configureApp(app);

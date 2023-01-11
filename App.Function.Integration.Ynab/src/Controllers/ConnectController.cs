@@ -16,15 +16,15 @@ public class ConnectController : ControllerBase
     }
 
     [HttpGet(Name = "Connect")]
-    [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status302Found)]
+    [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
     public async Task<ActionResult> Connect()
     {
         if (await _connectService.IsConnected())
         {
-            return BadRequest(new ApiResponse<bool>()
+            return BadRequest(new ApiResponse<string>()
             {
-                Errors = new List<ApiError>
+                Errors = new List<AppApiError>
                 {
                     new(ErrorType.BadRequest, "Already connected.")
                 }
@@ -32,6 +32,6 @@ public class ConnectController : ControllerBase
         }
 
         var redirectUri = _connectService.GetRedirectUrl();
-        return Redirect(redirectUri);
+        return Ok(new ApiResponse<string> { Data = redirectUri });
     }
 }

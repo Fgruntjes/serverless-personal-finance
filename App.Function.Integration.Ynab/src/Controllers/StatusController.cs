@@ -18,21 +18,21 @@ public class StatusController : ControllerBase
     }
 
     [HttpGet(Name = "Status")]
-    public async Task<Lib.Dto.Frontend.ApiResponse<IntegrationStatus>> Status()
+    public async Task<ActionResult> Status()
     {
         try
         {
             var connectedUser = await _client.GetUser();
-            return new Lib.Dto.Frontend.ApiResponse<IntegrationStatus>(
+            return Ok(new ApiResponse<IntegrationStatus>(
                 new IntegrationStatus(true, connectedUser.Data.Id)
-            );
+            ));
         }
         catch (TokenException httpException)
         {
-            return new Lib.Dto.Frontend.ApiResponse<IntegrationStatus>(new IntegrationStatus(false))
+            return BadRequest(new ApiResponse<IntegrationStatus>(new IntegrationStatus(false))
             {
-                Errors = new[] { new ApiError(ErrorType.Integration, httpException.Message) }
-            };
+                Errors = new[] { new AppApiError(ErrorType.Integration, httpException.Message) }
+            });
         }
     }
 }

@@ -21,23 +21,23 @@ public class ReturnController : ControllerBase
     }
 
     [HttpGet(Name = "Return")]
-    [ProducesResponseType(typeof(Lib.Dto.Frontend.ApiResponse<IntegrationStatus>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(Lib.Dto.Frontend.ApiResponse<IntegrationStatus>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<IntegrationStatus>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<IntegrationStatus>), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> Return([Required] string code)
     {
         try
         {
             await _connectService.ProcessReturn(code);
             var connectedUser = await _client.GetUser();
-            return Ok(new Lib.Dto.Frontend.ApiResponse<IntegrationStatus>(
+            return Ok(new ApiResponse<IntegrationStatus>(
                 new IntegrationStatus(true, connectedUser.Data.Id)
             ));
         }
         catch (TokenException httpException)
         {
-            return BadRequest(new Lib.Dto.Frontend.ApiResponse<IntegrationStatus>(new IntegrationStatus(false))
+            return BadRequest(new ApiResponse<IntegrationStatus>(new IntegrationStatus(false))
             {
-                Errors = new[] { new ApiError(ErrorType.Integration, httpException.Message) }
+                Errors = new[] { new AppApiError(ErrorType.Integration, httpException.Message) }
             });
         }
     }
