@@ -1,30 +1,16 @@
 using System.Net;
 using App.Lib.Dto.Frontend;
 using App.Lib.Tests;
-using App.Lib.Ynab;
 using App.Lib.Ynab.Exception;
-using App.Lib.Ynab.Rest;
 using App.Lib.Ynab.Rest.Dto;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
 namespace App.Function.Integration.Ynab.Tests.Controller;
 
-public class ReturnControllerTest : IntegrationTestFixture<Program>
+public class ReturnControllerTest : ControllerTest
 {
-    private readonly Mock<IApiClient> _mockedClient;
-    private readonly Mock<IConnectService> _mockedConnectService;
-
     public ReturnControllerTest(TestApplicationFactory<Program> factory) : base(factory)
     {
-        _mockedClient = new Mock<IApiClient>();
-        _mockedConnectService = new Mock<IConnectService>();
-        _client = factory.WithWebHostBuilder(builder =>
-        {
-            builder.ConfigureTestServices(s => s.AddScoped(_ => _mockedClient.Object));
-            builder.ConfigureTestServices(s => s.AddScoped(_ => _mockedConnectService.Object));
-        }).CreateClient();
     }
 
     [Fact]

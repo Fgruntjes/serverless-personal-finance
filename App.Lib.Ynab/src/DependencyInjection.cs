@@ -17,6 +17,7 @@ public static class DependencyInjection
 
         servicesCollection.AddScoped<IConnectService, ConnectService>();
         servicesCollection.AddScoped<RefreshTokenHandler>();
+        servicesCollection.AddScoped<TokenCleanupHandler>();
 
         servicesCollection
             .AddRefitClient<IApiClient>()

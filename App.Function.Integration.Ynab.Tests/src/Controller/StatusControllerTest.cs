@@ -1,30 +1,24 @@
 using App.Lib.Dto.Frontend;
 using App.Lib.Tests;
 using App.Lib.Ynab;
-using App.Lib.Ynab.Rest;
 using App.Lib.Ynab.Rest.Dto;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
 namespace App.Function.Integration.Ynab.Tests.Controller;
 
-public class StatusControllerTest : IntegrationTestFixture<Program>
+public class StatusControllerTest : ControllerTest
 {
-    private readonly Mock<IApiClient> _mockedClient;
-
     public StatusControllerTest(TestApplicationFactory<Program> factory) : base(factory)
     {
-        _mockedClient = new Mock<IApiClient>();
-        _client = factory.WithWebHostBuilder(builder =>
-        {
-            builder.ConfigureTestServices(s => s.AddScoped(_ => _mockedClient.Object));
-        }).CreateClient();
     }
 
     [Fact]
-    public async void StatusWhenConnected()
+    public async void Connected()
     {
+        _mockedConnectService
+            .Setup(c => c.IsConnected())
+            .ReturnsAsync(true);
+
         var getUserResponse = new Lib.Ynab.Rest.Dto.ApiResponse<UserData>
         {
             Data = new UserData
@@ -42,8 +36,45 @@ public class StatusControllerTest : IntegrationTestFixture<Program>
     }
 
     [Fact]
-    public async void VoidWhenNotConnected()
+    public async void Disconnected()
     {
+        _mockedConnectService
+            .Setup(c => c.IsConnected())
+            .ReturnsAsync(false);
+
+        (await _client.GetFromJsonAsync<Lib.Dto.Frontend.ApiResponse<IntegrationStatus>>("/status"))
+            .Should()
+            .BeEquivalentTo(new Lib.Dto.Frontend.ApiResponse<IntegrationStatus>(new IntegrationStatus())
+            { Data = new IntegrationStatus { Connected = false } });
+    }
+
+    [Fact]
+    public async void Connected_TokenNotSetException()
+    {
+        _mockedConnectService
+            .Setup(c => c.IsConnected())
+            .ReturnsAsync(true);
+
+        _mockedClient
+            .Setup(c => c.GetUser())
+            .Throws<TokenNotSetException>();
+
+        (await _client.GetFromJsonAsync<Lib.Dto.Frontend.ApiResponse<IntegrationStatus>>("/status"))
+            .Should()
+            .BeEquivalentTo(new Lib.Dto.Frontend.ApiResponse<IntegrationStatus>(new IntegrationStatus())
+            {
+                Data = new IntegrationStatus { Connected = false },
+                Errors = new[] { new AppApiError(ErrorType.Integration, "YNAB access token not set.") }
+            });
+    }
+
+    [Fact]
+    public async void Connected_NotAuthorizedHttpException()
+    {
+        _mockedConnectService
+            .Setup(c => c.IsConnected())
+            .ReturnsAsync(true);
+
         _mockedClient
             .Setup(c => c.GetUser())
             .Throws<TokenNotSetException>();

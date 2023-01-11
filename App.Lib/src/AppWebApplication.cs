@@ -13,7 +13,7 @@ public static class AppWebApplication
 {
     private const string CORSDevelopmentPolicy = "CORSDevelopmentPolicy";
     private const string CORSProductionPolicy = "CORSProductionPolicy";
-    
+
     public static async Task CreateAndRun(string[] args)
     {
         await CreateAndRun(args, _ => { }, _ => { });
@@ -132,11 +132,11 @@ public static class AppWebApplication
         builder.Services.AddCors(options =>
         {
             options.AddPolicy(name: CORSDevelopmentPolicy,
-                policy  =>
+                policy =>
                 {
                     policy.WithOrigins("http://localhost:3000");
                 });
-            options.AddPolicy(name: CORSProductionPolicy,_  => { });
+            options.AddPolicy(name: CORSProductionPolicy, _ => { });
         });
 
         await configureBuilder(builder);

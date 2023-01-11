@@ -102,6 +102,20 @@ public class OAuthTokenStorageTest : DatabaseTest
         tokenList.Should().BeEmpty();
     }
 
+    [Fact]
+    public async void Delete()
+    {
+        await CreateDatabaseToken();
+
+        await _tokenStorage.Delete(TestTokenName);
+
+        // Allow some time to make sure mongodb has updated the document
+        await Task.Delay(2000);
+        var cursor = await _tokenCollection.FindAsync(t => t.Name == TestTokenName);
+        var tokenList = await cursor.ToListAsync();
+        tokenList.Should().BeEmpty();
+    }
+
     private async Task<OAuthTokenDocument> CreateDatabaseToken()
     {
         var token = new OAuthTokenDocument(TestTokenName)

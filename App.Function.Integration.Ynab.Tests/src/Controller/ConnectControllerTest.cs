@@ -9,19 +9,10 @@ using Moq;
 
 namespace App.Function.Integration.Ynab.Tests.Controller;
 
-public class ConnectControllerTest : IntegrationTestFixture<Program>
+public class ConnectControllerTest : ControllerTest
 {
-    private readonly Mock<IConnectService> _mockedConnectService;
-
     public ConnectControllerTest(TestApplicationFactory<Program> factory) : base(factory)
     {
-        _mockedConnectService = new Mock<IConnectService>();
-        _client = factory
-            .WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureTestServices(s => s.AddScoped(_ => _mockedConnectService.Object));
-            })
-            .CreateClient();
     }
 
     [Fact]

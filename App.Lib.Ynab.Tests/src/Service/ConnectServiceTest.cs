@@ -294,6 +294,13 @@ public class ConnectServiceTest
                 Times.Once());
     }
 
+    [Fact]
+    public async void Disconnect()
+    {
+        await _connectService.Disconnect();
+        _tokenStorageMock.Verify(s => s.Delete(ConnectService.TokenName), Times.Once());
+    }
+
     private IOAuthToken SetupExpiredToken()
     {
         return SetupToken(new OAuthToken

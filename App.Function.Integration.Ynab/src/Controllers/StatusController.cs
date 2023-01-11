@@ -1,3 +1,4 @@
+using System.Net;
 using App.Lib.Dto.Frontend;
 using App.Lib.Ynab;
 using App.Lib.Ynab.Exception;
@@ -11,10 +12,12 @@ namespace App.Function.Integration.Ynab.Controllers;
 public class StatusController : ControllerBase
 {
     private readonly IApiClient _client;
+    private readonly IConnectService _connectService;
 
-    public StatusController(IApiClient client)
+    public StatusController(IApiClient client, IConnectService connectService)
     {
         _client = client;
+        _connectService = connectService;
     }
 
     [HttpGet(Name = "Status")]
@@ -22,16 +25,30 @@ public class StatusController : ControllerBase
     {
         try
         {
-            var connectedUser = await _client.GetUser();
+            if (await _connectService.IsConnected())
+            {
+                var connectedUser = await _client.GetUser();
+                return Ok(new ApiResponse<IntegrationStatus>(
+                    new IntegrationStatus(true, connectedUser.Data.Id)
+                ));
+            }
+
             return Ok(new ApiResponse<IntegrationStatus>(
-                new IntegrationStatus(true, connectedUser.Data.Id)
+                new IntegrationStatus(false)
             ));
         }
-        catch (TokenException httpException)
+        catch (Refit.ApiException exception)
         {
             return BadRequest(new ApiResponse<IntegrationStatus>(new IntegrationStatus(false))
             {
-                Errors = new[] { new AppApiError(ErrorType.Integration, httpException.Message) }
+                Errors = new[] { new AppApiError(ErrorType.Integration, exception.Message) }
+            });
+        }
+        catch (TokenException exception)
+        {
+            return BadRequest(new ApiResponse<IntegrationStatus>(new IntegrationStatus(false))
+            {
+                Errors = new[] { new AppApiError(ErrorType.Integration, exception.Message) }
             });
         }
     }

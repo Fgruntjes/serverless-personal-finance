@@ -1,17 +1,24 @@
 namespace App.Lib.Dto.Frontend;
 
-public class ApiResponse<T>
+public class ApiResponse
 {
-    public T? Data { get; init; }
-
     public IList<AppApiError> Errors { get; init; }
 
     public ApiResponse()
     {
         Errors = new List<AppApiError>();
     }
+}
 
-    public ApiResponse(T? data) : this()
+public class ApiResponse<T> : ApiResponse
+{
+    public T? Data { get; init; }
+
+    public ApiResponse()
+    {
+    }
+
+    public ApiResponse(T? data)
     {
         Data = data;
     }

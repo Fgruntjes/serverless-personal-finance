@@ -41,7 +41,7 @@ public class OAuthTokenStorage : IOAuthTokenStorage
     {
         if (string.IsNullOrEmpty(token.AccessToken))
         {
-            await _dbContext.GetCollection<OAuthTokenDocument>().DeleteOneAsync(filter => filter.Name == token.Name);
+            await Delete(token.Name);
             return;
         }
 
@@ -54,5 +54,11 @@ public class OAuthTokenStorage : IOAuthTokenStorage
                 .Set(field => field.ExpiresAt, token.ExpiresAt),
             new UpdateOptions { IsUpsert = true }
         );
+    }
+
+    public async Task Delete(string tokenName)
+    {
+        await _dbContext.GetCollection<OAuthTokenDocument>()
+            .DeleteOneAsync(filter => filter.Name == tokenName);
     }
 }

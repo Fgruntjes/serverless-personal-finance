@@ -100,6 +100,11 @@ public class ConnectService : IConnectService
         return !string.IsNullOrEmpty(token.AccessToken) && !TokenIsExpired(token);
     }
 
+    public async Task Disconnect()
+    {
+        await _tokenStorage.Delete(TokenName);
+    }
+
     private string GetReturnUrl()
     {
         var actionContext = _actionContextAccessor.ActionContext;
