@@ -6,10 +6,6 @@ using App.Lib.Ynab.Dto;
 using App.Lib.Ynab.Exception;
 using App.Lib.Ynab.Rest;
 using App.Lib.Ynab.Rest.Dto;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Options;
 using Moq;
 using Newtonsoft.Json;
@@ -27,7 +23,6 @@ public class ConnectServiceTest
     private readonly DateTime _expiredTokenDate = new(2022, 12, 30);
     private readonly ConnectService _connectService;
     private readonly Mock<IOAuthTokenStorage> _tokenStorageMock;
-    private readonly Mock<IUrlHelper> _urlHelperMock;
 
     private readonly HttpClient _httpClient;
     private readonly WireMockServer _apiServer;
@@ -41,26 +36,10 @@ public class ConnectServiceTest
         _apiServer = WireMockServer.Start();
         _appServer = WireMockServer.Start();
         _httpClient = new HttpClient();
-        var urlHelperFactoryMock = new Mock<IUrlHelperFactory>();
         var dateTimeProviderMock = new Mock<IDateTimeProvider>();
         dateTimeProviderMock
             .SetupGet(d => d.UtcNow)
             .Returns(_now);
-
-        var actionContextAccessorMock = new Mock<IActionContextAccessor>();
-        var actionContext = new ActionContext
-        {
-            HttpContext = new DefaultHttpContext()
-        };
-        actionContext.HttpContext.Request.Scheme = "https";
-        actionContextAccessorMock
-            .Setup(p => p.ActionContext)
-            .Returns(actionContext);
-
-        _urlHelperMock = new Mock<IUrlHelper>();
-        urlHelperFactoryMock
-            .Setup(o => o.GetUrlHelper(It.IsAny<ActionContext>()))
-            .Returns(_urlHelperMock.Object);
 
         _ynabOptions = new YnabOptions()
         {
@@ -73,8 +52,6 @@ public class ConnectServiceTest
             _tokenStorageMock.Object,
             Options.Create(_ynabOptions),
             _httpClient,
-            urlHelperFactoryMock.Object,
-            actionContextAccessorMock.Object,
             XUnitLogger.CreateLogger<ConnectService>(testOutputHelper),
             dateTimeProviderMock.Object);
     }
@@ -120,9 +97,7 @@ public class ConnectServiceTest
     [Fact]
     public void GetRedirectUrl_Success()
     {
-        SetupUrlHelperMock();
-
-        var queryParams = new Uri(_connectService.GetRedirectUrl()).ParseQueryString();
+        var queryParams = new Uri(_connectService.GetRedirectUrl("https://someurl.com")).ParseQueryString();
         queryParams.Should()
             .BeEquivalentTo(new NameValueCollection
             {
@@ -131,10 +106,6 @@ public class ConnectServiceTest
                 { "scope", "read-only" },
                 { "redirect_uri", "https://someurl.com" }
             });
-
-        _urlHelperMock.Verify(
-            u => u.Action(It.Is<UrlActionContext>(context => context.Protocol == "https")),
-            Times.Once());
     }
 
     [Fact]
@@ -189,7 +160,6 @@ public class ConnectServiceTest
     public async void GetValidAccessToken_Expired()
     {
         SetupExpiredToken();
-        SetupUrlHelperMock();
 
         _appServer
             .Given(Request.Create()
@@ -198,7 +168,6 @@ public class ConnectServiceTest
                 {
                     var token = JsonConvert.DeserializeObject<TokenRequestParams>(body);
                     return
-                        !string.IsNullOrWhiteSpace(token.RedirectUri) &&
                         token.ClientId == _ynabOptions.ClientId &&
                         token.ClientSecret == _ynabOptions.ClientSecret &&
                         token.GrantType == "refresh_token" &&
@@ -206,8 +175,8 @@ public class ConnectServiceTest
                 }))
             .RespondWith(Response.Create().WithBodyAsJson(new TokenResponse
             {
-                AccessToken = EncryptedString.FromDecryptedValue("OtherAccessToken"),
-                RefreshToken = EncryptedString.FromDecryptedValue("OtherRefreshToken"),
+                AccessToken = "OtherAccessToken",
+                RefreshToken = "OtherRefreshToken",
                 ExpiresIn = 600
             }));
 
@@ -260,8 +229,6 @@ public class ConnectServiceTest
     [Fact]
     public async void ProcessReturn_Success()
     {
-        SetupUrlHelperMock();
-
         _appServer
             .Given(Request.Create()
                 .WithPath("/oauth/token")
@@ -269,7 +236,7 @@ public class ConnectServiceTest
                 {
                     var token = JsonConvert.DeserializeObject<TokenRequestParams>(body);
                     return
-                        !string.IsNullOrWhiteSpace(token.RedirectUri) &&
+                        token.RedirectUri == "https://someurl.com" &&
                         token.ClientId == _ynabOptions.ClientId &&
                         token.ClientSecret == _ynabOptions.ClientSecret &&
                         token.GrantType == "authorization_code" &&
@@ -277,12 +244,12 @@ public class ConnectServiceTest
                 }))
             .RespondWith(Response.Create().WithBodyAsJson(new TokenResponse
             {
-                AccessToken = EncryptedString.FromDecryptedValue("OtherAccessToken"),
-                RefreshToken = EncryptedString.FromDecryptedValue("OtherRefreshToken"),
+                AccessToken = "OtherAccessToken",
+                RefreshToken = "OtherRefreshToken",
                 ExpiresIn = 600
             }));
 
-        await _connectService.ProcessReturn("SomeCode");
+        await _connectService.ProcessReturn("SomeCode", "https://someurl.com");
 
         _tokenStorageMock
             .Verify(s =>
@@ -319,12 +286,5 @@ public class ConnectServiceTest
             .Returns(Task.FromResult(token));
 
         return token;
-    }
-
-    private void SetupUrlHelperMock()
-    {
-        _urlHelperMock
-            .Setup(u => u.Action(It.IsAny<UrlActionContext>()))
-            .Returns("https://someurl.com");
     }
 }

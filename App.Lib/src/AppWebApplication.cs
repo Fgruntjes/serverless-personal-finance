@@ -129,6 +129,7 @@ public static class AppWebApplication
         builder.Services.AddSwaggerGen();
         builder.Services.AddSwaggerGenNewtonsoftSupport();
         builder.Services.AddLogging();
+        builder.Services.AddDataProtection();
         builder.Services.AddCors(options =>
         {
             options.AddPolicy(name: CORSDevelopmentPolicy,

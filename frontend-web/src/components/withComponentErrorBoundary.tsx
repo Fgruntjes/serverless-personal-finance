@@ -7,7 +7,13 @@ import {ErrorBoundary, FallbackProps} from "react-error-boundary";
 import {useTranslation} from "react-i18next";
 import {useQueryErrorResetBoundary} from "react-query";
 
-function ErrorFallback({error, resetErrorBoundary}: FallbackProps) {
+type AppFallbackProps = FallbackProps & {
+    title: string;
+}
+
+function ErrorFallback({
+    error, resetErrorBoundary, title
+}: AppFallbackProps) {
     const {t} = useTranslation("error");
     
     return (
@@ -19,7 +25,7 @@ function ErrorFallback({error, resetErrorBoundary}: FallbackProps) {
         >
             <div>
                 <Typography fontWeight="lg" mt={0.25}>
-                    {t("component.label")}
+                    {title}
                 </Typography>
                 <Typography fontSize="sm" sx={{opacity: 0.8}}>
                     {error.message}
@@ -30,16 +36,29 @@ function ErrorFallback({error, resetErrorBoundary}: FallbackProps) {
     );
 }
 
-export default function withComponentErrorBoundary<T extends {}>(WrappedComponent: React.ComponentType<T>) {
+type ComponentWithErrorProps = {
+    errorTitle?: string;
+}
+
+export default function withComponentErrorBoundary<T extends ComponentWithErrorProps>(
+    WrappedComponent: React.ComponentType<T>
+) {
     const displayName = WrappedComponent.displayName || WrappedComponent.name || "Component";
 
     const ComponentWithErrorBoundary = (props: T) => {
         const {reset} = useQueryErrorResetBoundary()
+        const {t} = useTranslation("error");
+        const errorTitle = props.errorTitle ? props.errorTitle : t("component.label");
 
         return (
             <ErrorBoundary
                 onReset={reset}
-                fallbackRender={({error, resetErrorBoundary}) => <ErrorFallback error={error} resetErrorBoundary={resetErrorBoundary} />}
+                fallbackRender={({error, resetErrorBoundary}) => 
+                    <ErrorFallback
+                        error={error}
+                        resetErrorBoundary={resetErrorBoundary}
+                        title={errorTitle}/>
+                }
             >
                 <WrappedComponent {...props} />
             </ErrorBoundary>

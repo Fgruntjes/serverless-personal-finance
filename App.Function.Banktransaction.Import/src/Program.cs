@@ -11,7 +11,7 @@ await AppWebApplication.CreateAndRun(
     },
     app =>
     {
-        app.UseDatabaseMigrations();
+        app.UseDatabase();
     });
 
 public partial class Program

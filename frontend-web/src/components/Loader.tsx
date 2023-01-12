@@ -4,8 +4,8 @@ import Typography from "@mui/joy/Typography";
 import React from "react";
 import {useTranslation} from "react-i18next";
 
-const StatusLoader = () => {
-    const {t} = useTranslation("integrationsPage");
+const Loader = () => {
+    const {t} = useTranslation();
 
     return <Alert
         color="info"
@@ -20,4 +20,4 @@ const StatusLoader = () => {
     </Alert>;
 }
 
-export default StatusLoader;
+export default Loader;

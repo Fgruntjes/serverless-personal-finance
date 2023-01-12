@@ -12,7 +12,7 @@ export type MenuItem = {
 export const menu: MenuItem[] = [
     {
         label: "menu.integrations",
-        path: paths.integrations,
+        path: paths.integrations.index,
         icon: <SyncAltIcon />,
     }
 ]

@@ -6,5 +6,5 @@ namespace App.Lib.Ynab.Rest;
 public interface IApiClient
 {
     [Get("/user")]
-    Task<Dto.ApiResponse<UserData>> GetUser();
+    Task<Dto.ApiResponse<UserResponse>> GetUser();
 }

@@ -11,7 +11,7 @@ import {useTranslation} from "react-i18next";
 interface IntegrationStatusListItemProps {
     name: string;
     icon: string;
-    children: JSX.Element;
+    children: JSX.Element|JSX.Element[];
 }
 
 const FullWidthImage = styled("img")({

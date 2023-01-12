@@ -1,5 +1,8 @@
 export const paths = {
     home: "/",
     login: "/login",
-    integrations: "/integrations"
+    integrations: {
+        index: "/integrations",
+        return: {ynab: "/integrations/return/ynab"}
+    }
 }

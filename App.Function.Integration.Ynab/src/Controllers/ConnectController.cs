@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using App.Lib.Ynab;
 using App.Lib.Dto.Frontend;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ public class ConnectController : ControllerBase
     [HttpGet(Name = "Connect")]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
-    public async Task<ActionResult> Connect()
+    public async Task<ActionResult> Connect([Required] string returnUrl)
     {
         if (await _connectService.IsConnected())
         {
@@ -31,7 +32,7 @@ public class ConnectController : ControllerBase
             });
         }
 
-        var redirectUri = _connectService.GetRedirectUrl();
+        var redirectUri = _connectService.GetRedirectUrl(returnUrl);
         return Ok(new ApiResponse<string> { Data = redirectUri });
     }
 }

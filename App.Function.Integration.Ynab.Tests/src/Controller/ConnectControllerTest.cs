@@ -4,6 +4,7 @@ using App.Lib.Tests;
 using App.Lib.Ynab;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
@@ -24,10 +25,10 @@ public class ConnectControllerTest : ControllerTest
             .ReturnsAsync(false);
 
         _mockedConnectService
-            .Setup(c => c.GetRedirectUrl())
+            .Setup(c => c.GetRedirectUrl("http://localhost:3000/return"))
             .Returns(redirectUri);
 
-        var response = await _client.GetAsync("/connect");
+        var response = await _client.GetAsync(QueryHelpers.AddQueryString("/connect", "returnUrl", "http://localhost:3000/return"));
         var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
         apiResponse
             .Should()
@@ -41,7 +42,7 @@ public class ConnectControllerTest : ControllerTest
             .Setup(c => c.IsConnected())
             .ReturnsAsync(true);
 
-        var connectResponse = await _client.GetAsync("/connect");
+        var connectResponse = await _client.GetAsync(QueryHelpers.AddQueryString("/connect", "returnUrl", "http://localhost:3000/return"));
         connectResponse
             .Should()
             .HaveStatusCode(HttpStatusCode.BadRequest);

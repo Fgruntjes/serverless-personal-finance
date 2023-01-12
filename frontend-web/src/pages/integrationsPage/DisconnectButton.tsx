@@ -6,7 +6,7 @@ const DisconnectButton = (props: {onClick: () => void}) => {
     const {t} = useTranslation("integrationsPage");
 
     return (
-        <Button color="warning"
+        <Button color="danger"
             onClick={() => props.onClick()}>
             {t("button.disconnect")}
         </Button>

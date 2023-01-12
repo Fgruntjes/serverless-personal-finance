@@ -19,8 +19,14 @@ export const routes: RouteObject[] = [
                 element: <IndexPage />
             },
             {
-                path: paths.integrations,
+                path: paths.integrations.index,
                 element: <IntegrationsPage />,
+                children: [
+                    {
+                        path: paths.integrations.return.ynab,
+                        element: <></>
+                    }
+                ]
             }
         ],
     },

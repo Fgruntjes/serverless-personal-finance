@@ -4,7 +4,6 @@ using App.Lib.Ynab.Dto;
 using App.Lib.Ynab.Exception;
 using App.Lib.Ynab.Rest.Dto;
 using Flurl;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
@@ -21,8 +20,6 @@ public class ConnectService : IConnectService
     private readonly IOAuthTokenStorage _tokenStorage;
     private readonly IOptions<YnabOptions> _options;
     private readonly HttpClient _httpClient;
-    private readonly IUrlHelperFactory _urlHelperFactory;
-    private readonly IActionContextAccessor _actionContextAccessor;
     private readonly ILogger<ConnectService> _logger;
     private readonly IDateTimeProvider _dateTimeProvider;
 
@@ -30,16 +27,12 @@ public class ConnectService : IConnectService
         IOAuthTokenStorage tokenStorage,
         IOptions<YnabOptions> options,
         HttpClient httpClient,
-        IUrlHelperFactory urlHelperFactory,
-        IActionContextAccessor actionContextAccessor,
         ILogger<ConnectService> logger,
         IDateTimeProvider dateTimeProvider)
     {
         _tokenStorage = tokenStorage;
         _options = options;
         _httpClient = httpClient;
-        _urlHelperFactory = urlHelperFactory;
-        _actionContextAccessor = actionContextAccessor;
         _logger = logger;
         _dateTimeProvider = dateTimeProvider;
     }
@@ -62,14 +55,13 @@ public class ConnectService : IConnectService
         {
             ClientId = _options.Value.ClientId,
             ClientSecret = _options.Value.ClientSecret,
-            RedirectUri = GetReturnUrl(),
             GrantType = "refresh_token",
             RefreshToken = token.RefreshToken
         });
 
     }
 
-    public string GetRedirectUrl()
+    public string GetRedirectUrl(string returnUrl)
     {
         return _options.Value.AppAddress
             .AppendPathSegment("/oauth/authorize")
@@ -78,17 +70,17 @@ public class ConnectService : IConnectService
                 response_type = "code",
                 scope = "read-only",
                 client_id = _options.Value.ClientId,
-                redirect_uri = GetReturnUrl(),
+                redirect_uri = returnUrl,
             });
     }
 
-    public async Task ProcessReturn(string code)
+    public async Task ProcessReturn(string code, string returnUrl)
     {
         await FetchToken(new TokenRequestParams
         {
             ClientId = _options.Value.ClientId,
             ClientSecret = _options.Value.ClientSecret,
-            RedirectUri = GetReturnUrl(),
+            RedirectUri = returnUrl,
             GrantType = "authorization_code",
             Code = code
         });
@@ -103,14 +95,6 @@ public class ConnectService : IConnectService
     public async Task Disconnect()
     {
         await _tokenStorage.Delete(TokenName);
-    }
-
-    private string GetReturnUrl()
-    {
-        var actionContext = _actionContextAccessor.ActionContext;
-        var urlHelper = _urlHelperFactory.GetUrlHelper(actionContext);
-
-        return urlHelper.Action("Return", "Return", new { }, actionContext.HttpContext.Request.Scheme);
     }
 
     private async Task<IOAuthToken> StoreToken(TokenResponse token)

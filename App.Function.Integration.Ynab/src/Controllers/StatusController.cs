@@ -21,20 +21,21 @@ public class StatusController : ControllerBase
     }
 
     [HttpGet(Name = "Status")]
+    [ProducesResponseType(typeof(ApiResponse<IntegrationStatus>), StatusCodes.Status200OK)]
     public async Task<ActionResult> Status()
     {
         try
         {
-            if (await _connectService.IsConnected())
+            if (!await _connectService.IsConnected())
             {
-                var connectedUser = await _client.GetUser();
                 return Ok(new ApiResponse<IntegrationStatus>(
-                    new IntegrationStatus(true, connectedUser.Data.Id)
+                    new IntegrationStatus(false)
                 ));
             }
 
+            var connectedUser = await _client.GetUser();
             return Ok(new ApiResponse<IntegrationStatus>(
-                new IntegrationStatus(false)
+                new IntegrationStatus(true, connectedUser.Data.User.Id)
             ));
         }
         catch (Refit.ApiException exception)

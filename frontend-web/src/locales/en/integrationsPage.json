@@ -3,7 +3,7 @@
   "name.ynab": "You need a budget",
   "label.disconnected": "Disconnected",
   "label.connected": "Connected",
-  "label.loading": "Loading...",
+  "label.processingReturn": "Processing {{integration}} response",
   "button.connect": "Connect",
   "button.disconnect": "Disconnect"
 }

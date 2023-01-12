@@ -19,11 +19,14 @@ public class StatusControllerTest : ControllerTest
             .Setup(c => c.IsConnected())
             .ReturnsAsync(true);
 
-        var getUserResponse = new Lib.Ynab.Rest.Dto.ApiResponse<UserData>
+        var getUserResponse = new Lib.Ynab.Rest.Dto.ApiResponse<UserResponse>
         {
-            Data = new UserData
+            Data = new UserResponse
             {
-                Id = "some.user@example.com",
+                User = new UserResponse.UserData
+                {
+                    Id = "some.user@example.com",
+                }
             }
         };
         _mockedClient
@@ -32,7 +35,7 @@ public class StatusControllerTest : ControllerTest
 
         (await _client.GetFromJsonAsync<Lib.Dto.Frontend.ApiResponse<IntegrationStatus>>("/status"))
             .Should()
-            .BeEquivalentTo(new Lib.Dto.Frontend.ApiResponse<IntegrationStatus>(new IntegrationStatus(true, getUserResponse.Data.Id)));
+            .BeEquivalentTo(new Lib.Dto.Frontend.ApiResponse<IntegrationStatus>(new IntegrationStatus(true, getUserResponse.Data.User.Id)));
     }
 
     [Fact]

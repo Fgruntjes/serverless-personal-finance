@@ -23,14 +23,14 @@ public class ReturnController : ControllerBase
     [HttpGet(Name = "Return")]
     [ProducesResponseType(typeof(ApiResponse<IntegrationStatus>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<IntegrationStatus>), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> Return([Required] string code)
+    public async Task<ActionResult> Return([Required] string code, [Required] string returnUrl)
     {
         try
         {
-            await _connectService.ProcessReturn(code);
+            await _connectService.ProcessReturn(code, returnUrl);
             var connectedUser = await _client.GetUser();
             return Ok(new ApiResponse<IntegrationStatus>(
-                new IntegrationStatus(true, connectedUser.Data.Id)
+                new IntegrationStatus(true, connectedUser.Data.User.Id)
             ));
         }
         catch (TokenException httpException)
