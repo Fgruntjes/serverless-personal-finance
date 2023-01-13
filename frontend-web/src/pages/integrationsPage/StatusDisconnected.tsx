@@ -16,9 +16,7 @@ const StatusDisconnected = (props: { children: JSX.Element }) => {
             <Typography fontWeight="lg" mt={0.25}>
                 {t("label.disconnected")}
             </Typography>
-            <Typography fontSize="sm" sx={{opacity: 0.8}}>
-                {props.children}
-            </Typography>
+            {props.children}
         </div>
     </Alert>;
 }

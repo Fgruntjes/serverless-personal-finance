@@ -1,6 +1,7 @@
+import assert from "assert";
 
 test("Nothing to test", () => {
-    expect(true).toBeTruthy();
+    assert(true);
 });
 
 export {}

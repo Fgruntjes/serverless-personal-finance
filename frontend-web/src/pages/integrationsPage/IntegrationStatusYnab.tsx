@@ -3,12 +3,13 @@ import {useQuery} from "react-query";
 import {generatePath, useLocation, useNavigate} from "react-router-dom";
 
 import Loader from "../../components/Loader";
-import withComponentErrorBoundary from "../../components/withComponentErrorBoundary";
 import {
     ConnectService, DisconnectService, ReturnService, StatusService
 } from "../../generated/functionIntegrationYnab";
+import withComponentErrorBoundary from "../../hoc/withComponentErrorBoundary";
 import useQueryString from "../../hooks/queryString";
 import {paths} from "../../paths";
+import redirectTo from "../../util/redirect";
 import stringIsEmpty from "../../util/stringIsEmpty";
 import ConnectButton from "./ConnectButton";
 import DisconnectButton from "./DisconnectButton";
@@ -30,7 +31,7 @@ const YnabConnectButton = withComponentErrorBoundary(() => {
             .connect(returnUri)
             .then(response => {
                 if (response.data) {
-                    window.location.href = response.data;
+                    redirectTo(response.data);
                 }
             });
     }
