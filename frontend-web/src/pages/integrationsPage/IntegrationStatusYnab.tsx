@@ -5,7 +5,7 @@ import {generatePath, useLocation, useNavigate} from "react-router-dom";
 import Loader from "../../components/Loader";
 import {
     ConnectService, DisconnectService, ReturnService, StatusService
-} from "../../generated/functionIntegrationYnab";
+} from "../../generated/App.Function.Integration.Ynab";
 import withComponentErrorBoundary from "../../hoc/withComponentErrorBoundary";
 import useQueryString from "../../hooks/queryString";
 import {paths} from "../../paths";

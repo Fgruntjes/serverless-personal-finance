@@ -2,11 +2,30 @@
 
 cd "$(dirname "$(realpath "$0")")";
 
-set +x
+set -e
+set -x
 
-FUNCTION_INTEGRATION_YNAB_URL="${FUNCTION_INTEGRATION_YNAB_URL:-http://localhost:5072}"
-
+API_PROJECTS=( 
+  "App.Function.Integration.Ynab"
+)
+  
+# Clear old generated code
 rm -Rf src/generated/*/*
-./node_modules/.bin/openapi \
-  --input "${FUNCTION_INTEGRATION_YNAB_URL}/swagger/v1/swagger.json" \
-  --output src/generated/functionIntegrationYnab
+
+# Build dotnet projects
+(cd ../ && dotnet build)
+  
+for PROJECT in "${API_PROJECTS[@]}"
+do
+    (
+        cd ../
+        dotnet swagger tofile \
+            --output "${PROJECT}/swagger.json" \
+            "${PROJECT}/bin/Debug/net7.0/${PROJECT}.dll" \
+            v1        
+    )
+        
+	  ./node_modules/.bin/openapi \
+        --input "../${PROJECT}/swagger.json" \
+        --output "src/generated/${PROJECT}"
+done

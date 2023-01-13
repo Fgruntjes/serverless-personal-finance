@@ -78,9 +78,16 @@ jobs:
         -   uses: actions/setup-node@v3
             with:
                 node-version: ${{ matrix.project.nodejs-version }}
+        -   uses: actions/setup-dotnet@v3
+            with:
+                dotnet-version: 7.0
+        -   run: dotnet tool restore
         -   run: |
                 cd ${{ matrix.project.name }}
                 npm ci
+                ./generate_api_types.sh
+        -   run: |
+                cd ${{ matrix.project.name }}
                 npm run test -- --reporters="default" --reporters="jest-md-dashboard"
         -   uses: marocchino/sticky-pull-request-comment@v2
             if: always()

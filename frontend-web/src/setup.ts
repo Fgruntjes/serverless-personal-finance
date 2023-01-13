@@ -1,4 +1,4 @@
-import {OpenAPI as FunctionIntegrationYnab} from "./generated/functionIntegrationYnab";
+import {OpenAPI as FunctionIntegrationYnab} from "./generated/App.Function.Integration.Ynab";
 
 export function setup()
 {
