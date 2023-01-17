@@ -1,9 +1,9 @@
 import assert from "assert";
 
-import {LoginError} from "./LoginError";
-
-describe(LoginError.name, () => {
+describe("bootstrap.configure", () => {
     test("Nothing to test", () => {
         assert(true);
-    });    
+    });
 });
+
+export {}

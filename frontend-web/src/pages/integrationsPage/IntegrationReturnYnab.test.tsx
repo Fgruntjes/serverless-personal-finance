@@ -53,5 +53,3 @@ describe(IntegrationReturnYnab.name, () => {
         expect(screen.getByText("NotFound")).toBeInTheDocument();
     });
 });
-
-export {};

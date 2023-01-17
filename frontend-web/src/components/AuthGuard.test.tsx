@@ -11,17 +11,19 @@ import AuthGuard from "./AuthGuard";
 
 jest.mock("react-router-dom")
 
-test("Redirect when not logged in", () => {
-    mockLoggedOut();
-
-    render(<AuthGuard><p data-testid="loggedin">logged in</p></AuthGuard>);
-
-    expect(Navigate).toHaveBeenCalledTimes(1);
-});
-
-test("Render children when logged in", async () => {
-    mockLoggedIn();
-
-    render(<AuthGuard><p data-testid="loggedin">logged in</p></AuthGuard>);
-    expect(await screen.findByTestId("loggedin")).toBeInTheDocument();
+describe(AuthGuard.name, () => {
+    test("Redirect when not logged in", () => {
+        mockLoggedOut();
+    
+        render(<AuthGuard><p data-testid="loggedin">logged in</p></AuthGuard>);
+    
+        expect(Navigate).toHaveBeenCalledTimes(1);
+    });
+    
+    test("Render children when logged in", async () => {
+        mockLoggedIn();
+    
+        render(<AuthGuard><p data-testid="loggedin">logged in</p></AuthGuard>);
+        expect(await screen.findByTestId("loggedin")).toBeInTheDocument();
+    });
 });

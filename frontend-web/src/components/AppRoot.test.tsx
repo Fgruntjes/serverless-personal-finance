@@ -8,16 +8,18 @@ import {RecoilRoot} from "recoil";
 import {mockLoggedIn} from "../hooks/auth.mock";
 import AppRoot from "./AppRoot";
 
-test("Render current page without error", () => {
-    mockLoggedIn();
-    
-    render(
-        <RecoilRoot>
-            <MemoryRouter>
-                <AppRoot />
-            </MemoryRouter>
-        </RecoilRoot>
-    );
-    
-    expect(screen.getByText("appTitle")).toBeInTheDocument();
+describe(AppRoot.name, () => {
+    test("Render current page without error", () => {
+        mockLoggedIn();
+
+        render(
+            <RecoilRoot>
+                <MemoryRouter>
+                    <AppRoot/>
+                </MemoryRouter>
+            </RecoilRoot>
+        );
+
+        expect(screen.getByText("appTitle")).toBeInTheDocument();
+    });
 });

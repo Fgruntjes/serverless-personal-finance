@@ -6,18 +6,18 @@ import click = Simulate.click;
 
 import DisconnectButton from "./DisconnectButton";
 
-test("Render children without error", async () => {
-    const mockedOnClick = jest.fn();
+describe(DisconnectButton.name, () => {
+    test("Render children without error", async () => {
+        const mockedOnClick = jest.fn();
+        
+        render(<DisconnectButton onClick={mockedOnClick} />);
     
-    render(<DisconnectButton onClick={mockedOnClick} />);
-
-    const button = screen.getByText("button.disconnect");
-    expect(button).toBeInTheDocument();
-    act(() => {
-        click(button);
+        const button = screen.getByText("button.disconnect");
+        expect(button).toBeInTheDocument();
+        act(() => {
+            click(button);
+        });
+    
+        expect(mockedOnClick.mock.calls.length).toEqual(1);
     });
-
-    expect(mockedOnClick.mock.calls.length).toEqual(1);
 });
-
-export {};

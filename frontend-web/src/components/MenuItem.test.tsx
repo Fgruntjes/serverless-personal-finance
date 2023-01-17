@@ -7,27 +7,30 @@ import click = Simulate.click;
 import {useNavigate} from "react-router-dom";
 
 jest.mock("react-router-dom");
-const mockedNavigate = jest.fn();
 
-const item: MenuItem = {
-    icon: <i>icon</i>,
-    label: "title",
-    path: "/somepath"
-}
+describe(AppMenuItem.name, () => {
+    const mockedNavigate = jest.fn();
 
-test("Render without error", () => {
-    render(<AppMenuItem item={item} />)
-});
+    const item: MenuItem = {
+        icon: <i>icon</i>,
+        label: "title",
+        path: "/somepath"
+    }
 
-test("Press item and navigate to link", () => {
-    jest.mocked(useNavigate).mockImplementation(() => mockedNavigate);
-    
-    render(<AppMenuItem item={item} />)
+    test("Render without error", () => {
+        render(<AppMenuItem item={item}/>)
+    });
 
-    const button = screen.getByText(item.label);
-    expect(button).toBeInTheDocument();
-    
-    act(() => click(button));
-    
-    expect(mockedNavigate).toHaveBeenCalledWith(item.path);
+    test("Press item and navigate to link", () => {
+        jest.mocked(useNavigate).mockImplementation(() => mockedNavigate);
+
+        render(<AppMenuItem item={item}/>)
+
+        const button = screen.getByText(item.label);
+        expect(button).toBeInTheDocument();
+
+        act(() => click(button));
+
+        expect(mockedNavigate).toHaveBeenCalledWith(item.path);
+    });
 });

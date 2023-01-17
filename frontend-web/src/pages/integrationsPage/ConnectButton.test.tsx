@@ -6,18 +6,18 @@ import click = Simulate.click;
 
 import ConnectButton from "./ConnectButton";
 
-test("Render children without error", async () => {
-    const mockedOnClick = jest.fn();
+describe(ConnectButton.name, () => {
+    test("Render children without error", async () => {
+        const mockedOnClick = jest.fn();
+        
+        render(<ConnectButton onClick={mockedOnClick} />);
     
-    render(<ConnectButton onClick={mockedOnClick} />);
-
-    const button = screen.getByText("button.connect");
-    expect(button).toBeInTheDocument();
-    act(() => {
-        click(button);
+        const button = screen.getByText("button.connect");
+        expect(button).toBeInTheDocument();
+        act(() => {
+            click(button);
+        });
+    
+        expect(mockedOnClick.mock.calls.length).toEqual(1);
     });
-
-    expect(mockedOnClick.mock.calls.length).toEqual(1);
 });
-
-export {};

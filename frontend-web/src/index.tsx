@@ -18,13 +18,13 @@ import {ToastContainer} from "react-toastify";
 import {RecoilRoot} from "recoil";
 
 import AuthProvider from "./components/AuthProvider";
+import {configure} from "./configure";
 import reportWebVitals from "./reportWebVitals";
 import {routes} from "./routes";
-import {setup} from "./setup";
 import createQueryClient from "./setup/createQueryClient";
 import theme from "./theme";
 
-setup();
+configure();
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
 );

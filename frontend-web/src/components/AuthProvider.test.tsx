@@ -9,23 +9,25 @@ import AuthProvider from "./AuthProvider";
 jest.mock("@react-oauth/google");
 jest.mock("../pages/ErrorPage");
 
-test("Render children without error", () => {
-    render(<AuthProvider clientId="clientid"><p>child element</p></AuthProvider>);
+describe(AuthProvider.name, () => {
+    test("Render children without error", () => {
+        render(<AuthProvider clientId="clientid"><p>child element</p></AuthProvider>);
 
-    expect(GoogleOAuthProvider).toHaveBeenCalledWith(
-        expect.objectContaining({
-            children: expect.anything(),
-            clientId: "clientid",
-        }),
-        expect.anything(),
-    );
-});
+        expect(GoogleOAuthProvider).toHaveBeenCalledWith(
+            expect.objectContaining({
+                children: expect.anything(),
+                clientId: "clientid",
+            }),
+            expect.anything(),
+        );
+    });
 
-test("Render error on missing setting", () => {
-    render(<AuthProvider><p>child element</p></AuthProvider>);
+    test("Render error on missing setting", () => {
+        render(<AuthProvider><p>child element</p></AuthProvider>);
 
-    expect(ErrorPage).toHaveBeenCalledWith(
-        expect.objectContaining({error: expect.stringContaining("REACT_APP_GOOGLE_AUTH_CLIENT_ID")}),
-        expect.anything(),
-    );
+        expect(ErrorPage).toHaveBeenCalledWith(
+            expect.objectContaining({error: expect.stringContaining("REACT_APP_GOOGLE_AUTH_CLIENT_ID")}),
+            expect.anything(),
+        );
+    }); 
 });

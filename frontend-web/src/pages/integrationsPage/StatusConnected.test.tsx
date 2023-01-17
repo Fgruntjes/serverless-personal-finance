@@ -3,9 +3,9 @@ import React from "react";
 
 import StatusConnected from "./StatusConnected";
 
-test("Render children without error", async () => {
-    render(<StatusConnected><div>test123</div></StatusConnected>);
-    expect(await screen.findByText("test123")).toBeInTheDocument();
+describe(StatusConnected.name, () => {
+    test("Render children without error", async () => {
+        render(<StatusConnected><div>test123</div></StatusConnected>);
+        expect(await screen.findByText("test123")).toBeInTheDocument();
+    });
 });
-
-export {};

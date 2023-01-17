@@ -5,32 +5,46 @@ import {MemoryRouter} from "react-router-dom";
 import {mockLoggedIn} from "../hooks/auth.mock";
 import Layout from "./Layout"
 
-test("Render RootDefault without errors", () => {
-    render(<Layout.RootDefault />);
+describe(Layout.RootDefault.name, () => {
+    test("Render RootDefault without errors", () => {
+        render(<Layout.RootDefault/>);
+    });
 });
 
-test("Render RootCenter without errors", () => {
-    render(<Layout.RootCenter />);
+describe(Layout.RootCenter.name, () => {
+    test("Render RootCenter without errors", () => {
+        render(<Layout.RootCenter/>);
+    });
 });
 
-test("Render SideNav without errors", () => {
-    render(<MemoryRouter><Layout.SideNav /></MemoryRouter>);
+describe(Layout.SideNav.name, () => {
+    test("Render SideNav without errors", () => {
+        render(<MemoryRouter><Layout.SideNav/></MemoryRouter>);
+    });
 });
 
-test("Render Main without errors", () => {
-    render(<Layout.Main />);
+describe(Layout.Main.name, () => {
+    test("Render Main without errors", () => {
+        render(<Layout.Main/>);
+    });
 });
 
-test("Render MainWrapper without errors", () => {
-    render(<Layout.MainWrapper />);
+describe(Layout.MainWrapper.name, () => {
+    test("Render MainWrapper without errors", () => {
+        render(<Layout.MainWrapper/>);
+    });
 });
 
-test("Render Header without errors", () => {
-    mockLoggedIn();
-    
-    render(<Layout.Header />);
+describe(Layout.Header.name, () => {
+    test("Render Header without errors", () => {
+        mockLoggedIn();
+
+        render(<Layout.Header/>);
+    });
 });
 
-test("Render Footer without errors", () => {
-    render(<Layout.Footer />);
+describe(Layout.Footer.name, () => {
+    test("Render Footer without errors", () => {
+        render(<Layout.Footer/>);
+    });
 });

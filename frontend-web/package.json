@@ -114,6 +114,7 @@
           "additionalHooks": "(useRecoilCallback|useRecoilTransaction_UNSTABLE)"
         }
       ],
+      "jest/require-top-level-describe": "error",
       "jest/valid-title": [
         "error",
         {

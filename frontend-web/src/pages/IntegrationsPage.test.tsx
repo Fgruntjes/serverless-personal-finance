@@ -5,9 +5,9 @@ import IntegrationsPage from "./IntegrationsPage";
 
 jest.mock("./integrationsPage/IntegrationStatusYnab");
 
-test("Render without error", async () => {
-    render(<IntegrationsPage />);
-    expect(await screen.findByText("title")).toBeInTheDocument();
+describe(IntegrationsPage.name, () => {
+    test("Render without error", async () => {
+        render(<IntegrationsPage/>);
+        expect(await screen.findByText("title")).toBeInTheDocument();
+    });
 });
-
-export {};

@@ -1,7 +1,7 @@
 import assert from "assert";
 
-test("Nothing to test", () => {
-    assert(true);
+describe("bootstrap.routes", () => {
+    test("Nothing to test", () => {
+        assert(true);
+    });
 });
-
-export {}

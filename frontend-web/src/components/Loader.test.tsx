@@ -3,6 +3,8 @@ import React from "react";
 
 import Loader from "./Loader"
 
-test("Render Loader without errors", () => {
-    render(<Loader />);
+describe(Loader.name, () => {
+    test("Render Loader without errors", () => {
+        render(<Loader />);
+    });
 });

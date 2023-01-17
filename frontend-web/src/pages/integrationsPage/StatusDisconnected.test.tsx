@@ -3,9 +3,9 @@ import React from "react";
 
 import StatusDisconnected from "./StatusDisconnected";
 
-test("Render children without error", async () => {
-    render(<StatusDisconnected><div>test123</div></StatusDisconnected>);
-    expect(await screen.findByText("test123")).toBeInTheDocument();
+describe(StatusDisconnected.name, () => {
+    test("Render children without error", async () => {
+        render(<StatusDisconnected><div>test123</div></StatusDisconnected>);
+        expect(await screen.findByText("test123")).toBeInTheDocument();
+    });
 });
-
-export {};

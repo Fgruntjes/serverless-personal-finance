@@ -19,5 +19,3 @@ describe(useYnabReturnService.name, () => {
         expect(jest.mocked(ReturnService.return)).toHaveBeenCalledTimes(1);
     });
 });
-
-export {};
