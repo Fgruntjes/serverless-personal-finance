@@ -5,5 +5,8 @@
   "label.connected": "Connected",
   "label.processingReturn": "Processing {{integration}} response",
   "button.connect": "Connect",
-  "button.disconnect": "Disconnect"
+  "button.disconnect": "Disconnect",
+  "processReturnCodeSuccess": "Processed return code, you are now connected to your YNAB budget",
+  "error.missingReturnCode": "Missing return code",
+  "error.processReturnCodeFailed": "Failed processing return code: {{error}}"
 }

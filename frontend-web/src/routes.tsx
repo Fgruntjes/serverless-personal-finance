@@ -4,6 +4,7 @@ import {RouteObject} from "react-router-dom";
 import AppRoot from "./components/AppRoot";
 import IndexPage from "./pages/IndexPage";
 import IntegrationsPage from "./pages/IntegrationsPage";
+import IntegrationReturnYnab from "./pages/integrationsPage/IntegrationReturnYnab";
 import LoginPage from "./pages/LoginPage";
 import RouteErrorPage from "./pages/RouteErrorPage";
 import {paths} from "./paths";
@@ -24,7 +25,7 @@ export const routes: RouteObject[] = [
                 children: [
                     {
                         path: paths.integrations.return.ynab,
-                        element: <></>
+                        element: <IntegrationReturnYnab />
                     }
                 ]
             }

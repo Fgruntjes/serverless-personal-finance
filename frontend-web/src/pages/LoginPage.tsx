@@ -10,10 +10,11 @@ import {Navigate} from "react-router-dom";
 
 import Layout from "../components/Layout";
 import {useAuth} from "../hooks/auth";
+import {TranslationNamespaces} from "../locales/namespaces";
 import {paths} from "../paths";
 
 function LoginPage() {
-    const {t} = useTranslation("loginPage");
+    const {t} = useTranslation(TranslationNamespaces.IntegrationsPage);
     const {authState, signIn} = useAuth();
     if (authState) {
         return <Navigate to={paths.home} replace />;

@@ -9,7 +9,7 @@ import CssBaseline from "@mui/joy/CssBaseline";
 import {CssVarsProvider} from "@mui/joy/styles";
 import React, {Suspense} from "react";
 import ReactDOM from "react-dom/client";
-import {QueryClient, QueryClientProvider} from "react-query"
+import {QueryClientProvider} from "react-query"
 import {
     createBrowserRouter,
     RouterProvider,
@@ -21,6 +21,7 @@ import AuthProvider from "./components/AuthProvider";
 import reportWebVitals from "./reportWebVitals";
 import {routes} from "./routes";
 import {setup} from "./setup";
+import createQueryClient from "./setup/createQueryClient";
 import theme from "./theme";
 
 setup();
@@ -28,12 +29,7 @@ const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
 );
 
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {useErrorBoundary: true},
-        mutations: {useErrorBoundary: true}
-    }
-});
+const queryClient = createQueryClient();
 const router = createBrowserRouter(routes);
 
 root.render(

@@ -7,6 +7,7 @@ import Typography from "@mui/joy/Typography";
 import React from "react";
 import {Trans, useTranslation} from "react-i18next";
 
+import {TranslationNamespaces} from "../locales/namespaces";
 import {menu} from "../menu";
 import {LogoutButton} from "./LogoutButton";
 import AppMenuItem from "./MenuItem";
@@ -50,7 +51,7 @@ const RootDefault = (props: GridProps) => (
 );
 
 const Header = (props: GridProps) => {
-    const {t} = useTranslation();
+    const {t} = useTranslation(TranslationNamespaces.Core);
     
     return (
         <Box

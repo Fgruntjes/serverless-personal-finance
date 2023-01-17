@@ -7,6 +7,8 @@ import {ErrorBoundary, FallbackProps} from "react-error-boundary";
 import {useTranslation} from "react-i18next";
 import {useQueryErrorResetBoundary} from "react-query";
 
+import {TranslationNamespaces} from "../locales/namespaces";
+
 type AppFallbackProps = FallbackProps & {
     title: string;
 }
@@ -14,7 +16,7 @@ type AppFallbackProps = FallbackProps & {
 function ErrorFallback({
     error, resetErrorBoundary, title
 }: AppFallbackProps) {
-    const {t} = useTranslation("error");
+    const {t} = useTranslation(TranslationNamespaces.Error);
     
     return (
         <Alert
@@ -47,7 +49,7 @@ export default function withComponentErrorBoundary<T extends ComponentWithErrorP
 
     const ComponentWithErrorBoundary = (props: T) => {
         const {reset} = useQueryErrorResetBoundary()
-        const {t} = useTranslation("error");
+        const {t} = useTranslation(TranslationNamespaces.Error);
         const errorTitle = props.errorTitle ? props.errorTitle : t("component.label");
 
         return (

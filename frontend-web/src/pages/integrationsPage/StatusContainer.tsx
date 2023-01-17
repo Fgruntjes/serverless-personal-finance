@@ -7,6 +7,8 @@ import {styled} from "@mui/system";
 import React from "react";
 import {useTranslation} from "react-i18next";
 
+import {TranslationNamespaces} from "../../locales/namespaces";
+
 
 interface IntegrationStatusListItemProps {
     name: string;
@@ -20,7 +22,7 @@ const FullWidthImage = styled("img")({
 });
 
 const StatusContainer = (props: IntegrationStatusListItemProps) => {
-    const {t} = useTranslation("integrationsPage");
+    const {t} = useTranslation(TranslationNamespaces.IntegrationsPage);
     
     return (
         <>

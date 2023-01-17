@@ -113,6 +113,12 @@
         {
           "additionalHooks": "(useRecoilCallback|useRecoilTransaction_UNSTABLE)"
         }
+      ],
+      "jest/valid-title": [
+        "error",
+        {
+          "ignoreTypeOfDescribeName": true
+        }
       ]
     }
   },

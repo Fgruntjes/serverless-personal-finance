@@ -4,8 +4,10 @@ import Typography from "@mui/joy/Typography";
 import React from "react";
 import {useTranslation} from "react-i18next";
 
+import {TranslationNamespaces} from "../../locales/namespaces";
+
 const StatusConnected = (props: { children: JSX.Element }) => {
-    const {t} = useTranslation("integrationsPage");
+    const {t} = useTranslation(TranslationNamespaces.IntegrationsPage);
 
     return <Alert
         color="success"

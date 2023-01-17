@@ -4,9 +4,10 @@ import React from "react";
 import {useTranslation} from "react-i18next";
 
 import {useAuth} from "../hooks/auth";
+import {TranslationNamespaces} from "../locales/namespaces";
 
 export const LogoutButton = () => {
-    const {t} = useTranslation();
+    const {t} = useTranslation(TranslationNamespaces.Core);
     const {signOut} = useAuth();
     
     return (

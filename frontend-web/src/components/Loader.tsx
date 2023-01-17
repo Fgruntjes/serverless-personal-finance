@@ -4,8 +4,10 @@ import Typography from "@mui/joy/Typography";
 import React from "react";
 import {useTranslation} from "react-i18next";
 
+import {TranslationNamespaces} from "../locales/namespaces";
+
 const Loader = () => {
-    const {t} = useTranslation();
+    const {t} = useTranslation(TranslationNamespaces.Core);
 
     return <Alert
         color="info"

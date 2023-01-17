@@ -5,6 +5,7 @@ import React from "react";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 
+import {TranslationNamespaces} from "../locales/namespaces";
 import {MenuItem} from "../menu";
 
 type AppMenuItemProps = {
@@ -19,7 +20,7 @@ const AppMenuItem = (props: AppMenuItemProps) => {
         }
     } = props;
     const navigate = useNavigate();
-    const {t} = useTranslation();
+    const {t} = useTranslation(TranslationNamespaces.Core);
     
     return (
         <ListItem key={props.key} sx={{padding: 0}}>

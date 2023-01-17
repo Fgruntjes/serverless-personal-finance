@@ -9,6 +9,7 @@ import {atom, useRecoilState} from "recoil";
 import {recoilPersist} from "recoil-persist";
 
 import {LoginError} from "../errors/LoginError";
+import {TranslationNamespaces} from "../locales/namespaces";
 
 const {persistAtom} = recoilPersist()
 
@@ -24,7 +25,7 @@ const authState = atom<AuthState>({
 });
 
 export function useAuth(): {authState: AuthState, signIn: VoidFunction, signOut: VoidFunction} {
-    const {t} = useTranslation("auth");
+    const {t} = useTranslation(TranslationNamespaces.Auth);
     const [currentAuthState, setAuthState] = useRecoilState(authState);
     const login = useGoogleLogin({
         flow: "implicit",
