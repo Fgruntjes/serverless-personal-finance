@@ -19,9 +19,9 @@ import {RecoilRoot} from "recoil";
 
 import AuthProvider from "./components/AuthProvider";
 import {configure} from "./configure";
+import createQueryClient from "./createQueryClient";
 import reportWebVitals from "./reportWebVitals";
 import {routes} from "./routes";
-import createQueryClient from "./setup/createQueryClient";
 import theme from "./theme";
 
 configure();

@@ -1,4 +1,5 @@
 {
   "component.label": "Something went wrong",
-  "button.retry": "Retry"
+  "button.retry": "Retry",
+  "emptyError": "Error was empty"
 }
