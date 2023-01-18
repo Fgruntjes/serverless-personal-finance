@@ -14,7 +14,7 @@ export function useYnabReturnService(returnCode: string|null, returnUrl: string)
     return useQuery(
         {
             retry: false,
-            queryKey: ["YnabReturnService", {returnCode, returnUrl}],
+            queryKey: [ReturnService.name, {returnCode, returnUrl}],
             queryFn: () => {
                 if (!stringIsEmpty(returnCode)) {
                     return ReturnService.return(returnCode as string, returnUrl);

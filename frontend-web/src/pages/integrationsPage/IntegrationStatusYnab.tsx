@@ -1,8 +1,9 @@
 import React from "react";
-import {useQuery} from "react-query";
 
 import Loader from "../../components/Loader";
-import {ConnectService, DisconnectService, StatusService} from "../../generated/App.Function.Integration.Ynab";
+import {useYnabConnectService} from "../../data/useYnabConnectService";
+import {useYnabDisconnectService} from "../../data/useYnabDisconnectService";
+import {useYnabStatusService} from "../../data/useYnabStatusService";
 import withComponentErrorBoundary from "../../hoc/withComponentErrorBoundary";
 import redirectTo from "../../util/redirect";
 import ConnectButton from "./ConnectButton";
@@ -15,37 +16,28 @@ import StatusDisconnected from "./StatusDisconnected";
 
 const YnabConnectButton = withComponentErrorBoundary(() => {
     const returnUri = getYnabReturnUrl();
-    
-    function onConnect() {
-        ConnectService
-            .connect(returnUri)
-            .then(response => {
-                if (response.data) {
-                    redirectTo(response.data);
-                }
-            });
-    }
+    const {
+        isLoading, refetch, data, isFetched, isError
+    } = useYnabConnectService(returnUri);
 
-    return <ConnectButton onClick={() => onConnect()} />;
+    if (isFetched && !isError && data && data.data) {
+        redirectTo(data.data);
+        return <ConnectButton loading={true} />;
+    }
+    
+    return <ConnectButton loading={isLoading} onClick={() => refetch()} />;
 });
 
 function YnabDisconnectButton(props: {onDisconnect: () => void}) {
-    function onDisconnect() {
-        DisconnectService
-            .disconnect()
-            .then(props.onDisconnect);
-    }
+    const {isLoading, refetch} = useYnabDisconnectService();
 
-    return <DisconnectButton onClick={() => onDisconnect()} />;
+    return <DisconnectButton loading={isLoading} onClick={() => refetch().then(props.onDisconnect)} />;
 }
 
 const StatusWidget = withComponentErrorBoundary(() => {
     const {
         data, isLoading, refetch
-    } = useQuery(
-        IntegrationStatusYnab.name,
-        () => StatusService.status()
-    );
+    } = useYnabStatusService();
     
     if (isLoading) {
         return <Loader />;
