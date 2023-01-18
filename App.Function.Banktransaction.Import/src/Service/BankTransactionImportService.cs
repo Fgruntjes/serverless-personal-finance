@@ -1,25 +1,26 @@
 using App.Lib.Dto;
-using App.LibDatabase;
-using App.LibDatabase.Document;
+using App.Lib.Database;
+using App.Lib.Database.Document;
+using App.Lib.Dto.Backend;
 using MongoDB.Driver;
 
 namespace App.Function.Banktransaction.Import.Service;
 
 public class BankTransactionImportService
 {
-    private readonly DbContext _dbContext;
+    private readonly DatabaseContext _databaseContext;
     private readonly DocumentMapFactory _documentMapFactory;
 
-    public BankTransactionImportService(DbContext dbContext, DocumentMapFactory documentMapFactory)
+    public BankTransactionImportService(DatabaseContext databaseContext, DocumentMapFactory documentMapFactory)
     {
-        _dbContext = dbContext;
+        _databaseContext = databaseContext;
         _documentMapFactory = documentMapFactory;
     }
 
     public async Task Import(BankTransaction[] transactions)
     {
         if (transactions.Length == 0)
-            throw new ArgumentOutOfRangeException(nameof(transactions), "Need to import at least 1 transaction.");
+            throw new ArgumentException("Need to import at least 1 transaction.", nameof(transactions));
 
         var accountMap = await GetAccountMap(transactions);
         var categoryMap = await GetCategoryMap(transactions);
@@ -31,7 +32,7 @@ public class BankTransactionImportService
             {
                 TransactionId = t.TransactionId,
                 AccountId = accountMap[t.AccountNumber].Id,
-                CategoryId = categoryMap[t.Category].Id,
+                CategoryId = !string.IsNullOrWhiteSpace(t.Category) ? categoryMap[t.Category].Id : null,
                 Date = t.Date,
                 PayeeId = payeeMap[t.PayeeName].Id,
                 PayeeDescription = t.PayeeDescription,
@@ -82,7 +83,7 @@ public class BankTransactionImportService
             operations.Add(operation);
         }
 
-        await _dbContext.GetCollection<BankTransactionDocument>()
+        await _databaseContext.GetCollection<BankTransactionDocument>()
             .BulkWriteAsync(operations);
     }
 
@@ -100,10 +101,11 @@ public class BankTransactionImportService
 
     private async Task<Dictionary<string, CategoryDocument>> GetCategoryMap(IEnumerable<BankTransaction> transactions)
     {
-        var searchValues = transactions
+        string[] searchValues = transactions
             .AsQueryable()
             .Select(t => t.Category)
-            .ToArray();
+            .Where(v => !string.IsNullOrWhiteSpace(v))
+            .ToArray()!;
 
         return await _documentMapFactory.Get<string, CategoryDocument>()
             .Load(d => searchValues.Contains(d.Name), d => d.Name)

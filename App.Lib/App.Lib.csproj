@@ -1,18 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <Reference Include="Swashbuckle.AspNetCore.SwaggerGen">
-        <HintPath>..\..\..\..\..\.nuget\packages\swashbuckle.aspnetcore.swaggergen\6.4.0\lib\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll</HintPath>
-      </Reference>
+      <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 
     <ItemGroup>
-      <FrameworkReference Include="Microsoft.AspNetCore.App" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.2" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
+      <PackageReference Include="Sentry.AspNetCore" Version="3.25.0" />
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+      <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.5.0" />
+      <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="System.Net.Http">
+        <HintPath>..\..\..\..\..\..\..\usr\share\dotnet\shared\Microsoft.NETCore.App\7.0.1\System.Net.Http.dll</HintPath>
+      </Reference>
     </ItemGroup>
 </Project>

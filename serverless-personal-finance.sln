@@ -1,16 +1,28 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Job.Import.Ynab", "App.Job.Import.Ynab\App.Job.Import.Ynab.csproj", "{D782C3AA-FBDE-450C-9B74-2E472C10A787}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Lib", "App.Lib\App.Lib.csproj", "{2E9A1B96-8AEF-44E4-ACBC-D115D94A42F5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Function.Banktransaction.Import", "App.Function.Banktransaction.Import\App.Function.Banktransaction.Import.csproj", "{C4E8B48D-E9A1-48C9-A82E-7053BE438278}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Function.Banktransaction.Import.Tests", "App.Function.Banktransaction.Import.Tests\App.Function.Banktransaction.Import.Tests.csproj", "{5C999EE0-3F9C-4ED2-96F6-CABD2D5A8E78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.LibTests", "App.LibTests\App.LibTests.csproj", "{C29C011B-E135-43FC-AA38-35A1B337140B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Lib.Tests", "App.Lib.Tests\App.Lib.Tests.csproj", "{C29C011B-E135-43FC-AA38-35A1B337140B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.LibDatabase", "App.LibDatabase\App.LibDatabase.csproj", "{0D025F89-999B-4AD7-9F83-A47641FA97A4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Lib.Database", "App.Lib.Database\App.Lib.Database.csproj", "{0D025F89-999B-4AD7-9F83-A47641FA97A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Lib.Queue", "App.Lib.Queue\App.Lib.Queue.csproj", "{E5C7A06D-6EAB-4485-BD09-E9912AEA5AD5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Job.Import.Ynab", "App.Job.Import.Ynab\App.Job.Import.Ynab.csproj", "{950F9934-97D9-43E9-A483-12820B89A5B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Function.Integration.Ynab", "App.Function.Integration.Ynab\App.Function.Integration.Ynab.csproj", "{009C03C7-67CB-4DDC-8008-B0902C4B7966}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Lib.Database.Tests", "App.Lib.Database.Tests\App.Lib.Database.Tests.csproj", "{F036A08E-5283-44C5-9E6C-B01D4B81C38F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Lib.Ynab", "App.Lib.Ynab\App.Lib.Ynab.csproj", "{51D05B29-77BC-4D59-AEA1-1EE717E5D13C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Function.Integration.Ynab.Tests", "App.Function.Integration.Ynab.Tests\App.Function.Integration.Ynab.Tests.csproj", "{F72B3538-FBA1-4EF7-965A-4AB0F2121713}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Lib.Ynab.Tests", "App.Lib.Ynab.Tests\App.Lib.Ynab.Tests.csproj", "{F36A3BAD-89D6-4ED7-815E-9C87344338AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,10 +30,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D782C3AA-FBDE-450C-9B74-2E472C10A787}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D782C3AA-FBDE-450C-9B74-2E472C10A787}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D782C3AA-FBDE-450C-9B74-2E472C10A787}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D782C3AA-FBDE-450C-9B74-2E472C10A787}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2E9A1B96-8AEF-44E4-ACBC-D115D94A42F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2E9A1B96-8AEF-44E4-ACBC-D115D94A42F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E9A1B96-8AEF-44E4-ACBC-D115D94A42F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -42,5 +50,33 @@ Global
 		{0D025F89-999B-4AD7-9F83-A47641FA97A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D025F89-999B-4AD7-9F83-A47641FA97A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D025F89-999B-4AD7-9F83-A47641FA97A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5C7A06D-6EAB-4485-BD09-E9912AEA5AD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5C7A06D-6EAB-4485-BD09-E9912AEA5AD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5C7A06D-6EAB-4485-BD09-E9912AEA5AD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5C7A06D-6EAB-4485-BD09-E9912AEA5AD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{950F9934-97D9-43E9-A483-12820B89A5B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{950F9934-97D9-43E9-A483-12820B89A5B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{950F9934-97D9-43E9-A483-12820B89A5B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{950F9934-97D9-43E9-A483-12820B89A5B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{009C03C7-67CB-4DDC-8008-B0902C4B7966}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{009C03C7-67CB-4DDC-8008-B0902C4B7966}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{009C03C7-67CB-4DDC-8008-B0902C4B7966}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{009C03C7-67CB-4DDC-8008-B0902C4B7966}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F036A08E-5283-44C5-9E6C-B01D4B81C38F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F036A08E-5283-44C5-9E6C-B01D4B81C38F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F036A08E-5283-44C5-9E6C-B01D4B81C38F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F036A08E-5283-44C5-9E6C-B01D4B81C38F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51D05B29-77BC-4D59-AEA1-1EE717E5D13C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51D05B29-77BC-4D59-AEA1-1EE717E5D13C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51D05B29-77BC-4D59-AEA1-1EE717E5D13C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51D05B29-77BC-4D59-AEA1-1EE717E5D13C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F72B3538-FBA1-4EF7-965A-4AB0F2121713}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F72B3538-FBA1-4EF7-965A-4AB0F2121713}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F72B3538-FBA1-4EF7-965A-4AB0F2121713}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F72B3538-FBA1-4EF7-965A-4AB0F2121713}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F36A3BAD-89D6-4ED7-815E-9C87344338AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F36A3BAD-89D6-4ED7-815E-9C87344338AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F36A3BAD-89D6-4ED7-815E-9C87344338AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F36A3BAD-89D6-4ED7-815E-9C87344338AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

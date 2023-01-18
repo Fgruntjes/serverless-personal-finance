@@ -1,0 +1,138 @@
+{
+  "name": "frontend-web",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@fontsource/roboto": "^4.5.8",
+    "@mui/icons-material": "^5.10.9",
+    "@mui/joy": "^5.0.0-alpha.49",
+    "@react-oauth/google": "^0.2.8",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.11.65",
+    "@types/react": "^18.0.21",
+    "@types/react-dom": "^18.0.6",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "i18next": "^21.10.0",
+    "i18next-resources-to-backend": "^1.0.0",
+    "jest-fail-on-console": "^3.0.2",
+    "jest-md-dashboard": "^0.7.1",
+    "openapi-typescript-codegen": "^0.23.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-error-boundary": "^3.1.4",
+    "react-i18next": "^11.18.6",
+    "react-query": "^3.39.2",
+    "react-router-dom": "^6.4.2",
+    "react-scripts": "5.0.1",
+    "react-toastify": "^9.0.8",
+    "recoil": "^0.7.6",
+    "recoil-persist": "^4.2.0",
+    "sass": "^1.55.0",
+    "typescript": "^4.8.4",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "format": "eslint . --fix"
+  },
+  "eslintConfig": {
+    "overrides": [
+      {
+        "files": [
+          "src/**/*.ts",
+          "src/**/*.tsx"
+        ]
+      }
+    ],
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
+    "plugins": [
+      "simple-import-sort",
+      "unused-imports"
+    ],
+    "rules": {
+      "indent": [
+        "error",
+        4
+      ],
+      "quotes": [
+        "error",
+        "double"
+      ],
+      "object-curly-spacing": [
+        "error",
+        "never"
+      ],
+      "object-curly-newline": [
+        "error",
+        {
+          "ObjectExpression": {
+            "multiline": true,
+            "minProperties": 3
+          },
+          "ObjectPattern": {
+            "multiline": true,
+            "minProperties": 3
+          },
+          "ImportDeclaration": {
+            "multiline": true,
+            "minProperties": 4
+          },
+          "ExportDeclaration": {
+            "multiline": true,
+            "minProperties": 4
+          }
+        }
+      ],
+      "@typescript-eslint/no-unused-vars": "off",
+      "unused-imports/no-unused-imports": "error",
+      "unused-imports/no-unused-vars": [
+        "error",
+        {
+          "vars": "all",
+          "varsIgnorePattern": "^_",
+          "args": "after-used",
+          "argsIgnorePattern": "^_"
+        }
+      ],
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
+      "react-hooks/exhaustive-deps": [
+        "error",
+        {
+          "additionalHooks": "(useRecoilCallback|useRecoilTransaction_UNSTABLE)"
+        }
+      ],
+      "jest/require-top-level-describe": "error",
+      "jest/valid-title": [
+        "error",
+        {
+          "ignoreTypeOfDescribeName": true
+        }
+      ]
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

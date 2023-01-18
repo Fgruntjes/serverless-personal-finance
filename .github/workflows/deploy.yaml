@@ -14,7 +14,7 @@ jobs:
                 project:
                 -   name: 'App.Function.Banktransaction.Import'
                     service: 'function-banktransaction-import'
-                    dotnet-version: '6.0'
+                    dotnet-version: '7.0.1'
         permissions:
             contents: 'read'
             id-token: 'write'
@@ -55,7 +55,6 @@ jobs:
                 project:
                 -   name: 'App.Function.Banktransaction.Import'
                     service: 'function-banktransaction-import'
-                    dotnet-version: '6.0'
                 region: [ 'europe-central2' ]
         steps:
         -   uses: actions/checkout@v3

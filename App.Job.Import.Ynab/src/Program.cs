@@ -1,18 +1,13 @@
-﻿using App.Job.Import.Ynab.Command;
-using Microsoft.Extensions.DependencyInjection;
-using Spectre.Cli.Extensions.DependencyInjection;
-using Spectre.Console.Cli;
+using App.Lib;
+using App.Lib.Queue;
 
-var services = new ServiceCollection();
-services.AddLogging();
+await AppWebApplication.CreateAndRun(
+    args,
+    builder =>
+    {
+        builder.Services.AddQueue(builder.Configuration["GoogleProjectId"]);
+    });
 
-var app = new CommandApp<ImportTransactionsCommand>(new DependencyInjectionRegistrar(services));
-app.Configure(config =>
+public partial class Program
 {
-#if DEBUG
-    config.PropagateExceptions();
-    config.ValidateExamples();
-#endif
-});
-
-return app.Run(args);
+}
