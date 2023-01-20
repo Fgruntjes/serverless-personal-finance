@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.AspNetCore.Mvc.Testing">
+        <HintPath>..\..\..\..\..\.nuget\packages\microsoft.aspnetcore.mvc.testing\6.0.9\lib\net6.0\Microsoft.AspNetCore.Mvc.Testing.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.Extensions.Hosting.Abstractions">
+        <HintPath>..\..\..\..\..\.nuget\packages\microsoft.extensions.hosting.abstractions\2.2.0\lib\netstandard2.0\Microsoft.Extensions.Hosting.Abstractions.dll</HintPath>
+      </Reference>
+      <Reference Include="MongoDB.Driver">
+        <HintPath>..\..\..\..\..\.nuget\packages\mongodb.driver\2.17.1\lib\netstandard2.1\MongoDB.Driver.dll</HintPath>
+      </Reference>
+      <Reference Include="MongoDB.Driver.Core">
+        <HintPath>..\..\..\..\..\.nuget\packages\mongodb.driver.core\2.17.1\lib\netstandard2.1\MongoDB.Driver.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="Newtonsoft.Json">
+        <HintPath>..\..\..\..\..\.nuget\packages\newtonsoft.json\11.0.2\lib\netstandard2.0\Newtonsoft.Json.dll</HintPath>
+      </Reference>
+      <Reference Include="xunit.core">
+        <HintPath>..\..\..\..\..\.nuget\packages\xunit.extensibility.core\2.4.2\lib\netstandard1.1\xunit.core.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentAssertions" Version="6.8.0" />
+      <PackageReference Include="LiquidTestReports.Markdown" Version="1.0.9" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.10" />
+      <PackageReference Include="Moq" Version="4.18.2" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+      <PackageReference Include="xunit" Version="2.4.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\App.Lib.Database\App.Lib.Database.csproj" />
+      <ProjectReference Include="..\App.Lib\App.Lib.csproj" />
+    </ItemGroup>
+
+</Project>

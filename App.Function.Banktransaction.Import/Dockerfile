@@ -1,9 +1,10 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+﻿ARG DOTNET_VERSION=7.0
+FROM mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION} AS base
 WORKDIR /app
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://*:8080
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION} AS build
 WORKDIR /src
 COPY ["App.Function.Banktransaction.Import/App.Function.Banktransaction.Import.csproj", "App.Function.Banktransaction.Import/"]
 RUN dotnet restore "App.Function.Banktransaction.Import/App.Function.Banktransaction.Import.csproj"

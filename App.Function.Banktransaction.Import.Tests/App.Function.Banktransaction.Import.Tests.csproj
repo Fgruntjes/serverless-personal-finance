@@ -1,28 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
 
         <IsPackable>false</IsPackable>
+
+        <OutputType>Library</OutputType>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentAssertions" Version="6.7.0" />
-        <PackageReference Include="coverlet.collector" Version="3.1.2" />
-        <PackageReference Include="LiquidTestReports.Markdown" Version="1.0.9" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
-        <PackageReference Include="xunit" Version="2.4.2" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+      <ProjectReference Include="..\App.Function.Banktransaction.Import\App.Function.Banktransaction.Import.csproj" />
+      <ProjectReference Include="..\App.Lib.Tests\App.Lib.Tests.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\App.Function.Banktransaction.Import\App.Function.Banktransaction.Import.csproj" />
-      <ProjectReference Include="..\App.TestsLib\App.TestsLib.csproj" />
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
     </ItemGroup>
 
 </Project>

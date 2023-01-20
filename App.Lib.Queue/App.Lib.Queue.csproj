@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+     <ItemGroup>
+      <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+     <ItemGroup>
+       <PackageReference Include="Rebus.GoogleCloudPubSub" Version="0.0.7" />
+       <PackageReference Include="Rebus.ServiceProvider" Version="8.3.1" />
+     </ItemGroup>
+
+     <ItemGroup>
+       <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+         <HintPath>..\..\..\..\..\..\..\usr\share\dotnet\shared\Microsoft.AspNetCore.App\7.0.1\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+       </Reference>
+     </ItemGroup>
+
+</Project>
