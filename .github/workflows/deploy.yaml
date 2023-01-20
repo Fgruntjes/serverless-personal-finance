@@ -14,7 +14,7 @@ jobs:
                 project:
                 -   name: 'App.Function.Banktransaction.Import'
                     service: 'function-banktransaction-import'
-                    dotnet-version: '7.0.1'
+                    dotnet-version: '7.0'
         permissions:
             contents: 'read'
             id-token: 'write'
@@ -53,8 +53,8 @@ jobs:
         strategy:
             matrix:
                 project:
-                -   name: 'App.Function.Banktransaction.Import'
-                    service: 'function-banktransaction-import'
+                - 'App.Function.Banktransaction.Import'
+                - 'App.Function.Integration.Ynab'
                 region: [ 'europe-central2' ]
         steps:
         -   uses: actions/checkout@v3
@@ -76,27 +76,27 @@ jobs:
         -   run: echo "environment_lowercase=$(echo ${{ steps.environment.outputs.result }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
         -   uses: mshick/fast-envsubst@v1
             env:
-                SERVICE: ${{ matrix.project.service }}
+                SERVICE: ${{ matrix.project }}
                 DEPLOY_ENV: ${{ env.environment_lowercase }}
                 DOTNET_ENVIRONMENT: ${{ steps.environment.outputs.result }}
-                IMAGE: gcr.io/${{ secrets.GOOGLE_PROJECT_ID }}/${{ matrix.project.service }}:${{env.slug}}
+                IMAGE: gcr.io/${{ secrets.GOOGLE_PROJECT_ID }}/${{ matrix.project }}:${{env.slug}}
                 Database__ConnectionString: ${{ secrets.DATABASE__CONNECTIONSTRING }}
                 Database__DatabaseName: ${{ steps.environment.outputs.result }}
                 Sentry__Dsn: ${{ secrets.SENTRY__DSN }}
             with:
-                in-file: ${{ matrix.project.name }}/service.yaml
-                out-file: ${{ matrix.project.name }}/service.deploy.yaml
-        -   run: cat ${{ matrix.project.name }}/service.deploy.yaml
+                in-file: ${{ matrix.project }}/service.yaml
+                out-file: ${{ matrix.project }}/service.deploy.yaml
+        -   run: cat ${{ matrix.project }}/service.deploy.yaml
         -   uses: google-github-actions/deploy-cloudrun@v0
             id: cloudrun
             with:
-                metadata: ${{ matrix.project.name }}/service.deploy.yaml
+                metadata: ${{ matrix.project }}/service.deploy.yaml
                 region: ${{ matrix.region }}
         # Deploy infra (terraform)
         -   uses: hashicorp/setup-terraform@v2
         -   run: |
-                test -d ${{ matrix.project.name }}/terraform || exit 0
-                cd ${{ matrix.project.name }}/terraform
+                test -d ${{ matrix.project }}/terraform || exit 0
+                cd ${{ matrix.project }}/terraform
                 terraform init
                 terraform plan -out plan.tf \
                     -var "environment=${{ env.environment_lowercase }}" \
