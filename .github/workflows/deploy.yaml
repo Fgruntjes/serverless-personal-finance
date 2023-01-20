@@ -13,8 +13,7 @@ jobs:
             matrix:
                 project:
                 -   name: 'App.Function.Banktransaction.Import'
-                    service: 'function-banktransaction-import'
-                    dotnet-version: '7.0'
+                -   name: 'App.Function.Integration.Ynab'
         permissions:
             contents: 'read'
             id-token: 'write'
@@ -38,8 +37,7 @@ jobs:
                 context: .
                 file: '${{ matrix.project.name }}/Dockerfile'
                 push: true
-                build-args: DOTNET_VERSION=${{ matrix.project.dotnet-version }}
-                tags: gcr.io/${{ secrets.GOOGLE_PROJECT_ID }}/${{ matrix.project.service }}:${{env.slug}}
+                tags: gcr.io/${{ secrets.GOOGLE_PROJECT_ID }}/${{ matrix.project.name }}:${{env.slug}}
                 cache-from: type=gha
                 cache-to: type=gha,mode=max
     

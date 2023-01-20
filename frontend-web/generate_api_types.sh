@@ -5,9 +5,7 @@ cd "$(dirname "$(realpath "$0")")";
 set -e
 set -x
 
-API_PROJECTS=( 
-  "App.Function.Integration.Ynab"
-)
+API_PROJECTS=( $(../.github/project_matrix.sh functions) )
   
 # Clear old generated code
 rm -Rf src/generated/*/*
