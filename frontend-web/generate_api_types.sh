@@ -10,8 +10,8 @@ API_PROJECTS=( $(../.github/project_matrix.sh functions) )
 # Clear old generated code
 rm -Rf src/generated/*/*
 
-# Build dotnet projects
-(cd ../ && dotnet build)
+# Build dotnet projects and restore tools
+(cd ../ && dotnet build && dotnet tool restore)
   
 for PROJECT in "${API_PROJECTS[@]}"
 do

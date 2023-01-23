@@ -1,4 +1,4 @@
-name: Test
+name: Unit test
 on:
     pull_request:
 
@@ -14,7 +14,7 @@ jobs:
         needs: [project_matrix]
         strategy:
             matrix:
-                project: ${{fromJson(needs.project_matrix.outputs.typescript)}}
+                project: ${{ fromJson(needs.project_matrix.outputs.typescript) }}
         steps:
         -   uses: actions/checkout@v3
         -   run: cd ${{ matrix.project }} && ./ensure_tests.sh
@@ -33,14 +33,8 @@ jobs:
         -   uses: actions/setup-dotnet@v3
             with:
                 dotnet-version: 7.0
-        -   run: dotnet tool restore
-        -   run: |
-                cd ${{ matrix.project }}
-                npm ci
-                ./generate_api_types.sh
-        -   run: |
-                cd ${{ matrix.project }}
-                npm run test -- --reporters="default" --reporters="jest-md-dashboard"
+        -   run: cd ${{ matrix.project }} && npm ci
+        -   run: cd ${{ matrix.project }} && npm run test -- --reporters="default" --reporters="jest-md-dashboard"
         -   uses: marocchino/sticky-pull-request-comment@v2
             if: always()
             with:

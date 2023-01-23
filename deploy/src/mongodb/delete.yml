@@ -1,0 +1,19 @@
+---
+- name: Delete mongodb database
+  gather_facts: false
+  hosts: localhost
+  environment:
+    MONGODB_ATLAS_PUBLIC_API_KEY: "{{ public_api_key }}"
+    MONGODB_ATLAS_PRIVATE_API_KEY: "{{ private_api_key }}"
+    MONGODB_ATLAS_PROJECT_ID: "{{ project_id }}"
+  tasks:
+    # Get instance info
+    - name: Get MongoDB Atlas serverless instance info
+      shell: atlas serverless describe "{{ app_environment }}" -o json | jq -e -r ".stateName" | grep -v "DELETING"
+      register: instance_info
+      changed_when: false
+      failed_when: false
+    # Delete instance if exists
+    - name: Delete server instance
+      when: instance_info.rc == 0
+      shell: atlas serverless delete "{{ app_environment }}" --force

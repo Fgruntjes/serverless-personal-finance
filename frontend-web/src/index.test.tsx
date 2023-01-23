@@ -4,3 +4,5 @@ describe("bootstrap.index", () => {
         expect(true).toBeTruthy();
     });
 });
+
+export {};

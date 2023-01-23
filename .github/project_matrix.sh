@@ -9,6 +9,11 @@ function isFunction() {
     [[ ! "${PROJECT_NAME}" =~ .Tests$ ]] && [[ "${PROJECT_NAME}" =~ ^App.Function ]]
 }
 
+function isDocker() {
+    PROJECT_NAME=$1
+    [[ -f "${PROJECT_DIRECTORY}/Dockerfile" ]]
+}
+
 function isTest() {
     PROJECT_NAME=$1
     [[ "${PROJECT_NAME}" =~ \.Tests$ && "${PROJECT_NAME}" != "App.Lib.Tests" ]]
@@ -32,6 +37,11 @@ do
                 RESULT_PROJECTS+=($PROJECT_NAME)
             fi
             ;;
+        docker)
+            if isDocker "${PROJECT_NAME}"; then
+                RESULT_PROJECTS+=($PROJECT_NAME)
+            fi
+            ;;
         tests)
             if isTest "${PROJECT_NAME}"; then
                 RESULT_PROJECTS+=($PROJECT_NAME)
@@ -44,7 +54,7 @@ do
             ;;
         *)
             echo "Unknown project type ${1}"
-            echo "Usage: project_matrix.sh {functions|tests|typescript} [--json]"
+            echo "Usage: project_matrix.sh {functions|tests|typescript|docker} [--json]"
             exit 1
             ;;
     esac

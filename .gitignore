@@ -2,8 +2,12 @@ bin/
 obj/
 /packages/
 riderModule.iml
-terraform.tfstate
+*.tfstate
+*.tfstate.backup
 .terraform/
+terraform/plan.tf
 /_ReSharper.Caches/
 /.idea
 */swagger.json
+.env.local
+.env.*.local

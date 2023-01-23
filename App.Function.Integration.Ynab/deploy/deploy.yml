@@ -1,0 +1,33 @@
+---
+- name: Deploy App.Function.Integration.Ynab
+  gather_facts: false
+  hosts: localhost
+  vars:
+      project_name: Function.Integration.Ynab
+      project_slug: "{{ app_environment }}-{{ project_name | lower | replace('.', '-') }}"
+
+  tasks:
+      - name: Deploy
+        shell: gcloud run deploy "{{ project_slug }}" \
+            --image="{{ google_region }}-docker.pkg.dev/{{ google_project_id }}/docker/{{ app_environment }}/app.{{ project_name | lower }}:{{ app_image_tag }}" \
+            --project="{{ google_project_id }}" \
+            --region="{{ google_region }}" \
+            --service-account="" \
+            --set-env-vars=" \
+                App__Frontend={{ app_frontend }}, \
+                Sentry__Dsn={{ sentry_dsn }}, \
+                Database__ConnectionString={{ database_connection_string }}, \
+                Database__DatabaseName={{ project_slug }} \
+            " \
+            --labels="environment={{ app_environment }}" \
+            --platform=managed \
+            --port=80
+      - name: Get service URL
+        shell: gcloud run services describe "{{ project_slug }}" \
+            --project="{{ google_project_id }}" \
+            --region="{{ google_region }}" \
+            --platform=managed \
+            --format='value(status.url)'
+        register: service_url
+      - name: Set service URL
+        set_fact: "function_integration_ynab_url={{ service_url.stdout }}"
