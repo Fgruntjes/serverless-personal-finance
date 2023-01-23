@@ -1,0 +1,56 @@
+name: Test Quality
+on:
+    pull_request:
+
+jobs:
+    project_matrix:
+        uses: ./.github/workflows/project_matrix.yaml
+    
+    #########################################################
+    # Code quality tests
+    #########################################################
+    test_quality_dotnet:
+        runs-on: ubuntu-latest
+        steps:
+        -   uses: actions/checkout@v3
+        -   uses: actions/setup-dotnet@v3
+            with:
+                dotnet-version: 7.0
+        -   run: dotnet format --verify-no-changes
+    
+    test_quality_terraform:
+        runs-on: ubuntu-latest
+        needs: [project_matrix]
+        strategy:
+            matrix:
+                project: ${{fromJson(needs.project_matrix.outputs.functions)}}
+        steps:
+        -   uses: actions/checkout@v3
+        -   uses: hashicorp/setup-terraform@v2
+        -   run: |
+                test -d ${{ matrix.project }}/terraform || exit 0
+                cd ${{ matrix.project }}/terraform
+                terraform init
+                terraform validate
+        -   uses: reviewdog/action-tflint@master
+            with:
+                github_token: ${{ secrets.github_token }}
+                working_directory: ${{ matrix.project }}/terraform
+                reporter: github-pr-review
+    
+    test_quality_typescript:
+        runs-on: ubuntu-latest
+        needs: [project_matrix]
+        strategy:
+            matrix:
+                project: ${{fromJson(needs.project_matrix.outputs.typescript)}}
+        steps:
+        -   uses: actions/checkout@v3
+        -   uses: actions/setup-node@v3
+            with:
+                node-version-file: ${{ matrix.project }}/package.json
+        -   uses: reviewdog/action-eslint@v1
+            with:
+                reporter: github-pr-review
+                workdir: ${{ matrix.project }}
+                fail_on_error: true

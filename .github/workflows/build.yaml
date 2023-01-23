@@ -1,0 +1,46 @@
+name: Build
+on:
+    workflow_call:
+        inputs:
+            tag:
+                required: true
+                type: string
+            labels:
+                required: false
+                type: string
+
+jobs:
+    project_matrix:
+        uses: ./.github/workflows/project_matrix.yaml
+        
+    build:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                project: ${{fromJson(needs.project_matrix.outputs.functions)}}
+        permissions:
+            contents: 'read'
+            id-token: 'write'
+        steps:
+        -   uses: actions/checkout@v3
+        -   uses: google-github-actions/auth@v0
+            id: google_auth
+            with:
+                token_format: 'access_token'
+                workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+                service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+        -   uses: docker/login-action@v2
+            with:
+                registry: gcr.io
+                username: oauth2accesstoken
+                password: ${{ steps.google_auth.outputs.access_token }}
+        -   uses: docker/setup-buildx-action@v2
+        -   uses: docker/build-push-action@v3
+            with:
+                context: .
+                file: '${{ matrix.project }}/Dockerfile'
+                push: true
+                tags: gcr.io/${{ secrets.GOOGLE_PROJECT_ID }}/${{ matrix.project }}:${{inputs.tag}}
+                cache-from: type=gha
+                cache-to: type=gha,mode=max
+                labels: ${{inputs.labels}}
