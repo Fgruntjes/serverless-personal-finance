@@ -1,0 +1,67 @@
+name: Unit test
+on:
+    pull_request:
+
+jobs:
+    project_matrix:
+        uses: ./.github/workflows/project_matrix.yaml
+    
+    #########################################################
+    # Code quality and unit tests
+    #########################################################
+    test_unit_typescript_ensure:
+        runs-on: ubuntu-latest
+        needs: [project_matrix]
+        strategy:
+            matrix:
+                project: ${{ fromJson(needs.project_matrix.outputs.typescript) }}
+        steps:
+        -   uses: actions/checkout@v3
+        -   run: cd ${{ matrix.project }} && ./ensure_tests.sh
+    
+    test_unit_typescript:
+        runs-on: ubuntu-latest
+        needs: [project_matrix]
+        strategy:
+            matrix:
+                project: ${{fromJson(needs.project_matrix.outputs.typescript)}}
+        steps:
+        -   uses: actions/checkout@v3
+        -   uses: actions/setup-node@v3
+            with:
+                node-version-file: ${{ matrix.project }}/package.json
+        -   uses: actions/setup-dotnet@v3
+            with:
+                dotnet-version: 7.0
+        -   run: cd ${{ matrix.project }} && npm ci
+        -   run: cd ${{ matrix.project }} && npm run test -- --reporters="default" --reporters="jest-md-dashboard"
+        -   uses: marocchino/sticky-pull-request-comment@v2
+            if: always()
+            with:
+                path: ${{ matrix.project }}/test-dashboard.md
+                header: unit_typescript
+
+    test_unit_dotnet:
+        runs-on: ubuntu-latest
+        needs: [project_matrix]
+        strategy:
+            fail-fast: false
+            matrix:
+                project: ${{fromJson(needs.project_matrix.outputs.tests)}}
+        steps:
+        -   uses: actions/checkout@v3
+        -   uses: actions/setup-dotnet@v3
+            with:
+                dotnet-version: 7.0
+        -   run: |
+                echo "title=Test Run for PR #${{github.event.number}} Run #${{github.run_number}}" >> $GITHUB_ENV
+                echo "file_name=TestReport.${{ matrix.project }}.${{github.sha}}.md" >> $GITHUB_ENV  
+        -   run: dotnet restore ${{ matrix.project }}
+        -   run: dotnet build --no-restore ${{ matrix.project }}
+        -   run: docker-compose -f App.Lib.Tests/docker-compose.yaml up -d
+        -   run: dotnet test --no-restore --no-build --logger "liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};" ${{ matrix.project }}
+        -   uses: marocchino/sticky-pull-request-comment@v2
+            if: always()
+            with:
+                path: ${{github.workspace}}/${{env.file_name}}
+                header: unit_dotnet

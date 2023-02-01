@@ -26,7 +26,7 @@ describe(AuthProvider.name, () => {
         render(<AuthProvider><p>child element</p></AuthProvider>);
 
         expect(ErrorPage).toHaveBeenCalledWith(
-            expect.objectContaining({error: expect.stringContaining("REACT_APP_GOOGLE_AUTH_CLIENT_ID")}),
+            expect.objectContaining({error: expect.stringContaining("REACT_APP_OAUTH_CLIENT_ID")}),
             expect.anything(),
         );
     }); 

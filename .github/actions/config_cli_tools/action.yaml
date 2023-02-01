@@ -1,0 +1,24 @@
+name: 'Configure CLI tools for CI/CD'
+description: 'Setup CI/CD tools and authentication'
+inputs:
+    google_workload_identity_provider:
+        required: true
+        description: "Google workload identity provider, created in `deploy/setup.sh`."
+    google_service_account:
+        required: true
+        description: "Google service account email, created in `deploy/setup.sh`."
+runs:
+    using: "composite"
+    steps:
+    -   uses: google-github-actions/auth@v1
+        with:
+            workload_identity_provider: ${{ inputs.google_workload_identity_provider }}
+            service_account: ${{ inputs.google_service_account }}
+    -   uses: google-github-actions/setup-gcloud@v1
+    -   uses: giantswarm/install-binary-action@v1
+        with:
+            binary: 'atlas'
+            version: '1.4.0'
+            smoke_test: "${binary} --version"
+            tarball_binary_path: "*/bin/${binary}"
+            download_url: 'https://fastdl.mongodb.org/mongocli/mongodb-atlas-cli_${version}_linux_x86_64.tar.gz'

@@ -1,0 +1,25 @@
+name: ProjectMatrix
+on:
+    workflow_call:
+        outputs:
+            tests:
+                value: ${{ jobs.project_matrix.outputs.tests }}
+            typescript:
+                value: ${{ jobs.project_matrix.outputs.typescript }}
+            docker:
+                value: ${{ jobs.project_matrix.outputs.docker }}
+jobs:
+    project_matrix:
+        runs-on: ubuntu-latest
+        steps:
+        -   uses: actions/checkout@v3
+        -   run: echo "matrix=$(.github/project_matrix.sh tests --json)" >> $GITHUB_OUTPUT
+            id: tests
+        -   run: echo "matrix=$(.github/project_matrix.sh typescript --json)" >> $GITHUB_OUTPUT
+            id: typescript
+        -   run: echo "matrix=$(.github/project_matrix.sh docker --json)" >> $GITHUB_OUTPUT
+            id: docker
+        outputs:
+            tests: ${{ steps.tests.outputs.matrix }}
+            typescript: ${{ steps.typescript.outputs.matrix }}
+            docker: ${{ steps.docker.outputs.matrix }}

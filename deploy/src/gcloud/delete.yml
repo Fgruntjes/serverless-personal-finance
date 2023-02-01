@@ -1,0 +1,19 @@
+---
+- name: Delete gcloud resources
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    # Cloud run services
+    - name: Delete services
+      shell: gcloud run services list \
+        --project="{{ google_project_id }}" \
+        --region="{{ google_region }}" \
+        --filter="metadata.labels.environment='{{ app_environment }}'" \
+        --format="value(metadata.name)" \
+        | xargs -I {} gcloud run services delete \
+          --project="{{ google_project_id }}" \
+          --region="{{ google_region }}" \
+          --quiet {}
+    # Pubsub
+    # Storage
+    # Scheduler jobs

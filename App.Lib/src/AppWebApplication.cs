@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Converters;
 
 namespace App.Lib;
@@ -114,6 +115,7 @@ public static class AppWebApplication
         Func<WebApplication, Task> configureApp)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Services.Configure<AppOptions>(builder.Configuration.GetSection(AppOptions.OptionsKey));
         builder.Configuration
             .AddEnvironmentVariables()
             .AddUserSecrets(Assembly.GetExecutingAssembly(), true);
@@ -130,31 +132,27 @@ public static class AppWebApplication
         builder.Services.AddSwaggerGenNewtonsoftSupport();
         builder.Services.AddLogging();
         builder.Services.AddDataProtection();
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy(name: CORSDevelopmentPolicy,
-                policy =>
-                {
-                    policy.WithOrigins("http://localhost:3000");
-                });
-            options.AddPolicy(name: CORSProductionPolicy, _ => { });
-        });
+        builder.Services.AddCors();
 
         await configureBuilder(builder);
         builder.WebHost.UseSentry();
 
         var app = builder.Build();
         app.MapControllers();
+        app.UseCors(policy =>
+        {
+            var settings = app.Services.GetRequiredService<IOptions<AppOptions>>();
+            policy.WithOrigins(settings.Value.Frontend);
+        });
+
         if (!app.Environment.IsDevelopment())
         {
             app.UseSentryTracing();
-            app.UseCors(CORSProductionPolicy);
         }
         else
         {
             app.UseSwagger();
             app.UseSwaggerUI();
-            app.UseCors(CORSDevelopmentPolicy);
         }
 
         await configureApp(app);

@@ -1,0 +1,16 @@
+---
+# Infra (database)
+- import_playbook: mongodb/delete.yml
+  vars:
+    app_environment: "{{ APP_ENVIRONMENT }}"
+    project_id: "{{ MONGODB_ATLAS_PROJECT_ID }}"
+    public_api_key: "{{ MONGODB_ATLAS_PUBLIC_KEY }}"
+    private_api_key: "{{ MONGODB_ATLAS_PRIVATE_KEY }}"
+
+# Google cloud resources
+- import_playbook: gcloud/delete.yml
+  vars:
+    app_environment: "{{ APP_ENVIRONMENT }}"
+    app_image_tag: "{{ APP_TAG }}"
+    google_region: "{{ GOOGLE_REGION }}"
+    google_project_id: "{{ GOOGLE_PROJECT_ID }}"

@@ -1,0 +1,31 @@
+---
+# Infra (database)
+- import_playbook: mongodb/create.yml
+  vars:
+    app_environment: "{{ APP_ENVIRONMENT }}"
+    google_region: "{{ GOOGLE_REGION }}"
+    project_id: "{{ MONGODB_ATLAS_PROJECT_ID }}"
+    public_api_key: "{{ MONGODB_ATLAS_PUBLIC_KEY }}"
+    private_api_key: "{{ MONGODB_ATLAS_PRIVATE_KEY }}"
+
+# Backend functions
+- import_playbook: ../../App.Function.Integration.Ynab/deploy/deploy.yml
+  vars:
+    app_environment: "{{ APP_ENVIRONMENT }}"
+    app_image_tag: "{{ APP_TAG }}"
+    app_frontend: "{{ APP_FRONTEND }}"
+    google_region: "{{ GOOGLE_REGION }}"
+    google_project_id: "{{ GOOGLE_PROJECT_ID }}"
+    sentry_dsn: "{{ SENTRY_DSN }}"
+    database_connection_string: "{{ mongodb_connection_string_admin }}"
+
+# Frontend
+- import_playbook: ../../frontend-web/deploy/deploy.yml
+  vars:
+    app_environment: "{{ APP_ENVIRONMENT }}"
+    app_project_name: "{{ GOOGLE_PROJECT_ID }}"
+    cloudflare_api_token: "{{ CLOUDFLARE_API_TOKEN }}"
+    cloudflare_account_id: "{{ CLOUDFLARE_ACCOUNT_ID }}"
+    oauth_client_id: "{{ GOOGLE_OAUTH_CLIENT_ID }}"
+    service_urls:
+      function_integration_ynab_url: "{{ function_integration_ynab_url }}"

@@ -1,0 +1,56 @@
+name: Build
+on:
+    workflow_call:
+        inputs:
+            environment:
+                required: true
+                type: string
+            tag:
+                required: true
+                type: string
+        secrets:
+            GOOGLE_WORKLOAD_IDENTITY_PROVIDER:
+                required: true
+            GOOGLE_SERVICE_ACCOUNT_EMAIL:
+                required: true
+            GOOGLE_PROJECT_ID:
+                required: true
+            GOOGLE_REGION:
+                required: true
+
+jobs:
+    project_matrix:
+        uses: ./.github/workflows/project_matrix.yaml
+        
+    build_images:
+        runs-on: ubuntu-latest
+        needs: [project_matrix]
+        strategy:
+            matrix:
+                project: ${{ fromJson(needs.project_matrix.outputs.docker) }}
+        permissions:
+            contents: 'read'
+            id-token: 'write'
+        steps:
+        -   uses: actions/checkout@v3
+        -   uses: ./.github/actions/config_docker
+            with:
+                google_workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+                google_service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+                container_registry: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev
+        -   uses: docker/metadata-action@v4
+            id: meta
+            with:
+                images: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT_ID }}/docker/${{ inputs.environment }}/${{ matrix.project }}
+                tags: ${{ inputs.tag }}
+        -   uses: docker/build-push-action@v3
+            with:
+                context: .
+                file: '${{ matrix.project }}/Dockerfile'
+                push: true
+                tags: ${{ steps.meta.outputs.tags }}
+                labels: ${{ steps.meta.outputs.labels }}
+                cache-from: type=gha
+                cache-to: type=gha,mode=max
+                # @see https://github.com/docker/buildx/issues/1533
+                provenance: false

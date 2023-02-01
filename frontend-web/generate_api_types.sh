@@ -5,15 +5,13 @@ cd "$(dirname "$(realpath "$0")")";
 set -e
 set -x
 
-API_PROJECTS=( 
-  "App.Function.Integration.Ynab"
-)
+API_PROJECTS=( $(../.github/project_matrix.sh functions) )
   
 # Clear old generated code
 rm -Rf src/generated/*/*
 
-# Build dotnet projects
-(cd ../ && dotnet build)
+# Build dotnet projects and restore tools
+(cd ../ && dotnet build && dotnet tool restore)
   
 for PROJECT in "${API_PROJECTS[@]}"
 do

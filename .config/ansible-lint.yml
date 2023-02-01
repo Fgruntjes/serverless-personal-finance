@@ -1,0 +1,13 @@
+---
+# check this website for detailed configuration options:
+#    https://ansible-lint.readthedocs.io/configuring/#ansible-lint-configuration
+
+profile: shared
+
+exclude_paths:
+    - "../.github"
+    - "../.git"
+    - "../**/docker-compose.yaml"
+
+warn_list:
+    - yaml[line-length]

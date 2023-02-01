@@ -1,0 +1,35 @@
+name: Code quality
+on:
+    pull_request:
+
+jobs:
+    #########################################################
+    # Code quality tests
+    #########################################################
+    test_quality_dotnet:
+        runs-on: ubuntu-latest
+        steps:
+        -   uses: actions/checkout@v3
+        -   uses: actions/setup-dotnet@v3
+            with:
+                dotnet-version: 7.0
+        -   run: dotnet format --verify-no-changes
+
+    test_quality_ansible:
+        runs-on: ubuntu-latest
+        steps:
+        -   uses: actions/checkout@v3
+        -   uses: ansible/ansible-lint-action@v6
+
+    test_quality_frontend_web_typescript:
+        runs-on: ubuntu-latest
+        steps:
+        -   uses: actions/checkout@v3
+        -   uses: actions/setup-node@v3
+            with:
+                node-version-file: frontend-web/package.json
+        -   uses: reviewdog/action-eslint@v1
+            with:
+                reporter: github-pr-review
+                fail_on_error: true
+                workdir: frontend-web

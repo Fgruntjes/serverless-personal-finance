@@ -1,0 +1,50 @@
+---
+- name: Create mongodb database
+  gather_facts: false
+  hosts: localhost
+  environment:
+    MONGODB_ATLAS_PUBLIC_API_KEY: "{{ public_api_key }}"
+    MONGODB_ATLAS_PRIVATE_API_KEY: "{{ private_api_key }}"
+    MONGODB_ATLAS_PROJECT_ID: "{{ project_id }}"
+  tasks:
+    - name: Set variables
+      set_fact:
+        admin_user: "{{ admin_user | default('admin') }}"
+        read_user: "{{ read_user | default('read') }}"
+        write_user: "{{ write_user | default('write') }}"
+
+    # Create instance
+    - name: Get MongoDB Atlas serverless instance info
+      shell: atlas serverless describe "{{ app_environment }}" -o json
+      register: instance_info
+      changed_when: false
+      failed_when: false
+    - name: Create server instance
+      when: instance_info.rc != 0
+      shell: atlas serverless create "{{ app_environment }}" \
+        --provider=GCP \
+        --region="{{ google_region | replace('europe-west1', 'WESTERN_EUROPE') }}"
+
+    # Configure network access
+    - name: Get network access list
+      shell: atlas accessLists list -o json | jq -e -r ".results[] | select(.comment == \"public\")" > /dev/null
+      register: access_info
+      changed_when: false
+      failed_when: false
+    - name: Create network access list
+      when: access_info.rc != 0
+      shell: atlas accessLists create "0.0.0.0/0" --comment="public"
+
+    # Create users
+    - include_tasks: create_user.yml
+      vars:
+        - username: "{{ admin_user }}"
+          role: atlasAdmin
+    - include_tasks: create_user.yml
+      vars:
+        - username: "{{ read_user }}"
+          role: readAnyDatabase
+    - include_tasks: create_user.yml
+      vars:
+        - username: "{{ write_user }}"
+          role: readWriteAnyDatabase
