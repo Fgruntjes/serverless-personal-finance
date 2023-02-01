@@ -12,9 +12,9 @@ jobs:
             id: semver
             with:
                 input_string: ${{ github.ref }}
-                version_extractor_regex: "\/v(.*)$"
+                version_extractor_regex: '\/v(.*)$'
         -   id: environment
-            run: PRERELASE=${{ steps.semver.outputs.prerelease }} echo "var=$([ -z "${PRERELASE}" ] && echo "production" || echo "${PRERELASE}")" >> $GITHUB_OUTPUT
+            run: echo "var=${{ steps.semver.outputs.prerelease || "production" }}" >> $GITHUB_OUTPUT
         outputs:
             environment: ${{ steps.environment.outputs.var }}
             tag: v${{ steps.semver.outputs.fullversion }}
