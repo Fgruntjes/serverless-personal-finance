@@ -1,0 +1,37 @@
+name: Deploy release
+
+on:
+    release:
+        types: [ published ]
+
+jobs:
+    deploy_slug:
+        runs-on: ubuntu-latest
+        steps:
+        -   uses: booxmedialtd/ws-action-parse-semver@v1
+            id: semver
+            with:
+                input_string: ${{ github.ref }}
+                version_extractor_regex: "\/v(.*)$"
+        -   id: environment
+            run: PRERELASE=${{ steps.semver.outputs.prerelease }} echo "var=$([ -z "${PRERELASE}" ] && echo "production" || echo "${PRERELASE}")" >> $GITHUB_OUTPUT
+        outputs:
+            environment: ${{ steps.environment.outputs.var }}
+            tag: v${{ steps.semver.outputs.fullversion }}
+
+    build:
+        needs: [ deploy_slug ]
+        uses: ./.github/workflows/build.yaml
+        secrets: inherit
+        with:
+            environment: ${{ needs.deploy_slug.outputs.environment }}
+            tag: ${{ needs.deploy_slug.outputs.tag }}
+            
+    deploy:
+        needs: [ deploy_slug, build ]
+        uses: ./.github/workflows/deploy.yaml
+        secrets: inherit
+        concurrency: ${{ needs.deploy_slug.outputs.environment }}
+        with:
+            environment: ${{ needs.deploy_slug.outputs.environment }}
+            tag: ${{ needs.deploy_slug.outputs.tag }}
