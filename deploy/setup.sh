@@ -179,6 +179,7 @@ function storeSecret {
     fi
     
     echo "${SECRET_VALUE}" | gh secret set "${SECRET_NAME}" --app actions
+    echo "${SECRET_VALUE}" | gh secret set "${SECRET_NAME}" --app dependabot
     echo "${SECRET_NAME}=\"${SECRET_VALUE}\"" >> .env.deploy.local
 }
 cat /dev/null > .env.deploy.local
