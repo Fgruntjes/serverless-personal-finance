@@ -41,6 +41,7 @@ jobs:
         steps:
         -   uses: actions/checkout@v3
         -   uses: bobheadxi/deployments@v1
+            if: ${{ inputs.environment == "main" || inputs.environment == "beta" || inputs.environment == "alpha" }}
             id: deployment
             with:
                 step: start
@@ -72,7 +73,7 @@ jobs:
                 env: ${{ inputs.environment }}
                 env_url: "https://${{ secrets.GOOGLE_PROJECT_ID }}.pages.dev"
         -   uses: bobheadxi/deployments@v1
-            if: ${{ inputs.environment != 'main' }}
+            if: ${{ inputs.environment == "beta" || inputs.environment == "alpha" }}
             with:
                 step: finish
                 token: ${{ secrets.GITHUB_TOKEN }}
