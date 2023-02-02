@@ -13,7 +13,7 @@ jobs:
         steps:
         -   uses: rlespinasse/github-slug-action@v4
         -   id: environment
-            run: echo "var=it-${{ env.GITHUB_REF_SLUG_URL }}" >> $GITHUB_OUTPUT
+            run: echo "var=${{ env.GITHUB_REF_SLUG_URL }}" >> $GITHUB_OUTPUT
         -   id: tag
             run: echo "var=${{ env.GITHUB_SHA_SHORT }}" >> $GITHUB_OUTPUT
         outputs:
