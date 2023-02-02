@@ -56,3 +56,11 @@ jobs:
         -   run: docker-compose -f App.Lib.Tests/docker-compose.yaml up -d
         -   run: dotnet test --no-restore --no-build ${{ matrix.project }}
 
+    test_unit_success:
+        runs-on: ubuntu-latest
+        needs:
+        - test_unit_dotnet
+        - test_unit_typescript
+        - test_unit_typescript_ensure
+        steps:
+        -   run: "echo 'all tests succeeded'"
