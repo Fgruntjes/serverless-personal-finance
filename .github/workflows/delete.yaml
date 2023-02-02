@@ -72,3 +72,9 @@ jobs:
                 MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
                 CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
                 CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        -   uses: tallyb/deployments@master
+            if: always()
+            with:
+                step: deactivate-env
+                token: ${{ secrets.GITHUB_TOKEN }}
+                env: ${{ inputs.environment }}
