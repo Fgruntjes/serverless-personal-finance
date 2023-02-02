@@ -1,23 +1,24 @@
-name: Deploy release
+name: Deploy environment
 
 on:
-    release:
-        types: [ published ]
+    push:
+        branches:
+        - main
+        - beta
+        - alpha
 
 jobs:
     deploy_slug:
         runs-on: ubuntu-latest
         steps:
-        -   uses: booxmedialtd/ws-action-parse-semver@v1
-            id: semver
-            with:
-                input_string: ${{ github.ref }}
-                version_extractor_regex: '\/v(.*)$'
+        -   uses: rlespinasse/github-slug-action@v4
         -   id: environment
-            run: echo "var=${{ steps.semver.outputs.prerelease || "production" }}" >> $GITHUB_OUTPUT
+            run: echo "var=it-${{ env.GITHUB_REF_SLUG_URL }}" >> $GITHUB_OUTPUT
+        -   id: tag
+            run: echo "var=${{ env.GITHUB_SHA_SHORT }}" >> $GITHUB_OUTPUT
         outputs:
             environment: ${{ steps.environment.outputs.var }}
-            tag: v${{ steps.semver.outputs.fullversion }}
+            tag: ${{ steps.tag.outputs.var }}
 
     build:
         needs: [ deploy_slug ]
