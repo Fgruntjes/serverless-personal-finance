@@ -38,11 +38,14 @@ jobs:
             contents: read
             id-token: write
             deployments: write
-        environment:
-            name: ${{ inputs.environment }}
-            url: "https://${{ inputs.environment }}.${{ inputs.url_slug }}.pages.dev"
         steps:
         -   uses: actions/checkout@v3
+        -   uses: tallyb/deployments@master
+            id: deployment
+            with:
+                step: start
+                token: ${{ secrets.GITHUB_TOKEN }}
+                env: ${{ inputs.environment }}
         -   uses: ./.github/actions/config_cli_tools
             with:
                 google_workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
@@ -59,3 +62,11 @@ jobs:
                 MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
                 CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
                 CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        -   uses: tallyb/deployments@master
+            if: always()
+            with:
+                step: finish
+                token: ${{ secrets.GITHUB_TOKEN }}
+                status: ${{ job.status }}
+                deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+                env_url: "https://${{ inputs.environment }}.${{ secrets.GOOGLE_PROJECT_ID }}.pages.dev"
