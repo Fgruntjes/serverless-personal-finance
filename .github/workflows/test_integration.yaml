@@ -34,7 +34,7 @@ jobs:
             environment: ${{ needs.deploy_slug.outputs.environment }}
             tag: ${{ needs.deploy_slug.outputs.tag }}
         
-    test:
+    test_integration:
         runs-on: ubuntu-latest
         needs: [deploy_slug, deploy]
         concurrency:
