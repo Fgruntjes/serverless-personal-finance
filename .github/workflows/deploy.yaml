@@ -39,8 +39,8 @@ jobs:
             id-token: write
             deployments: write
         environment:
-            name: ${{ needs.deploy_slug.outputs.environment }}
-            url: "https://${{ needs.deploy_slug.outputs.environment }}.${{ secrets.GOOGLE_PROJECT_ID }}.pages.dev"
+            name: ${{ inputs.environment }}
+            url: "https://${{ inputs.environment }}.${{ secrets.GOOGLE_PROJECT_ID }}.pages.dev"
         steps:
         -   uses: actions/checkout@v3
         -   uses: ./.github/actions/config_cli_tools
