@@ -31,6 +31,7 @@ jobs:
             group: ${{ needs.deploy_slug.outputs.environment }}
             cancel-in-progress: true
         with:
+            url_slug: ${{ secrets.GOOGLE_PROJECT_ID }}
             environment: ${{ needs.deploy_slug.outputs.environment }}
             tag: ${{ needs.deploy_slug.outputs.tag }}
         

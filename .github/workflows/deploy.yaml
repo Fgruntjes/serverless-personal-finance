@@ -40,7 +40,7 @@ jobs:
             deployments: write
         environment:
             name: ${{ inputs.environment }}
-            url: "https://${{ inputs.environment }}.${{ secrets.GOOGLE_PROJECT_ID }}.pages.dev"
+            url: "https://${{ inputs.environment }}.${{ inputs.url_slug }}.pages.dev"
         steps:
         -   uses: actions/checkout@v3
         -   uses: ./.github/actions/config_cli_tools
