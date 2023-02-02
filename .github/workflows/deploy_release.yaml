@@ -36,4 +36,3 @@ jobs:
         with:
             environment: ${{ needs.deploy_slug.outputs.environment }}
             tag: ${{ needs.deploy_slug.outputs.tag }}
-            url_slug: ${{ secrets.GOOGLE_PROJECT_ID }}
