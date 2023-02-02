@@ -44,7 +44,7 @@ jobs:
         -   run: echo "Do some integration tests on this tmp environment"
             
     delete:
-        needs: [deploy_slug, test]
+        needs: [deploy_slug, test_integration]
         uses: ./.github/workflows/delete.yaml
         secrets: inherit
         concurrency:
