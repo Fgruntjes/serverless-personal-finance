@@ -17,6 +17,7 @@ jobs:
                 persist-credentials: false
         -   uses: cycjimmy/semantic-release-action@v3
             with:
+                # @see https://github.com/cycjimmy/semantic-release-action/issues/143
                 semantic_version: 19
             env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
