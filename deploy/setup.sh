@@ -166,6 +166,9 @@ echo ""
 MONGODB_ATLAS_PUBLIC_KEY=$(echo "${MONGODB_ATLAS_API_KEY_CREATE_OUTPUT}" | jq -r ".publicKey")
 MONGODB_ATLAS_PRIVATE_KEY=$(echo "${MONGODB_ATLAS_API_KEY_CREATE_OUTPUT}" | jq -r ".privateKey")
 
+# Generate GH PAT for semantic release
+
+
 
 # Ensure Github secrets are set
 echo "Creating github secrets"
@@ -179,6 +182,7 @@ function storeSecret {
     fi
     
     echo "${SECRET_VALUE}" | gh secret set "${SECRET_NAME}" --app actions
+    echo "${SECRET_VALUE}" | gh secret set "${SECRET_NAME}" --app dependabot
     echo "${SECRET_NAME}=\"${SECRET_VALUE}\"" >> .env.deploy.local
 }
 cat /dev/null > .env.deploy.local
