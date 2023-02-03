@@ -25,6 +25,7 @@ jobs:
             
     delete_containers_release:
         needs: [environment_matrix]
+        if: ${{ needs.environment_matrix.outputs.release != '[]' }}
         strategy:
             fail-fast: false
             matrix: 
@@ -40,6 +41,7 @@ jobs:
 
     delete_containers_pr:
         needs: [environment_matrix]
+        if: ${{ needs.environment_matrix.outputs.pr != '[]' }}
         strategy:
             fail-fast: false
             matrix:
@@ -51,6 +53,7 @@ jobs:
 
     delete_resources_pr:
         needs: [environment_matrix]
+        if: ${{ needs.environment_matrix.outputs.pr != '[]' }}
         strategy:
             fail-fast: false
             matrix:
