@@ -53,7 +53,7 @@ jobs:
             environment_url: "https://${{ needs.deploy_slug.outputs.project_url_slug }}.pages.dev"
 
     delete_containers:
-        needs: [ deploy_slug, test ]
+        needs: [ deploy_slug, build ]
         uses: ./.github/workflows/delete_containers.yaml
         secrets: inherit
         concurrency:
