@@ -16,12 +16,9 @@ jobs:
             run: echo "var=${{ env.GITHUB_REF_SLUG_URL }}" >> $GITHUB_OUTPUT
         -   id: tag
             run: echo "var=${{ env.GITHUB_SHA_SHORT }}" >> $GITHUB_OUTPUT
-        -   id: project_url_slug
-            run: echo "var=${{ secrets.GOOGLE_PROJECT_ID }}" >> $GITHUB_OUTPUT
         outputs:
             environment: ${{ steps.environment.outputs.var }}
             tag: ${{ steps.tag.outputs.var }}
-            project_url_slug: ${{ steps.project_url_slug.outputs.var }}
 
     build:
         needs: [ deploy_slug ]
@@ -31,7 +28,7 @@ jobs:
             environment: ${{ needs.deploy_slug.outputs.environment }}
             tag: ${{ needs.deploy_slug.outputs.tag }}
 
-    deploy_prerelease:
+    deploy:
         needs: [ deploy_slug, build ]
         if: "${{ needs.deploy_slug.outputs.environment != 'main' }}"
         uses: ./.github/workflows/deploy.yaml
@@ -40,17 +37,7 @@ jobs:
         with:
             environment: ${{ needs.deploy_slug.outputs.environment }}
             tag: ${{ needs.deploy_slug.outputs.tag }}
-            environment_url: "https://${{ needs.deploy_slug.outputs.environment }}.${{ needs.deploy_slug.outputs.project_url_slug }}.pages.dev"
-    deploy_production:
-        needs: [ deploy_slug, build ]
-        if: "${{ needs.deploy_slug.outputs.environment == 'main' }}"
-        uses: ./.github/workflows/deploy.yaml
-        secrets: inherit
-        concurrency: ${{ needs.deploy_slug.outputs.environment }}
-        with:
-            environment: ${{ needs.deploy_slug.outputs.environment }}
-            tag: ${{ needs.deploy_slug.outputs.tag }}
-            environment_url: "https://${{ needs.deploy_slug.outputs.project_url_slug }}.pages.dev"
+            register_deployment: true
 
     delete_containers:
         needs: [ deploy_slug, build ]

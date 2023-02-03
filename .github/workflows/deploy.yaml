@@ -9,9 +9,10 @@ on:
             tag:
                 required: true
                 type: string
-            environment_url:
+            register_deployment:
                 required: false
-                type: string
+                type: boolean
+                default: false
         secrets:
             GOOGLE_WORKLOAD_IDENTITY_PROVIDER:
                 required: true
@@ -44,7 +45,7 @@ jobs:
         steps:
         -   uses: actions/checkout@v3
         -   uses: bobheadxi/deployments@v1
-            if: "${{ inputs.environment_url != '' }}"
+            if: "${{ inputs.register_deployment }}"
             id: deployment
             with:
                 step: start
@@ -67,11 +68,10 @@ jobs:
                 CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
                 CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         -   uses: bobheadxi/deployments@v1
-            if: "${{ inputs.environment_url != '' }}"
+            if: "${{ inputs.register_deployment }}"
             with:
                 step: finish
                 token: ${{ secrets.GITHUB_TOKEN }}
                 status: ${{ job.status }}
                 deployment_id: ${{ steps.deployment.outputs.deployment_id }}
                 env: ${{ inputs.environment }}
-                env_url: "${{ inputs.environment_url }}"
