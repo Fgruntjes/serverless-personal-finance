@@ -54,7 +54,7 @@ jobs:
             with:
                 google_workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
                 google_service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
-        -   run: ./deploy/run-ansible.sh src/deploy.yml
+        -   run: ./deploy/run-ansible.sh -vvv src/deploy.yml
             env:
                 APP_TAG: ${{ inputs.tag }}
                 APP_ENVIRONMENT: ${{ inputs.environment }}
