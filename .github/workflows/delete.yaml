@@ -54,6 +54,7 @@ jobs:
         permissions:
             contents: read
             id-token: write
+            deployments: write
         steps:
         -   uses: actions/checkout@v3
         -   uses: ./.github/actions/config_cli_tools
@@ -72,8 +73,8 @@ jobs:
                 MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
                 CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
                 CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        -   uses: tallyb/deployments@master
-            if: always()
+        -   uses: bobheadxi/deployments@v1
+            if: "${{ inputs.environment == 'main' || inputs.environment == 'beta' || inputs.environment == 'alpha' }}"
             with:
                 step: deactivate-env
                 token: ${{ secrets.GITHUB_TOKEN }}
