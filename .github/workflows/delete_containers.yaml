@@ -42,7 +42,7 @@ jobs:
             with:
                 args: >-
                     -repo=${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT_ID }}/docker/${{ inputs.environment }}
-                    -tag-filter-all='.*'
+                    -tag-filter-any=.
                     -recursive=true
                     -keep=${{ inputs.keep }}
                     -grace=${{ inputs.grace }}

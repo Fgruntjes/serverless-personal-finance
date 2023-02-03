@@ -19,6 +19,9 @@ jobs:
         needs: [deploy_slug]
         uses: ./.github/workflows/build.yaml
         secrets: inherit
+        concurrency:
+            group: ${{ needs.deploy_slug.outputs.environment }}-build
+            cancel-in-progress: true
         with:
             environment: ${{ needs.deploy_slug.outputs.environment }}
             tag: ${{ needs.deploy_slug.outputs.tag }}
@@ -28,7 +31,7 @@ jobs:
         uses: ./.github/workflows/deploy.yaml
         secrets: inherit
         concurrency: 
-            group: ${{ needs.deploy_slug.outputs.environment }}
+            group: ${{ needs.deploy_slug.outputs.environment }}-deploy
             cancel-in-progress: true
         with:
             environment: ${{ needs.deploy_slug.outputs.environment }}
@@ -38,30 +41,31 @@ jobs:
         runs-on: ubuntu-latest
         needs: [deploy_slug, deploy]
         concurrency:
-            group: ${{ needs.deploy_slug.outputs.environment }}
+            group: ${{ needs.deploy_slug.outputs.environment }}-test
             cancel-in-progress: true
         steps:
         -   run: echo "::warning file=.github/workflows/test_integration.yaml,::No integration tests implemented"
             
     delete_containers:
-        needs: [deploy_slug, test]
+        needs: [build, deploy, test]
         uses: ./.github/workflows/delete_containers.yaml
         secrets: inherit
-        if: ${{ always() }}
+        if: ${{ needs.build.result != 'skipped' && needs.deploy.result != 'skipped' && needs.test.result != 'skipped' }}
         with:
             environment: ${{ needs.deploy_slug.outputs.environment }}
             
     delete_resources:
-        needs: [ deploy_slug, test ]
+        needs: [build, deploy, test]
         uses: ./.github/workflows/delete_resources.yaml
         secrets: inherit
-        if: ${{ always() }}
+        if: ${{ needs.build.result != 'skipped' && needs.deploy.result != 'skipped' && needs.test.result != 'skipped' }}
         with:
             environment: ${{ needs.deploy_slug.outputs.environment }}
 
     test_integration_success:
         runs-on: ubuntu-latest
         needs:
+        - deploy
         - test
         - delete_containers
         - delete_resources

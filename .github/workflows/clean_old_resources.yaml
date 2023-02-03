@@ -1,0 +1,61 @@
+name: Clean old resources
+on:
+    schedule:
+    - cron: '3 * * * *'
+
+jobs:
+    environment_matrix:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            id-token: write
+        steps:
+        -   uses: actions/checkout@v3
+        -   uses: ./.github/actions/config_cli_tools
+            with:
+                google_workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+                google_service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+        -   run: echo "list=$(.github/environment_matrix.sh pr "-4 hours" --json)" >> $GITHUB_OUTPUT
+            id: pr
+        -   run: echo "list=$(.github/environment_matrix.sh release "now" --json)" >> $GITHUB_OUTPUT
+            id: release
+        outputs:
+            pr: ${{ steps.pr.outputs.list }}
+            release: ${{ steps.release.outputs.list }}
+            
+    delete_containers_release:
+        needs: [environment_matrix]
+        strategy:
+            fail-fast: false
+            matrix: 
+                environment: ${{ fromJson(needs.environment_matrix.outputs.release) }}        
+        uses: ./.github/workflows/delete_containers.yaml
+        secrets: inherit
+        with:
+            environment: ${{ matrix.environment }}
+            # Rollback at least one environment
+            keep: 2
+            # Rollback all changes of the last week 
+            grace: '24h'
+
+    delete_containers_pr:
+        needs: [environment_matrix]
+        strategy:
+            fail-fast: false
+            matrix:
+                environment: ${{ fromJson(needs.environment_matrix.outputs.pr) }}
+        uses: ./.github/workflows/delete_containers.yaml
+        secrets: inherit
+        with:
+            environment: ${{ matrix.environment }}
+
+    delete_resources_pr:
+        needs: [environment_matrix]
+        strategy:
+            fail-fast: false
+            matrix:
+                environment: ${{ fromJson(needs.environment_matrix.outputs.pr) }}
+        uses: ./.github/workflows/delete_resources.yaml
+        secrets: inherit
+        with:
+            environment: ${{ matrix.environment }}
