@@ -2,7 +2,7 @@
 
 set -e
 
-cd "$(dirname "$(realpath "$0")")/..";
+cd "$(dirname "$(realpath "$0")")/.."
 
 function isFunction() {
     PROJECT_NAME=$1

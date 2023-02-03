@@ -1,4 +1,4 @@
-name: Cleanup
+name: Delete resources
 on:
     workflow_call:
         inputs:
@@ -29,26 +29,6 @@ on:
                 required: true
 
 jobs:
-    delete_containers:
-        runs-on: ubuntu-latest
-        timeout-minutes: 5
-        permissions:
-            contents: read
-            id-token: write
-        steps:
-        -   uses: actions/checkout@v3
-        -   uses: ./.github/actions/config_docker
-            with:
-                google_workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
-                google_service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
-                container_registry: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev
-        -   uses: docker://europe-docker.pkg.dev/gcr-cleaner/gcr-cleaner/gcr-cleaner-cli
-            with:
-                args: >-
-                    -repo=${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT_ID }}/docker/${{ inputs.environment }}
-                    -tag-filter-all='.*'
-                    -recursive=true
-        
     delete_resources:
         runs-on: ubuntu-latest
         permissions:
@@ -73,9 +53,3 @@ jobs:
                 MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
                 CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
                 CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        -   uses: bobheadxi/deployments@v1
-            if: "${{ inputs.environment == 'main' || inputs.environment == 'beta' || inputs.environment == 'alpha' }}"
-            with:
-                step: deactivate-env
-                token: ${{ secrets.GITHUB_TOKEN }}
-                env: ${{ inputs.environment }}

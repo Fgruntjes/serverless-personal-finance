@@ -1,0 +1,48 @@
+name: Clean containers
+on:
+    workflow_call:
+        inputs:
+            environment:
+                required: true
+                type: string
+            keep:
+                required: false
+                type: number
+                default: 0
+            grace:
+                required: false
+                type: string
+                default: "0s"
+
+        secrets:
+            GOOGLE_WORKLOAD_IDENTITY_PROVIDER:
+                required: true
+            GOOGLE_SERVICE_ACCOUNT_EMAIL:
+                required: true
+            GOOGLE_PROJECT_ID:
+                required: true
+            GOOGLE_REGION:
+                required: true
+
+jobs:
+    delete_containers:
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        permissions:
+            contents: read
+            id-token: write
+        steps:
+        -   uses: actions/checkout@v3
+        -   uses: ./.github/actions/config_docker
+            with:
+                google_workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+                google_service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+                container_registry: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev
+        -   uses: docker://europe-docker.pkg.dev/gcr-cleaner/gcr-cleaner/gcr-cleaner-cli
+            with:
+                args: >-
+                    -repo=${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT_ID }}/docker/${{ inputs.environment }}
+                    -tag-filter-any=.
+                    -recursive=true
+                    -keep=${{ inputs.keep }}
+                    -grace=${{ inputs.grace }}
