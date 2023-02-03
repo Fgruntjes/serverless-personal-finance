@@ -36,6 +36,7 @@ jobs:
         with:
             environment: ${{ needs.deploy_slug.outputs.environment }}
             tag: ${{ needs.deploy_slug.outputs.tag }}
+            register_deployment: true
 
     delete_containers:
         needs: [ deploy_slug, test ]
