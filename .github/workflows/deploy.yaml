@@ -9,10 +9,9 @@ on:
             tag:
                 required: true
                 type: string
-            register_deployment:
+            environment_url:
                 required: false
-                type: boolean
-                default: false
+                type: string
         secrets:
             GOOGLE_WORKLOAD_IDENTITY_PROVIDER:
                 required: true
@@ -42,15 +41,10 @@ jobs:
             contents: read
             id-token: write
             deployments: write
-        environment:
-            name: "${{ inputs.environment }}"
-            url: "${{ steps.environment_url.outputs.url }}"
         steps:
         -   uses: actions/checkout@v3
-        -   run: echo "url=https://$(["${{ inputs.environment }}" == "main"] || echo "${{ inputs.environment }}." )${{ secrets.GOOGLE_PROJECT_ID }}.pages.dev" >> $GITHUB_OUTPUT
-            id: environment_url
         -   uses: bobheadxi/deployments@v1
-            if: "${{ inputs.register_deployment }}"
+            if: "${{ inputs.environment_url != '' }}"
             id: deployment
             with:
                 step: start
@@ -73,11 +67,11 @@ jobs:
                 CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
                 CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         -   uses: bobheadxi/deployments@v1
-            if: "${{ inputs.register_deployment }}"
+            if: "${{ inputs.environment_url != '' }}"
             with:
                 step: finish
                 token: ${{ secrets.GITHUB_TOKEN }}
                 status: ${{ job.status }}
                 deployment_id: ${{ steps.deployment.outputs.deployment_id }}
                 env: ${{ inputs.environment }}
-                env_url: "https://${{ secrets.GOOGLE_PROJECT_ID }}.pages.dev"
+                env_url: "${{ inputs.environment_url }}"

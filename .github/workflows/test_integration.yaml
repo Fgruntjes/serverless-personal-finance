@@ -41,7 +41,7 @@ jobs:
             group: ${{ needs.deploy_slug.outputs.environment }}
             cancel-in-progress: true
         steps:
-        -   run: echo "Do some integration tests on this tmp environment"
+        -   run: echo "::warning file=.github/workflows/test_integration.yaml,::No integration tests implemented"
             
     delete_containers:
         needs: [deploy_slug, test]
