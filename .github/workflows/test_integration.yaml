@@ -47,9 +47,6 @@ jobs:
         needs: [deploy_slug, test]
         uses: ./.github/workflows/delete_containers.yaml
         secrets: inherit
-        concurrency:
-            group: ${{ needs.deploy_slug.outputs.environment }}
-            cancel-in-progress: true
         if: ${{ always() }}
         with:
             environment: ${{ needs.deploy_slug.outputs.environment }}
@@ -58,9 +55,6 @@ jobs:
         needs: [ deploy_slug, test ]
         uses: ./.github/workflows/delete_resources.yaml
         secrets: inherit
-        concurrency:
-            group: ${{ needs.deploy_slug.outputs.environment }}
-            cancel-in-progress: true
         if: ${{ always() }}
         with:
             environment: ${{ needs.deploy_slug.outputs.environment }}
