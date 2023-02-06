@@ -22,6 +22,10 @@ on:
                 required: true
             GOOGLE_REGION:
                 required: true
+            GOOGLE_OAUTH_CLIENT_ID:
+                required: true
+            GOOGLE_OAUTH_CLIENT_SECRET:
+                required: true
             SENTRY_DSN:
                 required: true
             CLOUDFLARE_API_TOKEN:
@@ -62,6 +66,8 @@ jobs:
                 SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
                 GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
                 GOOGLE_PROJECT_ID: ${{ secrets.GOOGLE_PROJECT_ID }}
+                GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+                GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
                 MONGODB_ATLAS_PUBLIC_KEY: ${{ secrets.MONGODB_ATLAS_PUBLIC_KEY }}
                 MONGODB_ATLAS_PRIVATE_KEY: ${{ secrets.MONGODB_ATLAS_PRIVATE_KEY }}
                 MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
