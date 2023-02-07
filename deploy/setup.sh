@@ -166,9 +166,6 @@ echo ""
 MONGODB_ATLAS_PUBLIC_KEY=$(echo "${MONGODB_ATLAS_API_KEY_CREATE_OUTPUT}" | jq -r ".publicKey")
 MONGODB_ATLAS_PRIVATE_KEY=$(echo "${MONGODB_ATLAS_API_KEY_CREATE_OUTPUT}" | jq -r ".privateKey")
 
-# Generate GH PAT for semantic release
-
-
 
 # Ensure Github secrets are set
 echo "Creating github secrets"
@@ -195,6 +192,7 @@ storeSecret MONGODB_ATLAS_PRIVATE_KEY
 storeSecret MONGODB_ATLAS_PUBLIC_KEY
 storeSecret MONGODB_ATLAS_PROJECT_ID
 
+# Variables that are required before setup. Preferably these are created with cli tools.
 storeSecret GOOGLE_OAUTH_CLIENT_ID
 storeSecret GOOGLE_OAUTH_CLIENT_SECRET
 storeSecret CLOUDFLARE_API_TOKEN
