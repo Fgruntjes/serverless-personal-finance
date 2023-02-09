@@ -19,7 +19,7 @@
     - name: Get project info
       shell: npx wrangler pages project list | grep "{{ app_project_name }}" > /dev/null
       args:
-        chdir: "{{ project_dir }}"
+        chdir: "deploy"
       register: project_info
       changed_when: false
       failed_when: false
@@ -27,9 +27,9 @@
       when: project_info.rc != 0
       shell: npx wrangler pages project create "{{ app_project_name }}" \ --production-branch=main
       args:
-        chdir: "{{ project_dir }}"
+        chdir: "deploy"
 
     - name: Publish the website to Cloudflare Pages
-      shell: npx wrangler pages publish build \ --branch="{{ app_environment }}" \ --project-name="{{ app_project_name }}"
+      shell: npx wrangler pages publish "{{ project_dir }}/build" \ --branch="{{ app_environment }}" \ --project-name="{{ app_project_name }}"
       args:
-        chdir: "{{ project_dir }}"
+        chdir: "deploy"

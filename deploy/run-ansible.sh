@@ -9,6 +9,9 @@ test -f .env.deploy.local && source .env.deploy.local
 test -f .env.local && source .env.local
 set +a
 
+# Install deploy dependencies
+npm ci
+
 ansible-playbook "${@}" \
     -e "APP_TAG=${APP_TAG}" \
     -e "APP_ENVIRONMENT=${APP_ENVIRONMENT}" \
