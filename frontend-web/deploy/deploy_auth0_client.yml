@@ -1,0 +1,11 @@
+---
+- name: Create auth0 client
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - include_tasks: ../../deploy/src/auth0/ensure_client.yml
+      vars:
+        auth0_client_type: "spa"
+        auth0_client_identifier: "frontend_web"
+        auth0_client_callbacks: "{{ frontend_web_url }}"
+        auth0_client_origins: "{{ frontend_web_url }}"

@@ -4,7 +4,7 @@
     password: "{{ lookup('community.general.random_string', length=12, special=false) }}"
 
 - name: Get atlas user info {{ username }}
-  command: atlas dbusers describe "{{ username }}" --projectId="{{ project_id }}" -o json
+  shell: atlas dbusers describe "{{ username }}" --projectId="{{ project_id }}" -o json
   register: user_info
   changed_when: false
   failed_when: false
@@ -12,7 +12,7 @@
 # Create new
 - name: Create atlas user "{{ username }}"
   when: user_info.rc != 0
-  command: atlas dbusers create \
+  shell: atlas dbusers create \
     --projectId="{{ project_id }}" \
     --scope="CLUSTER,{{ app_environment }}" \
     --username="{{ username }}" \
@@ -22,13 +22,13 @@
 # Update / roll password
 - name: Update atlas user "{{ username }}"
   when: user_info.rc == 0
-  command: atlas dbusers update "{{ username }}" \
+  shell: atlas dbusers update "{{ username }}" \
     --projectId="{{ project_id }}" \
     --password="{{ password }}"
 
 - name: Find connection string
   register: connection_string_info
-  command: atlas serverless describe "{{ app_environment }}" \
+  shell: atlas serverless describe "{{ app_environment }}" \
     --projectId="{{ project_id }}" \
     -o json | jq -r ".connectionStrings.standardSrv"
 

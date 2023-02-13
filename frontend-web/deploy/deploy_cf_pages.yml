@@ -1,0 +1,36 @@
+---
+- name: Deploy frontend-web
+  hosts: localhost
+  gather_facts: false
+  environment:
+    CLOUDFLARE_API_TOKEN: "{{ cloudflare_api_token }}"
+    CLOUDFLARE_ACCOUNT_ID: "{{ cloudflare_account_id }}"
+  vars:
+    project_dir: "{{ playbook_dir }}/.."
+  tasks:
+    - name: Build
+      shell: npm ci && npm run build
+      args:
+        chdir: "{{ project_dir }}"
+      environment:
+        REACT_APP_FUNCTION_INTEGRATION_YNAB_BASE: "{{ function_integration_ynab_url }}"
+        REACT_APP_AUTH0_CLIENT_ID: "{{ auth0_client_frontend_web_id }}"
+        REACT_APP_AUTH0_DOMAIN: "{{ auth0_domain }}"
+
+    - name: Get project info
+      shell: npx wrangler pages project list | grep "{{ app_project_name }}" > /dev/null
+      args:
+        chdir: "deploy"
+      register: project_info
+      changed_when: false
+      failed_when: false
+    - name: Create project
+      when: project_info.rc != 0
+      shell: npx wrangler pages project create "{{ app_project_name }}" \ --production-branch=main
+      args:
+        chdir: "deploy"
+
+    - name: Publish the website to Cloudflare Pages
+      shell: npx wrangler pages publish "{{ project_dir }}/build" \ --branch="{{ app_environment }}" \ --project-name="{{ app_project_name }}"
+      args:
+        chdir: "deploy"

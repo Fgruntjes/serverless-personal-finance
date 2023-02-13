@@ -4,7 +4,7 @@ set -e
 
 cd "$(dirname "$(realpath "$0")")";
 
-# TODO ensure required cli tools are installed / configured: gcloud (google), gh (github), atlas (mongodb) and cf (cloudflare)
+# TODO ensure required cli tools are installed / configured: gcloud (google), gh (github), atlas (mongodb)
 
 # Load env variables
 set -a
@@ -46,7 +46,7 @@ echo "Ensure project ${PROJECT_SLUG} is linked to billing account ${GOOGLE_BILLI
 gcloud beta billing projects link "${PROJECT_SLUG}" "--billing-account=${GOOGLE_BILLING_ACCOUNT_ID}"
 echo ""
 
-# Create identity pool
+# Create identity pool to for ci/cd auth
 # @see (https://github.com/google-github-actions/auth#setup)
 if ! gcloud iam workload-identity-pools describe --location="global" --project="${PROJECT_SLUG}" "${IDENTITY_POOL_NAME}" > /dev/null; then
     echo "Creating identity pool: ${IDENTITY_POOL_NAME}"
@@ -101,7 +101,6 @@ gcloud iam service-accounts add-iam-policy-binding "${GOOGLE_SERVICE_ACCOUNT_EMA
 GCLOUD_ROLES=(
   "roles/artifactregistry.repoAdmin"
   "roles/storage.objectViewer"
-  "roles/run.developer"
   "roles/iam.serviceAccountUser"
 )
 for GCLOUD_ROLE in "${GCLOUD_ROLES[@]}"; do
@@ -192,9 +191,11 @@ storeSecret MONGODB_ATLAS_PRIVATE_KEY
 storeSecret MONGODB_ATLAS_PUBLIC_KEY
 storeSecret MONGODB_ATLAS_PROJECT_ID
 
+
 # Variables that are required before setup. Preferably these are created with cli tools.
-storeSecret GOOGLE_OAUTH_CLIENT_ID
-storeSecret GOOGLE_OAUTH_CLIENT_SECRET
+storeSecret AUTH0_DOMAIN
+storeSecret AUTH0_CLIENT_ID
+storeSecret AUTH0_CLIENT_SECRET
 storeSecret CLOUDFLARE_API_TOKEN
 storeSecret CLOUDFLARE_ACCOUNT_ID
 storeSecret SENTRY_DSN

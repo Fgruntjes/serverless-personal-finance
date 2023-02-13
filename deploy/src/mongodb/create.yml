@@ -15,25 +15,25 @@
 
     # Create instance
     - name: Get MongoDB Atlas serverless instance info
-      command: atlas serverless describe "{{ app_environment }}" -o json
+      shell: atlas serverless describe "{{ app_environment }}" -o json
       register: instance_info
       changed_when: false
       failed_when: false
     - name: Create server instance
       when: instance_info.rc != 0
-      command: atlas serverless create "{{ app_environment }}" \
+      shell: atlas serverless create "{{ app_environment }}" \
         --provider=GCP \
         --region="{{ google_region | replace('europe-west1', 'WESTERN_EUROPE') }}"
 
     # Configure network access
     - name: Get network access list
-      command: atlas accessLists list -o json | jq -e -r ".results[] | select(.comment == \"public\")" > /dev/null
+      shell: atlas accessLists list -o json | jq -e -r ".results[] | select(.comment == \"public\")" > /dev/null
       register: access_info
       changed_when: false
       failed_when: false
     - name: Create network access list
       when: access_info.rc != 0
-      command: atlas accessLists create "0.0.0.0/0" --comment="public"
+      shell: atlas accessLists create "0.0.0.0/0" --comment="public"
 
     # Create users
     - include_tasks: create_user.yml
