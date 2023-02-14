@@ -29,4 +29,4 @@ runs:
             version: '1.0.0-beta.1'
             smoke_test: "${binary} --version"
             tarball_binary_path: "*/${binary}"
-            download_url: 'https://github.com/auth0/auth0-cli/releases/download${version}/auth0-cli_${version}_Linux_x86_64.tar.gz'
+            download_url: 'https://github.com/auth0/auth0-cli/releases/download/v${version}/auth0-cli_${version}_Linux_x86_64.tar.gz'
