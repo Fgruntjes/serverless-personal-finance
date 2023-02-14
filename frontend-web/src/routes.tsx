@@ -5,7 +5,6 @@ import AppRoot from "./components/AppRoot";
 import IndexPage from "./pages/IndexPage";
 import IntegrationsPage from "./pages/IntegrationsPage";
 import IntegrationReturnYnab from "./pages/integrationsPage/IntegrationReturnYnab";
-import LoginPage from "./pages/LoginPage";
 import RouteErrorPage from "./pages/RouteErrorPage";
 import {paths} from "./paths";
 
@@ -30,11 +29,5 @@ export const routes: RouteObject[] = [
                 ]
             }
         ],
-    },
-    {
-        path: paths.login,
-        element:  <LoginPage />,
-        errorElement: <RouteErrorPage />,
-        children: [],
     },
 ];

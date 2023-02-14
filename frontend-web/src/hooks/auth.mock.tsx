@@ -1,11 +1,6 @@
 import {jest} from "@jest/globals";
 
-import {AuthState, useAuth} from "./auth";
-
-export const mockLoggedInToken: AuthState = {
-    token: "fake",
-    expiresAt: Date.now() + 1000 * 1000
-}
+import {useAuth} from "./auth";
 
 jest.mock("./auth");
 
@@ -15,7 +10,9 @@ export const mockedSignOut = jest.fn();
 
 export function mockLoggedIn(): void {
     mockedUseAuth.mockReturnValue({
-        authState: mockLoggedInToken,
+        isAuthenticated: true,
+        isLoading: false,
+        getAccessToken: async () => "fake",
         signIn: mockedSignIn,
         signOut: mockedSignOut,
     });
@@ -23,7 +20,19 @@ export function mockLoggedIn(): void {
 
 export function mockLoggedOut(): void {
     mockedUseAuth.mockReturnValue({
-        authState: null,
+        isAuthenticated: false,
+        isLoading: false,
+        getAccessToken: async () => null,
+        signIn: mockedSignIn,
+        signOut: mockedSignOut,
+    });
+}
+
+export function mockIsLoading(): void {
+    mockedUseAuth.mockReturnValue({
+        isAuthenticated: false,
+        isLoading: true,
+        getAccessToken: async () => null,
         signIn: mockedSignIn,
         signOut: mockedSignOut,
     });

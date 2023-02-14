@@ -143,6 +143,7 @@ public static class AppWebApplication
         {
             var settings = app.Services.GetRequiredService<IOptions<AppOptions>>();
             policy.WithOrigins(settings.Value.Frontend);
+            policy.WithHeaders("Authorization");
         });
 
         if (!app.Environment.IsDevelopment())

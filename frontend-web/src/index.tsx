@@ -17,7 +17,6 @@ import {
 import {ToastContainer} from "react-toastify";
 import {RecoilRoot} from "recoil";
 
-import AuthProvider from "./components/AuthProvider";
 import createQueryClient from "./createQueryClient";
 import reportWebVitals from "./reportWebVitals";
 import {routes} from "./routes";
@@ -37,9 +36,7 @@ root.render(
                 <RecoilRoot>
                     <CssVarsProvider theme={theme}>
                         <CssBaseline/>
-                        <AuthProvider clientId={process.env.REACT_APP_OAUTH_CLIENT_ID}>
-                            <RouterProvider router={router}/>
-                        </AuthProvider>
+                        <RouterProvider router={router}/>
                         <ToastContainer />
                     </CssVarsProvider>
                 </RecoilRoot>
