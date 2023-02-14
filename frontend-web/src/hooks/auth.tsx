@@ -46,7 +46,7 @@ export function useAuth(): AuthContext {
         },
         signOut: () => {
             if (isAuthenticated) {
-                logout();
+                logout({logoutParams: {returnTo: ""}});
             } else {
                 toast.warning(t("notLoggedIn"))
             }

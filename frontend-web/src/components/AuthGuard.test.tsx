@@ -4,9 +4,10 @@ import {
     screen
 } from "@testing-library/react";
 import React from "react";
-import {Navigate} from "react-router-dom";
 
-import {mockIsLoading, mockLoggedIn, mockLoggedOut} from "../hooks/auth.mock";
+import {
+    mockedSignIn, mockIsLoading, mockLoggedIn, mockLoggedOut
+} from "../hooks/auth.mock";
 import AuthGuard from "./AuthGuard";
 import Loader from "./Loader";
 
@@ -19,7 +20,7 @@ describe(AuthGuard.name, () => {
     
         render(<AuthGuard><p data-testid="loggedin">logged in</p></AuthGuard>);
     
-        expect(Navigate).toHaveBeenCalledTimes(1);
+        expect(mockedSignIn).toHaveBeenCalledTimes(1);
     });
     
     test("Render children when logged in", async () => {

@@ -6,6 +6,7 @@ export function useYnabConnectService(returnUrl: string) {
     return useQuery(
         {
             retry: false,
+            enabled: false,
             queryKey: [ConnectService.name],
             queryFn: () => ConnectService.connect(returnUrl),
         }

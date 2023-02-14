@@ -1,59 +1,77 @@
 import React from "react";
+import {useMatches} from "react-router-dom";
 
 import Loader from "../../components/Loader";
 import {useYnabConnectService} from "../../data/useYnabConnectService";
 import {useYnabDisconnectService} from "../../data/useYnabDisconnectService";
 import {useYnabStatusService} from "../../data/useYnabStatusService";
 import withComponentErrorBoundary from "../../hoc/withComponentErrorBoundary";
+import {paths} from "../../paths";
 import redirectTo from "../../util/redirect";
 import ConnectButton from "./ConnectButton";
 import DisconnectButton from "./DisconnectButton";
-import {getYnabReturnUrl} from "./IntegrationReturnYnab";
+import IntegrationReturnYnab, {getYnabReturnUrl} from "./IntegrationReturnYnab";
 import logo from "./integrationStatusYnab/logo.svg"
 import StatusConnected from "./StatusConnected";
 import StatusContainer from "./StatusContainer";
 import StatusDisconnected from "./StatusDisconnected";
 
-const YnabConnectButton = withComponentErrorBoundary(() => {
+const StatusWidget = withComponentErrorBoundary(() => {
     const returnUri = getYnabReturnUrl();
     const {
-        isLoading, refetch, data, isFetched, isError
-    } = useYnabConnectService(returnUri);
-
-    if (isFetched && !isError && data && data.data) {
-        redirectTo(data.data);
-        return <ConnectButton loading={true} />;
-    }
-    
-    return <ConnectButton loading={isLoading} onClick={() => refetch()} />;
-});
-
-function YnabDisconnectButton(props: {onDisconnect: () => void}) {
-    const {isLoading, refetch} = useYnabDisconnectService();
-
-    return <DisconnectButton loading={isLoading} onClick={() => refetch().then(props.onDisconnect)} />;
-}
-
-const StatusWidget = withComponentErrorBoundary(() => {
-    const {
-        data, isLoading, refetch
+        data: statusData,
+        isLoading: statusIsLoading
     } = useYnabStatusService();
+    const {
+        isLoading: disconnectIsLoading,
+        refetch: disconnectRefetch
+    } = useYnabDisconnectService();
+    const {
+        isLoading: connectIsLoading,
+        isFetched: connectIsFetched,
+        refetch: connectRefetch,
+        data: connectData,
+    } = useYnabConnectService(returnUri);
+    const routeMatches = useMatches();
+    const lastRouteMatch = routeMatches[routeMatches.length - 1];
     
-    if (isLoading) {
+    if (statusIsLoading) {
         return <Loader />;
     }
-
-    if (data?.data?.connected) {
-        return <StatusConnected><YnabDisconnectButton onDisconnect={refetch} /></StatusConnected>;
-    } else {
-        return <StatusDisconnected><YnabConnectButton /></StatusDisconnected>;
+    
+    if (!connectIsLoading && connectIsFetched && connectData?.data) {
+        redirectTo(connectData.data);
     }
+    
+    if (lastRouteMatch.pathname === paths.integrations.return.ynab) {
+        return (
+            <StatusDisconnected>
+                <IntegrationReturnYnab />
+            </StatusDisconnected>
+        );
+    }
+    
+    if (statusData?.data?.connected) {
+        return (
+            <StatusConnected>
+                <DisconnectButton loading={disconnectIsLoading} onClick={() => disconnectRefetch()} />
+            </StatusConnected>
+        );
+    }
+
+    return (
+        <StatusDisconnected>
+            <ConnectButton loading={connectIsLoading} onClick={() => connectRefetch()} />
+        </StatusDisconnected>
+    );
 });
 
-const IntegrationStatusYnab = () => (
-    <StatusContainer icon={logo} name="ynab">
-        <StatusWidget/>
-    </StatusContainer>
-);
+const IntegrationStatusYnab = () => {
+    return (
+        <StatusContainer icon={logo} name="ynab">
+            <StatusWidget/>
+        </StatusContainer>
+    );
+}
 
 export default IntegrationStatusYnab;

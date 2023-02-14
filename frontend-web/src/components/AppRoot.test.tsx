@@ -1,22 +1,22 @@
 import "./AuthGuard.mock"
 
-import {render, screen} from "@testing-library/react";
+import {screen} from "@testing-library/react";
 import React from "react";
-import {MemoryRouter} from "react-router-dom";
 import {RecoilRoot} from "recoil";
 
 import {mockLoggedIn} from "../hooks/auth.mock";
+import renderWithRouter from "../util/testRenderWithRouter";
 import AppRoot from "./AppRoot";
+
+jest.mock("./AuthProvider", () => (props: {children: JSX.Element}) => (<>{props.children}</>));
 
 describe(AppRoot.name, () => {
     test("Render current page without error", () => {
         mockLoggedIn();
 
-        render(
+        renderWithRouter(
             <RecoilRoot>
-                <MemoryRouter>
-                    <AppRoot/>
-                </MemoryRouter>
+                <AppRoot/>
             </RecoilRoot>
         );
 

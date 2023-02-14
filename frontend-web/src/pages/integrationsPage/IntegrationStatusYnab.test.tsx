@@ -1,12 +1,11 @@
 import {jest} from "@jest/globals";
-import {
-    act, render, screen, waitFor
-} from "@testing-library/react";
+import {act, screen, waitFor} from "@testing-library/react";
 import {Simulate} from "react-dom/test-utils";
 
 import {useYnabConnectService} from "../../data/useYnabConnectService";
 import {useYnabDisconnectService} from "../../data/useYnabDisconnectService";
 import {useYnabStatusService} from "../../data/useYnabStatusService";
+import renderWithRouter from "../../util/testRenderWithRouter";
 import IntegrationStatusYnab from "./IntegrationStatusYnab";
 
 import click = Simulate.click;
@@ -22,6 +21,10 @@ describe(IntegrationStatusYnab.name, () => {
     const mockedUseConnectService = useYnabConnectService as jest.Mock<any>;
     
     function mockStatusDisconnected() {
+        mockedUseStatusService.mockReturnValue({isLoading: false});
+        mockedUseConnectService.mockReturnValue({isLoading: false});
+        mockedUseDisconnectService.mockReturnValue({isLoading: false});
+        
         mockedUseStatusService.mockReturnValue({
             isLoading: false,
             data: {data: {connected: false}}
@@ -29,6 +32,10 @@ describe(IntegrationStatusYnab.name, () => {
     }
 
     function mockStatusConnected() {
+        mockedUseStatusService.mockReturnValue({isLoading: false});
+        mockedUseConnectService.mockReturnValue({isLoading: false});
+        mockedUseDisconnectService.mockReturnValue({isLoading: false});
+
         mockedUseStatusService.mockReturnValue({
             isLoading: false,
             data: {data: {connected: true, name: "somename"}}
@@ -37,49 +44,46 @@ describe(IntegrationStatusYnab.name, () => {
     
     test("Render loading status", async () => {
         mockedUseStatusService.mockReturnValue({isLoading: true});
+        mockedUseConnectService.mockReturnValue({isLoading: false});
+        mockedUseDisconnectService.mockReturnValue({isLoading: false});
 
-        render(<IntegrationStatusYnab />);
+        renderWithRouter(<IntegrationStatusYnab />);
         
         expect(screen.getByText("label.loading")).toBeInTheDocument();
     });
 
     test("Render connected", async () => {
         mockStatusConnected();
-        mockedUseDisconnectService.mockReturnValue({isLoading: false})
 
-        render(<IntegrationStatusYnab />);
+        renderWithRouter(<IntegrationStatusYnab />);
 
         expect(screen.queryByText("label.loading")).not.toBeInTheDocument();
         expect(screen.getByText("label.connected")).toBeInTheDocument();
     });
 
     test("Render connected, click disconnect", async () => {
-        const mockedStatusRefetch = jest.fn();
-        mockedUseStatusService.mockReturnValue({
-            isLoading: false,
-            refetch: mockedStatusRefetch,
-            data: {data: {connected: true, name: "somename"}}
-        });
+        mockStatusConnected();
+        const mockedDisconnectRefetch = jest.fn();
         mockedUseDisconnectService.mockReturnValue({
             isLoading: false,
-            refetch: () => Promise.resolve(),
+            refetch: mockedDisconnectRefetch,
         })
-
-        render(<IntegrationStatusYnab />);
+        
+        renderWithRouter(<IntegrationStatusYnab />);
 
         const button = screen.getByText("button.disconnect");
         expect(button).toBeInTheDocument();
         act(() => {
             click(button);
         });
-        await waitFor(() => expect(mockedStatusRefetch).toHaveBeenCalledTimes(1));
+        await waitFor(() => expect(mockedDisconnectRefetch).toHaveBeenCalledTimes(1));
     });
 
     test("Render connected, loading disconnect button", async () => {
         mockStatusConnected();
         mockedUseDisconnectService.mockReturnValue({isLoading: true})
 
-        render(<IntegrationStatusYnab />);
+        renderWithRouter(<IntegrationStatusYnab />);
 
         expect(screen.getByText("button.disconnect")).toHaveAttribute("disabled");
         expect(screen.getByText("label.connected")).toBeInTheDocument();
@@ -87,21 +91,10 @@ describe(IntegrationStatusYnab.name, () => {
 
     test("Render disconnected", async () => {
         mockStatusDisconnected();
-        mockedUseConnectService.mockReturnValue({isLoading: false})
-        
-        render(<IntegrationStatusYnab />);
+
+        renderWithRouter(<IntegrationStatusYnab />);
 
         expect(screen.queryByText("label.loading")).not.toBeInTheDocument();
-        expect(screen.getByText("label.disconnected")).toBeInTheDocument();
-    });
-
-    test("Render disconnected, loading connect button", async () => {
-        mockStatusDisconnected();
-        mockedUseConnectService.mockReturnValue({isLoading: true})
-
-        render(<IntegrationStatusYnab />);
-
-        expect(screen.getByText("button.connect")).toHaveAttribute("disabled");
         expect(screen.getByText("label.disconnected")).toBeInTheDocument();
     });
 
@@ -113,7 +106,7 @@ describe(IntegrationStatusYnab.name, () => {
             refetch: mockedConnectRefetch,
         })
 
-        render(<IntegrationStatusYnab />);
+        renderWithRouter(<IntegrationStatusYnab />);
 
         const button = screen.getByText("button.connect");
         expect(button).toBeInTheDocument();
@@ -122,5 +115,15 @@ describe(IntegrationStatusYnab.name, () => {
         });
 
         expect(mockedConnectRefetch).toHaveBeenCalledTimes(1);
+    });
+
+    test("Render disconnected, loading connect button", async () => {
+        mockStatusDisconnected();
+        mockedUseConnectService.mockReturnValue({isLoading: true})
+
+        renderWithRouter(<IntegrationStatusYnab />);
+
+        expect(screen.getByText("button.connect")).toHaveAttribute("disabled");
+        expect(screen.getByText("label.disconnected")).toBeInTheDocument();
     });
 });
