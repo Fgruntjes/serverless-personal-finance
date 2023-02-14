@@ -8,7 +8,7 @@
       register: auth0_login_info
       changed_when: false
       failed_when: false
-    
+
     # Create new
     - name: Auth0 login "{{ auth0_domain }}"
       when: auth0_login_info.rc != 0

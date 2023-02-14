@@ -14,7 +14,7 @@
     --type="{{ auth0_client_type }}" \
     --callbacks="{{ auth0_client_callbacks }}" \
     --web-origins="{{ auth0_client_origins }}"
-  
+
 - name: Get client info
   register: auth0_client_info
   shell: auth0 apps list --json --reveal-secrets \
