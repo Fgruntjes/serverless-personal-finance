@@ -1,5 +1,6 @@
 ---
 - import_playbook: deploy_auth0_client.yml
   vars:
-      frontend_web_url: "{{ 'https://' + app_environment + '.' + app_project_name + '.pages.dev/' | regex_replace('^https://main.', 'https://') }}"
+    frontend_environment_url: "{{ 'https://' + app_environment + '.' + app_project_name + '.pages.dev/' }}"
+    frontend_url: "{{ frontend_environment_url |  regex_replace('^https://main.', 'https://') }}"
 - import_playbook: deploy_cf_pages.yml

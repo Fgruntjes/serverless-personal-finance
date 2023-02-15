@@ -7,5 +7,5 @@
       vars:
         auth0_client_type: "spa"
         auth0_client_identifier: "frontend_web"
-        auth0_client_callbacks: "{{ frontend_web_url }}"
-        auth0_client_origins: "{{ frontend_web_url }}"
+        auth0_client_callbacks: "{{ frontend_url }}"
+        auth0_client_origins: "{{ frontend_url }}"

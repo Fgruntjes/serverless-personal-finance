@@ -1,6 +1,6 @@
 ---
 - name: Api info "{{ auth0_api_identifier }}"
-  shell: auth0 apis show "{{ auth0_api_identifier }}"
+  shell: auth0 apis show "{{ app_environment }}:{{ auth0_api_identifier }}"
   register: auth0_api_info
   changed_when: false
   failed_when: false
@@ -9,8 +9,8 @@
 - name: Create auth0 api "{{ auth0_api_identifier }}"
   when: auth0_api_info.rc != 0
   shell: auth0 apis create \
-    --name="{{ auth0_api_identifier }}" \
-    --identifier="{{ auth0_api_identifier }}" \
+    --name="{{ app_environment }}:{{ auth0_api_identifier }}" \
+    --identifier="{{ app_environment }}:{{ auth0_api_identifier }}" \
     --offline-access=false \
-    --scopes="connect,disconnect,status" \
+    --scopes="{{ auth0_scopes }}" \
     --no-input

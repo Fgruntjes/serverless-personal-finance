@@ -1,6 +1,6 @@
 ---
 - name: Client info "{{ auth0_client_identifier }}"
-  shell: auth0 apps list --json | jq -e -r ".[] | select(.name == \"{{ auth0_client_identifier }}\")"
+  shell: auth0 apps list --json | jq -e -r ".[] | select(.name == \"{{ app_environment }}:{{ auth0_client_identifier }}\")"
   register: auth0_client_exists
   changed_when: false
   failed_when: false
@@ -9,20 +9,21 @@
 - name: Create auth0 client "{{ auth0_client_identifier }}"
   when: auth0_client_exists.rc != 0
   shell: auth0 apps create \
-    --name="{{ auth0_client_identifier }}" \
-    --description="{{ auth0_client_identifier }}" \
+    --name="{{ app_environment }}:{{ auth0_client_identifier }}" \
+    --description="{{ app_environment }}:{{ auth0_client_identifier }}" \
     --type="{{ auth0_client_type }}" \
     --callbacks="{{ auth0_client_callbacks }}" \
-    --web-origins="{{ auth0_client_origins }}"
+    --web-origins="{{ auth0_client_origins }}" \
+    --logout-urls="{{ auth0_client_origins }}"
 
 - name: Get client info
   register: auth0_client_info
   shell: auth0 apps list --json --reveal-secrets \
-    | jq -e -r ".[] | select(.name == \"{{ auth0_client_identifier }}\")"
+    | jq -e -r ".[] | select(.name == \"{{ app_environment }}:{{ auth0_client_identifier }}\")"
 
-- set_fact: auth0_client_{{ auth0_client_identifier }}_id={{ input.client_id }}
+- set_fact: "{{ app_environment }}_auth0_client_{{ auth0_client_identifier }}_id={{ input.client_id }}"
   vars:
     input: "{{ auth0_client_info.stdout | from_json }}"
-- set_fact: auth0_client_{{ auth0_client_identifier }}_secret={{ input.client_secret }}
+- set_fact: "{{ app_environment }}_auth0_client_{{ auth0_client_identifier }}_secret={{ input.client_secret }}"
   vars:
     input: "{{ auth0_client_info.stdout | from_json }}"

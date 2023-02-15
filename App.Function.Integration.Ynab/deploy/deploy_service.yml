@@ -21,6 +21,7 @@
             " \
             --labels="environment={{ app_environment }}" \
             --platform=managed \
+            --allow-unauthenticated \
             --port=80
       - name: Get service URL
         shell: gcloud run services describe "{{ project_slug }}" \
