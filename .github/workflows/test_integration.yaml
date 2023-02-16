@@ -69,5 +69,6 @@ jobs:
         - test
         - delete_containers
         - delete_resources
+        if: ${{ always() }}
         steps:
-        -   run: "echo 'all tests succeeded'"
+        -   run: "echo 'all tests done'; exit ${{ failure() }}"

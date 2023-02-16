@@ -37,5 +37,6 @@ jobs:
         - test_quality_dotnet
         - test_quality_ansible
         - test_quality_frontend_web_typescript
+        if: ${{ always() }}
         steps:
-        -   run: "echo 'all tests succeeded'"
+        -   run: "echo 'all tests done'; exit ${{ failure() }}"
