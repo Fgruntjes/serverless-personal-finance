@@ -18,6 +18,8 @@ public class OAuthTokenStorageTest : DatabaseTest
         _tokenStorage = new OAuthTokenStorage(_databaseContext);
         _tokenCollection = _databaseContext.GetCollection<OAuthTokenDocument>();
         _testTokenExpiresAt = new DateTime(2022, 12, 20, 10, 1, 2).ToUniversalTime();
+
+        SerializerRegistrationHandler.RegisterSerializer(DataProtectorProviderMock.Create().Object);
     }
 
     [Fact]
