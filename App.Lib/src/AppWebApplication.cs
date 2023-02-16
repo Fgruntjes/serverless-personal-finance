@@ -1,4 +1,5 @@
 using System.Reflection;
+using App.Lib.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -7,14 +8,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Converters;
+using App.Lib.Authorization;
 
 namespace App.Lib;
 
 public static class AppWebApplication
 {
-    private const string CORSDevelopmentPolicy = "CORSDevelopmentPolicy";
-    private const string CORSProductionPolicy = "CORSProductionPolicy";
-
     public static async Task CreateAndRun(string[] args)
     {
         await CreateAndRun(args, _ => { }, _ => { });
@@ -116,9 +115,14 @@ public static class AppWebApplication
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.Configure<AppOptions>(builder.Configuration.GetSection(AppOptions.OptionsKey));
+        builder.Services.Configure<Auth0Options>(builder.Configuration.GetSection(Auth0Options.OptionsKey));
         builder.Configuration
             .AddEnvironmentVariables()
             .AddUserSecrets(Assembly.GetExecutingAssembly(), true);
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.Configuration.AddDevEnvVariables();
+        }
 
         builder.Services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
         builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
@@ -133,17 +137,22 @@ public static class AppWebApplication
         builder.Services.AddLogging();
         builder.Services.AddDataProtection();
         builder.Services.AddCors();
+        builder.Services.AddAppAuthentication(builder.Configuration);
 
         await configureBuilder(builder);
         builder.WebHost.UseSentry();
 
         var app = builder.Build();
         app.MapControllers();
+        app.UseAuthentication();
+        app.UseAuthorization();
         app.UseCors(policy =>
         {
             var settings = app.Services.GetRequiredService<IOptions<AppOptions>>();
-            policy.WithOrigins(settings.Value.Frontend);
-            policy.WithHeaders("Authorization");
+            policy.WithOrigins(settings.Value.Frontend)
+                .WithHeaders("Authorization")
+                .AllowCredentials()
+                .AllowAnyMethod();
         });
 
         if (!app.Environment.IsDevelopment())

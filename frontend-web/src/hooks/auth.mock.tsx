@@ -22,7 +22,7 @@ export function mockLoggedOut(): void {
     mockedUseAuth.mockReturnValue({
         isAuthenticated: false,
         isLoading: false,
-        getAccessToken: async () => null,
+        getAccessToken: async () => undefined,
         signIn: mockedSignIn,
         signOut: mockedSignOut,
     });
@@ -32,7 +32,7 @@ export function mockIsLoading(): void {
     mockedUseAuth.mockReturnValue({
         isAuthenticated: false,
         isLoading: true,
-        getAccessToken: async () => null,
+        getAccessToken: async () => undefined,
         signIn: mockedSignIn,
         signOut: mockedSignOut,
     });

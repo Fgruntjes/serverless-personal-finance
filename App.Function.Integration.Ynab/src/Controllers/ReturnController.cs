@@ -3,6 +3,7 @@ using App.Lib.Dto.Frontend;
 using App.Lib.Ynab;
 using App.Lib.Ynab.Exception;
 using App.Lib.Ynab.Rest;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.Function.Integration.Ynab.Controllers;
@@ -21,6 +22,7 @@ public class ReturnController : ControllerBase
     }
 
     [HttpGet(Name = "Return")]
+    [Authorize("function.integration.ynab")]
     [ProducesResponseType(typeof(ApiResponse<IntegrationStatus>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<IntegrationStatus>), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> Return([Required] string code, [Required] string returnUrl)

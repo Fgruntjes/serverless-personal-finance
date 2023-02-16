@@ -8,11 +8,13 @@ import {TranslationNamespaces} from "../locales/namespaces";
 
 type AuthContext = {
     isAuthenticated: boolean,
-    getAccessToken: () => Promise<string|null>,
+    getAccessToken: TokenFetcher,
     isLoading: boolean,
     signIn: VoidFunction,
     signOut: VoidFunction
 };
+
+export type TokenFetcher = () => Promise<string|undefined>;
 
 export function useAuth(): AuthContext {
     const {
@@ -35,7 +37,7 @@ export function useAuth(): AuthContext {
         isAuthenticated,
         isLoading,
         getAccessToken: async () => {
-            return getAccessTokenSilently();
+            return getAccessTokenSilently() ?? "";
         },
         signIn: () => {
             if (isAuthenticated) {

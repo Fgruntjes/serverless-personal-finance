@@ -5,5 +5,6 @@
   tasks:
     - include_tasks: ../../deploy/src/auth0/ensure_api.yml
       vars:
-        - auth0_api_identifier: "App.Function.Integration.Ynab"
-          auth0_scopes: "connect,disconnect,status"
+        - auth0_api_identifier: "public"
+          auth0_scopes: >-
+            function.integration.ynab

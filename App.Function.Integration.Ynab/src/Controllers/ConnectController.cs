@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using App.Lib.Ynab;
 using App.Lib.Dto.Frontend;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.Function.Integration.Ynab.Controllers;
@@ -17,6 +18,7 @@ public class ConnectController : ControllerBase
     }
 
     [HttpGet(Name = "Connect")]
+    [Authorize("function.integration.ynab")]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
     public async Task<ActionResult> Connect([Required] string returnUrl)

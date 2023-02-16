@@ -51,6 +51,7 @@ jobs:
             id: environment_url
             with:
                 cond: ${{ inputs.environment == 'main' }}
+                # When urls change also change App.Lib.Configuration.DevEnvConfigurationProvider.GetFrontendUrl
                 if_true: "https://${{ secrets.GOOGLE_PROJECT_ID }}.pages.dev"
                 if_false: "https://${{ inputs.environment }}.${{ secrets.GOOGLE_PROJECT_ID }}.pages.dev"
         -   uses: bobheadxi/deployments@v1
