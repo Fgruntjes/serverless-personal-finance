@@ -1,3 +1,4 @@
+using App.Lib.Tests.Authorization;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -7,16 +8,10 @@ namespace App.Lib.Tests;
 
 public class TestApplicationFactory<TEntryPoint> : WebApplicationFactory<TEntryPoint> where TEntryPoint : class
 {
-    private readonly string _environment;
-
-    public TestApplicationFactory()
-    {
-        _environment = "Development";
-    }
-
     protected override IHost CreateHost(IHostBuilder builder)
     {
-        builder.UseEnvironment(_environment);
+        builder.UseEnvironment(Environments.Production);
+        builder.ConfigureTestAuthServices();
         builder.ConfigureServices(services =>
         {
             services.AddLogging(logBuilder => logBuilder.AddConsole());

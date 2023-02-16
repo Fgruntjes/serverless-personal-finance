@@ -20,7 +20,6 @@ public class ControllerTest : IntegrationTestFixture<Program>
         _mockedConnectService = new Mock<IConnectService>();
         _client = factory.WithWebHostBuilder(builder =>
         {
-            builder.ConfigureTestAuthServices();
             builder.ConfigureTestServices(s => s.AddScoped(_ => _mockedClient.Object));
             builder.ConfigureTestServices(s => s.AddScoped(_ => _mockedConnectService.Object));
         }).CreateClient();

@@ -1,11 +1,7 @@
 using System.Net;
 using App.Lib.Dto.Frontend;
 using App.Lib.Tests;
-using App.Lib.Ynab;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
 namespace App.Function.Integration.Ynab.Tests.Controller;
