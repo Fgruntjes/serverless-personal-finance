@@ -71,4 +71,4 @@ jobs:
         - delete_resources
         if: ${{ always() }}
         steps:
-        -   run: "echo 'all tests done'; exit ${{ failure() }}"
+        -   run: "[[ '${{ needs.deploy.result }}' == 'success' && '${{ needs.test.result }}' == 'success' ]]"
