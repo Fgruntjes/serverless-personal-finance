@@ -8,21 +8,21 @@ namespace App.Lib.Tests.Authorization;
 
 public class TestAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-	public static readonly string TestScheme = "TestScheme";
-	
-	public TestAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
-	{
-	}
-	
-	protected override Task<AuthenticateResult> HandleAuthenticateAsync()
-	{
-		var claims = new[] { new Claim(ClaimTypes.Name, "Test user") };
-		var identity = new ClaimsIdentity(claims, "Test");
-		var principal = new ClaimsPrincipal(identity);
-		var ticket = new AuthenticationTicket(principal, TestScheme);
+    public static readonly string TestScheme = "TestScheme";
 
-		var result = AuthenticateResult.Success(ticket);
+    public TestAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
+    {
+    }
 
-		return Task.FromResult(result);
-	}
+    protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+    {
+        var claims = new[] { new Claim(ClaimTypes.Name, "Test user") };
+        var identity = new ClaimsIdentity(claims, "Test");
+        var principal = new ClaimsPrincipal(identity);
+        var ticket = new AuthenticationTicket(principal, TestScheme);
+
+        var result = AuthenticateResult.Success(ticket);
+
+        return Task.FromResult(result);
+    }
 }

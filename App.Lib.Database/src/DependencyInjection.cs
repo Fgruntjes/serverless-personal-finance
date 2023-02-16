@@ -10,7 +10,7 @@ namespace App.Lib.Database;
 public static class DependencyInject
 {
     private static Boolean SerializersRegistered;
-    private static object SerializeREgisterLock = new ();
+    private static object SerializeREgisterLock = new();
 
     public static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
@@ -32,7 +32,7 @@ public static class DependencyInject
                 var dataProtector = app.ApplicationServices.GetRequiredService<IDataProtectionProvider>();
                 BsonSerializer.RegisterSerializer(typeof(EncryptedString), new EncryptedStringSerializer(dataProtector));
                 SerializersRegistered = true;
-            }            
+            }
         }
 
         app.UseMongoMigration(m => m);
