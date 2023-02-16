@@ -1,0 +1,19 @@
+---
+- name: Configure auth0 auth provider
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Auth0 login state
+      shell: auth0 tenants list --no-color --no-input | grep "{{ auth0_domain }}"
+      register: auth0_login_info
+      changed_when: false
+      failed_when: false
+
+    # Create new
+    - name: Auth0 login "{{ auth0_domain }}"
+      when: auth0_login_info.rc != 0
+      shell: auth0 login \
+        --domain "{{ auth0_domain }}" \
+        --client-id "{{ auth0_client_id }}" \
+        --client-secret "{{ auth0_client_secret }}" \
+        --no-input

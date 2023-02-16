@@ -1,0 +1,10 @@
+---
+- name: Deploy App.Function.Integration.Ynab auth0 api
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - include_tasks: ensure_api.yml
+      vars:
+        - auth0_api_identifier: "public"
+          auth0_scopes: >-
+            function.integration.ynab

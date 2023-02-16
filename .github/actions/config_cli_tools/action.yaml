@@ -22,3 +22,11 @@ runs:
             smoke_test: "${binary} --version"
             tarball_binary_path: "*/bin/${binary}"
             download_url: 'https://fastdl.mongodb.org/mongocli/mongodb-atlas-cli_${version}_linux_x86_64.tar.gz'
+
+    -   uses: giantswarm/install-binary-action@v1
+        with:
+            binary: 'auth0'
+            version: '1.0.0-beta.1'
+            smoke_test: "${binary} --version"
+            tarball_binary_path: "${binary}"
+            download_url: 'https://github.com/auth0/auth0-cli/releases/download/v${version}/auth0-cli_${version}_Linux_x86_64.tar.gz'

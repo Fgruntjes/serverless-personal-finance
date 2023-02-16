@@ -1,4 +1,4 @@
-import {waitFor} from "@testing-library/react";
+import {act, waitFor} from "@testing-library/react";
 
 import {ConnectService} from "../generated/App.Function.Integration.Ynab";
 import testRenderQueryHook from "../util/testRenderQueryHook";
@@ -15,6 +15,9 @@ describe(useYnabConnectService.name, () => {
     
     test("Call connect", async () => {
         const {result} = renderYnabHook("https://example.com/return");
+        act(() => {
+            result.current.refetch();
+        });
         await waitFor(() => expect(result.current.isSuccess).toBe(true));
         
         expect(ConnectService.connect).toHaveBeenCalledTimes(1);

@@ -1,35 +1,6 @@
 ---
-- name: Deploy frontend-web
-  hosts: localhost
-  gather_facts: false
-  environment:
-    CLOUDFLARE_API_TOKEN: "{{ cloudflare_api_token }}"
-    CLOUDFLARE_ACCOUNT_ID: "{{ cloudflare_account_id }}"
+- import_playbook: deploy_auth0_client.yml
   vars:
-    project_dir: "{{ playbook_dir }}/.."
-  tasks:
-    - name: Build
-      shell: npm ci && npm run build
-      args:
-        chdir: "{{ project_dir }}"
-      environment:
-        REACT_APP_FUNCTION_INTEGRATION_YNAB_BASE: "{{ function_integration_ynab_url }}"
-        REACT_APP_OAUTH_CLIENT_ID: "{{ oauth_client_id }}"
-
-    - name: Get project info
-      shell: npx wrangler pages project list | grep "{{ app_project_name }}" > /dev/null
-      args:
-        chdir: "{{ project_dir }}"
-      register: project_info
-      changed_when: false
-      failed_when: false
-    - name: Create project
-      when: project_info.rc != 0
-      shell: npx wrangler pages project create "{{ app_project_name }}" \ --production-branch=main
-      args:
-        chdir: "{{ project_dir }}"
-
-    - name: Publish the website to Cloudflare Pages
-      shell: npx wrangler pages publish build \ --branch="{{ app_environment }}" \ --project-name="{{ app_project_name }}"
-      args:
-        chdir: "{{ project_dir }}"
+    frontend_environment_url: "{{ 'https://' + app_environment + '.' + app_project_name + '.pages.dev/' }}"
+    frontend_url: "{{ frontend_environment_url |  regex_replace('^https://main.', 'https://') }}"
+- import_playbook: deploy_cf_pages.yml

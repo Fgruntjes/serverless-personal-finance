@@ -23,7 +23,7 @@ public static class DependencyInject
     public static void UseDatabase(this IApplicationBuilder app)
     {
         var dataProtector = app.ApplicationServices.GetRequiredService<IDataProtectionProvider>();
-        BsonSerializer.RegisterSerializer(typeof(EncryptedString), new EncryptedStringSerializer(dataProtector));
+        SerializerRegistrationHandler.RegisterSerializer(dataProtector);
 
         app.UseMongoMigration(m => m);
     }

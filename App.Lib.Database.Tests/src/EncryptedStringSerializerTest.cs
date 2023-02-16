@@ -21,21 +21,7 @@ public class EncryptedStringSerializerTest
 
     public EncryptedStringSerializerTest()
     {
-        var dataProtectorMock = new Mock<IDataProtector>();
-        dataProtectorMock
-            .Setup(protector => protector.Protect(It.IsAny<byte[]>()))
-            .Returns<byte[]>(plaintext => plaintext);
-
-        dataProtectorMock
-            .Setup(protector => protector.Unprotect(It.IsAny<byte[]>()))
-            .Returns<byte[]>(plaintext => plaintext);
-
-        var dataProtectionProviderMock = new Mock<IDataProtectionProvider>();
-        dataProtectionProviderMock
-            .Setup(provider => provider.CreateProtector(It.IsAny<string>()))
-            .Returns(dataProtectorMock.Object);
-
-        _serializer = new EncryptedStringSerializer(dataProtectionProviderMock.Object);
+        _serializer = new EncryptedStringSerializer(DataProtectorProviderMock.Create().Object);
         _writerMock = new Mock<IBsonWriter>();
         _readerMock = new Mock<IBsonReader>();
         _serializeContext = BsonSerializationContext.CreateRoot(_writerMock.Object);

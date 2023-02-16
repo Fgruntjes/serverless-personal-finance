@@ -1,4 +1,13 @@
 ---
+# Infra (auth0)
+- import_playbook: auth0/login.yml
+  vars:
+    app_environment: "{{ APP_ENVIRONMENT }}"
+    auth0_domain: "{{ AUTH0_DOMAIN }}"
+    auth0_client_id: "{{ AUTH0_CLIENT_ID }}"
+    auth0_client_secret: "{{ AUTH0_CLIENT_SECRET }}"
+- import_playbook: auth0/deploy_api.yml
+
 # Infra (database)
 - import_playbook: mongodb/create.yml
   vars:
@@ -18,6 +27,7 @@
     google_project_id: "{{ GOOGLE_PROJECT_ID }}"
     sentry_dsn: "{{ SENTRY_DSN }}"
     database_connection_string: "{{ mongodb_connection_string_admin }}"
+    auth0_domain: "{{ AUTH0_DOMAIN }}"
 
 # Frontend
 - import_playbook: ../../frontend-web/deploy/deploy.yml
@@ -26,6 +36,6 @@
     app_project_name: "{{ GOOGLE_PROJECT_ID }}"
     cloudflare_api_token: "{{ CLOUDFLARE_API_TOKEN }}"
     cloudflare_account_id: "{{ CLOUDFLARE_ACCOUNT_ID }}"
-    oauth_client_id: "{{ GOOGLE_OAUTH_CLIENT_ID }}"
+    auth0_domain: "{{ AUTH0_DOMAIN }}"
     service_urls:
       function_integration_ynab_url: "{{ function_integration_ynab_url }}"

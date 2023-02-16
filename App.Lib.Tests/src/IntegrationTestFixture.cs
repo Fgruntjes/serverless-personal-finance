@@ -1,4 +1,6 @@
+using System.Net.Http.Headers;
 using App.Lib.Database;
+using App.Lib.Tests.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -17,6 +19,7 @@ public class IntegrationTestFixture<TEntryPoint> :
     {
         _factory = factory;
         _client = factory.CreateClient();
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthenticationHandler.TestScheme);
     }
 
     public void Dispose()

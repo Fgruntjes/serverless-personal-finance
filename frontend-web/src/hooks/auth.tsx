@@ -1,68 +1,54 @@
-import {
-    googleLogout,
-    useGoogleLogin
-} from "@react-oauth/google";
+import {useAuth0} from "@auth0/auth0-react";
 import {useEffect} from "react";
 import {useTranslation} from "react-i18next";
 import {toast} from "react-toastify";
-import {atom, useRecoilState} from "recoil";
-import {recoilPersist} from "recoil-persist";
 
 import {LoginError} from "../errors/LoginError";
 import {TranslationNamespaces} from "../locales/namespaces";
 
-const {persistAtom} = recoilPersist()
+type AuthContext = {
+    isAuthenticated: boolean,
+    getAccessToken: TokenFetcher,
+    isLoading: boolean,
+    signIn: VoidFunction,
+    signOut: VoidFunction
+};
 
-export type AuthState = {
-    token: string;
-    expiresAt: number;
-}|null;
+export type TokenFetcher = () => Promise<string|undefined>;
 
-const authState = atom<AuthState>({
-    key: "authState",
-    default: null,
-    effects: [persistAtom],
-});
-
-export function useAuth(): {authState: AuthState, signIn: VoidFunction, signOut: VoidFunction} {
+export function useAuth(): AuthContext {
+    const {
+        loginWithRedirect,
+        logout,
+        getAccessTokenSilently,
+        isAuthenticated,
+        isLoading,
+        error
+    } = useAuth0();
     const {t} = useTranslation(TranslationNamespaces.Auth);
-    const [currentAuthState, setAuthState] = useRecoilState(authState);
-    const login = useGoogleLogin({
-        flow: "implicit",
-        onError: (error) => {
-            throw new LoginError(
-                error.error || "unknown",
-                error.error_description || "Unknown error thrown"
-            );
-        },
-        onSuccess: (tokenResponse) => {
-            toast.success(t("loggedInSuccessful"))
-            setAuthState({
-                token: tokenResponse.access_token,
-                expiresAt: Date.now() + (tokenResponse.expires_in * 1000)
-            });
-        },
-    });
-    
+
     useEffect(() => {
-        if (currentAuthState && currentAuthState.expiresAt < Date.now()) {
-            setAuthState(null);
+        if (error) {
+            throw new LoginError(error.message || "unknown");
         }
-    }, [currentAuthState, setAuthState]);
+    }, [error]);
     
     return {
-        authState: currentAuthState,
+        isAuthenticated,
+        isLoading,
+        getAccessToken: async () => {
+            return getAccessTokenSilently() ?? "";
+        },
         signIn: () => {
-            if (currentAuthState) {
+            if (isAuthenticated) {
                 toast.warning(t("alreadyLoggedIn"))
             } else {
-                login();
+                loginWithRedirect({appState: {returnTo: `${window.location.pathname}${window.location.search}`}});
             }
         },
         signOut: () => {
-            if (currentAuthState) {
-                setAuthState(null);
-                googleLogout();
+            if (isAuthenticated) {
+                logout({logoutParams: {returnTo: ""}});
             } else {
                 toast.warning(t("notLoggedIn"))
             }

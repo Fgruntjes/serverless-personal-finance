@@ -1,19 +1,29 @@
 import React from "react";
-import {Navigate, useLocation} from "react-router-dom";
+import {useEffect} from "react";
 
 import {useAuth} from "../hooks/auth";
-import {paths} from "../paths";
+import Loader from "./Loader";
 
 export type AuthGuardProps = { children: JSX.Element };
 
 function AuthGuard({children}: AuthGuardProps) {
-    let {authState} = useAuth();
-    let location = useLocation();
-  
-    if (!authState) {
-        return <Navigate to={paths.login} state={{from: location}} replace />;
-    }
+    let {
+        isAuthenticated, isLoading, signIn
+    } = useAuth();
+    
+    useEffect(
+        () => {
+            if (!isLoading && !isAuthenticated) {
+                signIn();
+            }
+        },
+        [isLoading, isAuthenticated, signIn]
+    );
 
+    if (isLoading) {
+        return <Loader />
+    }
+    
     return children;
 }
 

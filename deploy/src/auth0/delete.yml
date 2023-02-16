@@ -1,0 +1,13 @@
+---
+- name: Configure auth0 auth provider
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Delete apis
+      shell: auth0 apis list --json 2>/dev/null \
+        | jq -r '.[] | select(.identifier | startswith("{{ app_environment }}:")) | .identifier' \
+        | xargs -r -L 1 auth0 apis delete --force
+    - name: Delete apps
+      shell: auth0 apps list --json 2>/dev/null \
+        | jq -r '.[] | select(.name | startswith("{{ app_environment }}:")) | .client_id' \
+        | xargs -r -L 1 auth0 apps delete --force

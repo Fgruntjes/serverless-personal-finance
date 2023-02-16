@@ -9,6 +9,9 @@ test -f .env.deploy.local && source .env.deploy.local
 test -f .env.local && source .env.local
 set +a
 
+# Install deploy dependencies
+npm ci
+
 ansible-playbook "${@}" \
     -e "APP_TAG=${APP_TAG}" \
     -e "APP_ENVIRONMENT=${APP_ENVIRONMENT}" \
@@ -21,6 +24,7 @@ ansible-playbook "${@}" \
     -e "MONGODB_ATLAS_PROJECT_ID=${MONGODB_ATLAS_PROJECT_ID}" \
     -e "CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}" \
     -e "CLOUDFLARE_ACCOUNT_ID=${CLOUDFLARE_ACCOUNT_ID}" \
-    -e "GOOGLE_OAUTH_CLIENT_ID=${GOOGLE_OAUTH_CLIENT_ID}" \
-    -e "GOOGLE_OAUTH_CLIENT_SECRET=${GOOGLE_OAUTH_CLIENT_SECRET}"
+    -e "AUTH0_DOMAIN=${AUTH0_DOMAIN}" \
+    -e "AUTH0_CLIENT_ID=${AUTH0_CLIENT_ID}" \
+    -e "AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET}"
     
