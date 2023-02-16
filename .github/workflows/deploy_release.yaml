@@ -39,14 +39,11 @@ jobs:
             register_deployment: true
 
     delete_containers:
-        needs: [ deploy_slug, test ]
+        needs: [ deploy_slug, deploy ]
         uses: ./.github/workflows/delete_containers.yaml
         secrets: inherit
-        concurrency:
-            group: ${{ needs.deploy_slug.outputs.environment }}
-            cancel-in-progress: true
         if: ${{ always() }}
         with:
             environment: ${{ needs.deploy_slug.outputs.environment }}
             keep: 2
-            grace: "7d"
+            grace: "168h"
