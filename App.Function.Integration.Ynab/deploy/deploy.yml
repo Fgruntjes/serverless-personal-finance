@@ -4,4 +4,3 @@
       project_slug: "{{ app_environment }}-{{ project_name | lower | replace('.', '-') }}"
   hosts: localhost
 - import_playbook: deploy_service.yml
-- import_playbook: deploy_auth0_api.yml

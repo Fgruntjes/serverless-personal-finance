@@ -19,9 +19,4 @@
         <HintPath>..\App.Function.Integration.Ynab.Tests\bin\Debug\net6.0\App.Lib.dll</HintPath>
       </Reference>
     </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="deploy\deploy_auth0_api.yml" />
-    </ItemGroup>
-
 </Project>
