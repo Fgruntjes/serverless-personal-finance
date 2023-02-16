@@ -54,7 +54,7 @@ jobs:
         -   run: dotnet restore ${{ matrix.project }}
         -   run: dotnet build --no-restore ${{ matrix.project }}
         -   run: docker-compose -f App.Lib.Tests/docker-compose.yaml up -d
-        -   run: dotnet test --no-restore --no-build ${{ matrix.project }}
+        -   run: dotnet test --no-restore --no-build --verbosity detailed ${{ matrix.project }}
 
     test_unit_success:
         runs-on: ubuntu-latest
