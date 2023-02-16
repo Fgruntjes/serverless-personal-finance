@@ -1,4 +1,6 @@
+using System.Net.Http.Headers;
 using App.Lib.Tests;
+using App.Lib.Tests.Authorization;
 using App.Lib.Ynab;
 using App.Lib.Ynab.Rest;
 using Microsoft.AspNetCore.TestHost;
@@ -18,8 +20,10 @@ public class ControllerTest : IntegrationTestFixture<Program>
         _mockedConnectService = new Mock<IConnectService>();
         _client = factory.WithWebHostBuilder(builder =>
         {
+            builder.ConfigureTestAuthServices();
             builder.ConfigureTestServices(s => s.AddScoped(_ => _mockedClient.Object));
             builder.ConfigureTestServices(s => s.AddScoped(_ => _mockedConnectService.Object));
         }).CreateClient();
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthenticationHandler.TestScheme);
     }
 }

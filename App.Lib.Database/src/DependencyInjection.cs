@@ -9,8 +9,9 @@ namespace App.Lib.Database;
 
 public static class DependencyInject
 {
-    private static bool SerializersRegistered = false;
-    
+    private static Boolean SerializersRegistered;
+    private static object SerializeREgisterLock = new ();
+
     public static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<DatabaseOptions>(configuration.GetSection("Database"));
@@ -24,13 +25,16 @@ public static class DependencyInject
 
     public static void UseDatabase(this IApplicationBuilder app)
     {
-        if (!SerializersRegistered)
+        lock (SerializeREgisterLock)
         {
-            var dataProtector = app.ApplicationServices.GetRequiredService<IDataProtectionProvider>();
-            BsonSerializer.RegisterSerializer(typeof(EncryptedString), new EncryptedStringSerializer(dataProtector));
-            SerializersRegistered = true;
+            if (!SerializersRegistered)
+            {
+                var dataProtector = app.ApplicationServices.GetRequiredService<IDataProtectionProvider>();
+                BsonSerializer.RegisterSerializer(typeof(EncryptedString), new EncryptedStringSerializer(dataProtector));
+                SerializersRegistered = true;
+            }            
         }
-        
+
         app.UseMongoMigration(m => m);
     }
 }

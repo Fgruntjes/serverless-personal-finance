@@ -1,4 +1,7 @@
+using System.Net.Http.Headers;
 using App.Lib.Database;
+using App.Lib.Tests.Authorization;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -16,7 +19,11 @@ public class IntegrationTestFixture<TEntryPoint> :
     public IntegrationTestFixture(TestApplicationFactory<TEntryPoint> factory)
     {
         _factory = factory;
-        _client = factory.CreateClient();
+        _client = factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureTestAuthServices();
+        }).CreateClient();
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: TestAuthenticationHandler.TestScheme);
     }
 
     public void Dispose()
