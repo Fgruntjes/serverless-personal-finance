@@ -21,9 +21,9 @@
   shell: auth0 apps list --json --reveal-secrets \
     | jq -e -r ".[] | select(.name == \"{{ app_environment }}:{{ auth0_client_identifier }}\")"
 
-- set_fact: "{{ app_environment }}_auth0_client_{{ auth0_client_identifier }}_id={{ input.client_id }}"
+- set_fact: "{{ app_environment | regex_replace('-', '_') }}_auth0_client_{{ auth0_client_identifier }}_id={{ input.client_id }}"
   vars:
     input: "{{ auth0_client_info.stdout | from_json }}"
-- set_fact: "{{ app_environment }}_auth0_client_{{ auth0_client_identifier }}_secret={{ input.client_secret }}"
+- set_fact: "{{ app_environment | regex_replace('-', '_') }}_auth0_client_{{ auth0_client_identifier }}_secret={{ input.client_secret }}"
   vars:
     input: "{{ auth0_client_info.stdout | from_json }}"
