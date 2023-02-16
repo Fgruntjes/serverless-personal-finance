@@ -5,6 +5,6 @@
   tasks:
     - include_tasks: ensure_api.yml
       vars:
-        - auth0_api_identifier: "public"
+          auth0_api_identifier: "public"
           auth0_scopes: >-
             function.integration.ynab
