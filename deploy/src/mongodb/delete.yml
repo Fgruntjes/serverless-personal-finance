@@ -9,11 +9,11 @@
   tasks:
     # Get instance info
     - name: Get MongoDB Atlas serverless instance info
-      command: atlas serverless describe "{{ app_environment }}" -o json | jq -e -r ".stateName" | grep -v "DELETING"
+      shell: atlas serverless describe "{{ app_environment }}" -o json | jq -e -r ".stateName" | grep -v "DELETING"
       register: instance_info
       changed_when: false
       failed_when: false
     # Delete instance if exists
     - name: Delete server instance
       when: instance_info.rc == 0
-      command: atlas serverless delete "{{ app_environment }}" --force
+      shell: atlas serverless delete "{{ app_environment }}" --force
