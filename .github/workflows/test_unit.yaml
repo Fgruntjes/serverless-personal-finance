@@ -64,5 +64,6 @@ jobs:
         - test_unit_dotnet
         - test_unit_typescript
         - test_unit_typescript_ensure
+        if: ${{ always() }}
         steps:
-        -   run: "echo 'all tests succeeded'"
+        -   run: "[[ '${{ needs.test_unit_dotnet.result }}' == 'success' && '${{ needs.test_unit_typescript.result }}' == 'success' && '${{ needs.test_unit_typescript_ensure.result }}' == 'success' ]]"

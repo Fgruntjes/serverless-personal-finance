@@ -7,6 +7,7 @@
     CLOUDFLARE_ACCOUNT_ID: "{{ cloudflare_account_id }}"
   vars:
     project_dir: "{{ playbook_dir }}/../.."
+    app_environment_var_name: "{{ app_environment | regex_replace('-', '_') }}"
   tasks:
     - name: Build
       shell: npm ci && npm run build
@@ -15,7 +16,7 @@
       environment:
         REACT_APP_FUNCTION_INTEGRATION_YNAB_BASE: "{{ function_integration_ynab_url }}"
         REACT_APP_APP_ENVIRONMENT: "{{ app_environment }}"
-        REACT_APP_AUTH0_CLIENT_ID: "{{ lookup('vars', app_environment + '_auth0_client_frontend_web_id') }}"
+        REACT_APP_AUTH0_CLIENT_ID: "{{ lookup('vars', app_environment_var_name + '_auth0_client_frontend_web_id') }}"
         REACT_APP_AUTH0_DOMAIN: "{{ auth0_domain }}"
 
     - name: Get project info
