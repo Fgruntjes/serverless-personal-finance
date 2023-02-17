@@ -10,6 +10,7 @@ import {CssVarsProvider} from "@mui/joy/styles";
 import React, {Suspense} from "react";
 import ReactDOM from "react-dom/client";
 import {QueryClientProvider} from "react-query"
+import {ReactQueryDevtools} from "react-query/devtools"
 import {
     createBrowserRouter,
     RouterProvider,
@@ -40,6 +41,7 @@ root.render(
                         <ToastContainer />
                     </CssVarsProvider>
                 </RecoilRoot>
+                <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
         </Suspense>
     </React.StrictMode>
