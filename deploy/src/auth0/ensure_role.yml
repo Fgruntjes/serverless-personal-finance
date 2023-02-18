@@ -1,0 +1,25 @@
+---
+- name: Role info "{{ auth0_role_name }}"
+  shell: auth0 roles list --json | jq -e -r ".[] | select(.name == \"{{ app_environment }}:{{ auth0_role_name }}\")"
+  register: auth0_role_exists
+  changed_when: false
+  failed_when: false
+
+# Create new
+- name: Create role "{{ auth0_role_name }}"
+  when: auth0_role_exists.rc != 0
+  shell: auth0 roles create \
+    --name="{{ app_environment }}:{{ auth0_role_name }}" \
+    --description="{{ app_environment }}:{{ auth0_role_name }}"
+
+# Get role id
+- name: Role info "{{ auth0_role_name }}"
+  register: auth0_role_id_info
+  shell: auth0 roles list --json 2>/dev/null \
+    | jq -r ".[] | select(.name == \"{{ app_environment }}:{{ auth0_role_name }}\") | .id"
+
+- include_tasks: ensure_role_permission.yml
+  loop: "{{ auth0_scopes }}"
+  vars:
+    auth0_role_id: "{{ auth0_role_id_info.stdout }}"
+    auth0_permission: "{{ item }}"
