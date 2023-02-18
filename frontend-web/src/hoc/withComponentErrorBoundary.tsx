@@ -2,10 +2,10 @@ import WarningIcon from "@mui/icons-material/Warning";
 import Alert from "@mui/joy/Alert";
 import Button from "@mui/joy/Button";
 import Typography from "@mui/joy/Typography";
+import {useQueryErrorResetBoundary} from "@tanstack/react-query";
 import React from "react";
 import {ErrorBoundary, FallbackProps} from "react-error-boundary";
 import {useTranslation} from "react-i18next";
-import {useQueryErrorResetBoundary} from "react-query";
 
 import {TranslationNamespaces} from "../locales/namespaces";
 

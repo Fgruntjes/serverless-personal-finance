@@ -14,7 +14,6 @@
       args:
         chdir: "{{ project_dir }}/frontend-web"
       environment:
-        NODE_ENV: "development"
         REACT_APP_FUNCTION_INTEGRATION_YNAB_BASE: "{{ function_integration_ynab_url }}"
         REACT_APP_APP_ENVIRONMENT: "{{ app_environment }}"
         REACT_APP_AUTH0_CLIENT_ID: "{{ lookup('vars', app_environment_var_name + '_auth0_client_frontend_web_id') }}"
