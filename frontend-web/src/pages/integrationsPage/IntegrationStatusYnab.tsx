@@ -23,11 +23,11 @@ const StatusWidget = withComponentErrorBoundary(() => {
         isLoading: statusIsLoading
     } = useYnabStatusService();
     const {
-        isLoading: disconnectIsLoading,
+        isInitialLoading: disconnectIsLoading,
         refetch: disconnectRefetch
     } = useYnabDisconnectService();
     const {
-        isLoading: connectIsLoading,
+        isInitialLoading: connectIsLoading,
         isFetched: connectIsFetched,
         refetch: connectRefetch,
         data: connectData,

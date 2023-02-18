@@ -2,25 +2,28 @@ import {waitFor} from "@testing-library/react";
 import {toast} from "react-toastify";
 
 import {ReturnService} from "../generated/App.Function.Integration.Ynab";
+import queryResultMock from "../util/queryResultMock";
 import testRenderQueryHook from "../util/testRenderQueryHook";
 import {useYnabReturnService} from "./useYnabReturnService";
 
-jest.mock("../generated/App.Function.Integration.Ynab");
 jest.mock("react-toastify");
 
 describe(useYnabReturnService.name, () => {
     const renderYnabHook = (returnCode: string|null, returnUrl: string) => testRenderQueryHook(
         () => useYnabReturnService(returnCode, returnUrl)
     );
-    const mockedReturn = jest.fn(ReturnService.return);
-    ReturnService.return = mockedReturn;
+
+    beforeEach(() => {
+        ReturnService.return = queryResultMock(
+            ReturnService.return,
+            {data: {accountName: "", connected: false}}
+        );
+    });
     
     test("Call connect and show success", async () => {
-        mockedReturn.mockResolvedValue({});
-
         const {result} = renderYnabHook("123", "https://www.example.com/returnsomething");
         await waitFor(() => expect(result.current.isSuccess).toBe(true));
-                
+
         expect(ReturnService.return).toHaveBeenCalledWith("123", "https://www.example.com/returnsomething");
         expect(ReturnService.return).toHaveBeenCalledTimes(1)
         expect(toast.success).toHaveBeenCalledWith("processReturnCodeSuccess");
@@ -28,7 +31,7 @@ describe(useYnabReturnService.name, () => {
 
     test("Show error on failure", async () => {
         jest.spyOn(console, "error").mockImplementation()
-        mockedReturn.mockImplementation(() => {
+        jest.mocked(ReturnService.return).mockImplementation(() => {
             throw new Error("Some Error");
         });
 

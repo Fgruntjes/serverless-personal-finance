@@ -1,5 +1,4 @@
-import {QueryClient} from "react-query";
-import {QueryClientConfig} from "react-query/types/core/types";
+import {QueryClient, QueryClientConfig} from "@tanstack/react-query";
 
 const createQueryClient = (options: Partial<QueryClientConfig> = {}) => 
     new QueryClient({

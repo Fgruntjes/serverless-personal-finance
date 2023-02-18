@@ -1,9 +1,9 @@
+import {QueryClientProvider} from "@tanstack/react-query";
 import {Queries,queries} from "@testing-library/dom";
 import {
     render, renderHook, RenderHookOptions, RenderHookResult, RenderResult
 } from "@testing-library/react";
 import React from "react";
-import {QueryClientProvider} from "react-query";
 
 import createQueryClient from "../createQueryClient";
 

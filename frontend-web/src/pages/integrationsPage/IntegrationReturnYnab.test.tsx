@@ -1,7 +1,7 @@
 import {jest} from "@jest/globals";
+import {useQuery} from "@tanstack/react-query";
 import {render, screen} from "@testing-library/react";
 import React from "react";
-import {useQuery} from "react-query";
 import {
     MemoryRouter, Navigate, Route, Routes
 } from "react-router-dom";
@@ -10,7 +10,7 @@ import {paths} from "../../paths";
 import IntegrationReturnYnab from "./IntegrationReturnYnab";
 
 jest.mock("../../generated/App.Function.Integration.Ynab");
-jest.mock("react-query");
+jest.mock("@tanstack/react-query");
 
 const mockedUseQuery = useQuery as jest.Mock<any>;
 const mockedNavigate = jest.fn(Navigate);
