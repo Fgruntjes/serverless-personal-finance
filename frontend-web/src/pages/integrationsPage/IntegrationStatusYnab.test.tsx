@@ -22,8 +22,8 @@ describe(IntegrationStatusYnab.name, () => {
     
     function mockStatusDisconnected() {
         mockedUseStatusService.mockReturnValue({isLoading: false});
-        mockedUseConnectService.mockReturnValue({isLoading: false});
-        mockedUseDisconnectService.mockReturnValue({isLoading: false});
+        mockedUseConnectService.mockReturnValue({isInitialLoading: false});
+        mockedUseDisconnectService.mockReturnValue({isInitialLoading: false});
         
         mockedUseStatusService.mockReturnValue({
             isLoading: false,
@@ -33,8 +33,8 @@ describe(IntegrationStatusYnab.name, () => {
 
     function mockStatusConnected() {
         mockedUseStatusService.mockReturnValue({isLoading: false});
-        mockedUseConnectService.mockReturnValue({isLoading: false});
-        mockedUseDisconnectService.mockReturnValue({isLoading: false});
+        mockedUseConnectService.mockReturnValue({isInitialLoading: false});
+        mockedUseDisconnectService.mockReturnValue({isInitialLoading: false});
 
         mockedUseStatusService.mockReturnValue({
             isLoading: false,
@@ -44,8 +44,8 @@ describe(IntegrationStatusYnab.name, () => {
     
     test("Render loading status", async () => {
         mockedUseStatusService.mockReturnValue({isLoading: true});
-        mockedUseConnectService.mockReturnValue({isLoading: false});
-        mockedUseDisconnectService.mockReturnValue({isLoading: false});
+        mockedUseConnectService.mockReturnValue({isInitialLoading: false});
+        mockedUseDisconnectService.mockReturnValue({isInitialLoading: false});
 
         renderWithRouter(<IntegrationStatusYnab />);
         
@@ -81,7 +81,7 @@ describe(IntegrationStatusYnab.name, () => {
 
     test("Render connected, loading disconnect button", async () => {
         mockStatusConnected();
-        mockedUseDisconnectService.mockReturnValue({isLoading: true})
+        mockedUseDisconnectService.mockReturnValue({isInitialLoading: true})
 
         renderWithRouter(<IntegrationStatusYnab />);
 
@@ -119,7 +119,7 @@ describe(IntegrationStatusYnab.name, () => {
 
     test("Render disconnected, loading connect button", async () => {
         mockStatusDisconnected();
-        mockedUseConnectService.mockReturnValue({isLoading: true})
+        mockedUseConnectService.mockReturnValue({isInitialLoading: true})
 
         renderWithRouter(<IntegrationStatusYnab />);
 
