@@ -13,14 +13,12 @@
             --project="{{ google_project_id }}" \
             --region="{{ google_region }}" \
             --service-account="" \
-            --set-env-vars=" \
-                App__Frontend={{ app_frontend }}, \
-                App__Environment={{ app_environment }}, \
-                Auth0__Domain={{ auth0_domain }}, \
-                Sentry__Dsn={{ sentry_dsn }}, \
-                Database__ConnectionString={{ database_connection_string }}, \
-                Database__DatabaseName={{ project_slug }} \
-            " \
+            --set-env-vars="App__Frontend={{ app_frontend }}" \
+            --set-env-vars="App__Environment={{ app_environment }}" \
+            --set-env-vars="Auth0__Domain={{ auth0_domain }}" \
+            --set-env-vars="Sentry__Dsn={{ sentry_dsn }}" \
+            --set-env-vars="Database__ConnectionString={{ database_connection_string }}" \
+            --set-env-vars="Database__DatabaseName={{ project_slug }}" \
             --labels="environment={{ app_environment }}" \
             --platform=managed \
             --allow-unauthenticated \

@@ -2,11 +2,11 @@ import {act, render, screen} from "@testing-library/react";
 import {useEffect} from "react";
 import {Simulate} from "react-dom/test-utils";
 import click = Simulate.click;
-import {useQueryErrorResetBoundary} from "react-query";
+import {useQueryErrorResetBoundary} from "@tanstack/react-query";
 
 import withComponentErrorBoundary from "./withComponentErrorBoundary";
 
-jest.mock("react-query");
+jest.mock("@tanstack/react-query");
 
 describe(withComponentErrorBoundary.name, () => {
     const TestComponent = withComponentErrorBoundary(
