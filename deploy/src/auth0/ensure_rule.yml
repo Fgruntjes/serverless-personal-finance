@@ -1,0 +1,14 @@
+---
+- name: Action info "{{ auth0_rule_name }}"
+  shell: auth0 rules list --json | jq -e -r ".[] | select(.name == \"{{ app_environment }}--{{ auth0_rule_name }}\")"
+  register: auth0_rule_exists
+  changed_when: false
+  failed_when: false
+
+# Create new
+- name: Create action "{{ auth0_rule_name }}"
+  when: auth0_rule_exists.rc != 0
+  shell: auth0 rules create \
+      --name="{{ app_environment }}--{{ auth0_rule_name }}" \
+      --script="{{lookup('ansible.builtin.file', auth0_rule_file) }}" \
+      --enabled=true

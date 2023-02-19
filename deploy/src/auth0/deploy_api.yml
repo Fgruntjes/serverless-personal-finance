@@ -11,3 +11,7 @@
     - include_tasks: ensure_role.yml
       vars:
         auth0_role_name: "User"
+    - include_tasks: ensure_rule.yml
+      vars:
+        auth0_rule_name: "tenant-claim"
+        auth0_rule_file: "{{lookup('ansible.builtin.file', 'tenant-claim') }}"
