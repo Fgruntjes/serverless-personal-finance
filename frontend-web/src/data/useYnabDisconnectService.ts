@@ -1,7 +1,10 @@
 import {useQuery, useQueryClient} from "@tanstack/react-query";
 
-import {DisconnectService, StatusService} from "../generated/App.Function.Integration.Ynab";
+import {DisconnectService} from "../generated/App.Function.Integration.Ynab";
 import {bindPromiseToSignal} from "../util/bindPromiseToSignal";
+import {YnabStatusServiceQueryKey} from "./useYnabStatusService";
+
+export const YnabDisconnectServiceQueryKey = "YnabDisconnectService";
 
 export function useYnabDisconnectService() {
     const queryClient = useQueryClient();
@@ -9,9 +12,9 @@ export function useYnabDisconnectService() {
         {
             retry: false,
             enabled: false,
-            queryKey: [DisconnectService.name],
+            queryKey: [YnabDisconnectServiceQueryKey],
             queryFn: ({signal}) => bindPromiseToSignal(DisconnectService.disconnect(), signal),
-            onSettled: () => queryClient.invalidateQueries({queryKey: [StatusService.name]})
+            onSettled: () => queryClient.invalidateQueries({queryKey: [YnabStatusServiceQueryKey]})
         }
     );
 }
