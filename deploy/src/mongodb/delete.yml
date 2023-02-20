@@ -17,3 +17,7 @@
     - name: Delete server instance
       when: instance_info.rc == 0
       shell: atlas serverless delete "{{ app_environment }}" --force
+    - name: Delete users
+      shell: atlas dbusers list -o json \
+        | jq -r '.[] | select(.username | startswith("{{ app_environment }}__")) | .username' \
+        | xargs -r -L 1  atlas dbusers delete --force
