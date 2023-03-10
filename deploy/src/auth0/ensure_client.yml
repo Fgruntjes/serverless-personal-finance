@@ -1,6 +1,6 @@
 ---
 - name: Client info "{{ auth0_client_identifier }}"
-  shell: auth0 apps list --json | jq -e -r ".[] | select(.name == \"{{ app_environment }}:{{ auth0_client_identifier }}\")"
+  shell: auth0 apps list --json | jq  -e -s ".[0], .[] | .[] | select(.name == \"{{ app_environment }}:{{ auth0_client_identifier }}\")"
   register: auth0_client_exists
   changed_when: false
   failed_when: false

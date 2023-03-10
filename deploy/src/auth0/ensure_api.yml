@@ -12,5 +12,5 @@
     --name="{{ app_environment }}:{{ auth0_api_identifier }}" \
     --identifier="{{ app_environment }}:{{ auth0_api_identifier }}" \
     --offline-access=false \
-    --scopes="{{ auth0_scopes }}" \
+    --scopes="{{ auth0_scopes | join(',') }}" \
     --no-input

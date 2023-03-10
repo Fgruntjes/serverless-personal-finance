@@ -16,7 +16,6 @@ import {
     RouterProvider,
 } from "react-router-dom";
 import {ToastContainer} from "react-toastify";
-import {RecoilRoot} from "recoil";
 
 import createQueryClient from "./createQueryClient";
 import reportWebVitals from "./reportWebVitals";
@@ -49,13 +48,11 @@ const App = () => {
             <Suspense fallback="Loading">
                 {/* eslint-disable-next-line react/jsx-no-undef */}
                 <QueryClientProvider client={queryClient}>
-                    <RecoilRoot>
-                        <CssVarsProvider theme={theme}>
-                            <CssBaseline/>
-                            <RouterProvider router={router}/>
-                            <ToastContainer />
-                        </CssVarsProvider>
-                    </RecoilRoot>
+                    <CssVarsProvider theme={theme}>
+                        <CssBaseline/>
+                        <RouterProvider router={router}/>
+                        <ToastContainer />
+                    </CssVarsProvider>
                     {showDevtools && process.env.NODE_ENV === "production" && (
                         <React.Suspense fallback={null}>
                             <ReactQueryDevtoolsProduction />

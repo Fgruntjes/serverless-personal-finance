@@ -11,3 +11,11 @@
       shell: auth0 apps list --json 2>/dev/null \
         | jq -r '.[] | select(.name | startswith("{{ app_environment }}:")) | .client_id' \
         | xargs -r -L 1 auth0 apps delete --force
+    - name: Delete roles
+      shell: auth0 roles list --json 2>/dev/null \
+        | jq -r '.[] | select(.name | startswith("{{ app_environment }}:")) | .id' \
+        | xargs -r -L 1 auth0 roles delete --force
+    - name: Delete rules
+      shell: auth0 rules list --json 2>/dev/null \
+        | jq -r '.[] | select(.name | startswith("{{ app_environment }}:")) | .id' \
+        | xargs -r -L 1 auth0 rules delete --force

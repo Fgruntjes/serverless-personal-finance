@@ -1,11 +1,10 @@
+using App.Lib.Authorization;
 using App.Lib.Database;
 using App.Lib.Net.Http;
 using App.Lib.Ynab.Dto;
 using App.Lib.Ynab.Exception;
 using App.Lib.Ynab.Rest.Dto;
 using Flurl;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -22,25 +21,28 @@ public class ConnectService : IConnectService
     private readonly HttpClient _httpClient;
     private readonly ILogger<ConnectService> _logger;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IAuthContext _authContext;
 
     public ConnectService(
         IOAuthTokenStorage tokenStorage,
         IOptions<YnabOptions> options,
         HttpClient httpClient,
         ILogger<ConnectService> logger,
-        IDateTimeProvider dateTimeProvider)
+        IDateTimeProvider dateTimeProvider,
+        IAuthContext authContext)
     {
         _tokenStorage = tokenStorage;
         _options = options;
         _httpClient = httpClient;
         _logger = logger;
         _dateTimeProvider = dateTimeProvider;
+        _authContext = authContext;
     }
 
 
     public async Task<IOAuthToken> GetValidAccessToken()
     {
-        var token = await _tokenStorage.Get(TokenName);
+        var token = await _tokenStorage.Get(TokenName, _authContext.CurrentTenant);
         if (
             string.IsNullOrEmpty((string)token.AccessToken) ||
             string.IsNullOrEmpty((string)token.RefreshToken))
@@ -88,20 +90,22 @@ public class ConnectService : IConnectService
 
     public async Task<bool> IsConnected()
     {
-        var token = await _tokenStorage.Get(TokenName);
+        var token = await _tokenStorage.Get(TokenName, _authContext.CurrentTenant);
         return !string.IsNullOrEmpty(token.AccessToken) && !TokenIsExpired(token);
     }
 
     public async Task Disconnect()
     {
-        await _tokenStorage.Delete(TokenName);
+        await _tokenStorage.Delete(TokenName, _authContext.CurrentTenant);
     }
 
     private async Task<IOAuthToken> StoreToken(TokenResponse token)
     {
+        var tenant = _authContext.CurrentTenant;
         var newToken = new OAuthToken
         {
             Name = TokenName,
+            Tenant = tenant,
             RefreshToken = EncryptedString.FromDecryptedValue(token.RefreshToken),
             AccessToken = EncryptedString.FromDecryptedValue(token.AccessToken),
             ExpiresAt = _dateTimeProvider.UtcNow.AddSeconds(token.ExpiresIn),

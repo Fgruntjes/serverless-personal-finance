@@ -1,0 +1,14 @@
+---
+- name: "Role permission info {{ auth0_role_id }}"
+  shell: auth0 roles permissions list --json "{{ auth0_role_id }}" \
+    | jq -e -s ".[0], .[] | .[] | select(.resource_server_identifier == \"{{ app_environment }}:{{ auth0_api_identifier }}\" && .permission_name == \"{{ auth0_permission }}\")"
+  register: auth0_role_permission_exists
+  changed_when: false
+  failed_when: false
+
+# Create new
+- name: "Create role permission {{ auth0_role_id }}: {{ auth0_api }} {{ auth0_permission }}"
+  when: auth0_role_permission_exists.rc != 0
+  shell: auth0 roles permissions add {{ auth0_role_id }} \
+    --api-id="{{ app_environment }}:{{ auth0_api_identifier }}" \
+    --permissions="{{ auth0_permission }}"

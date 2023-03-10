@@ -2,17 +2,7 @@ import {AppState, Auth0Provider} from "@auth0/auth0-react";
 import React from "react";
 import {useNavigate} from "react-router-dom";
 
-import {configure} from "../configure";
-import {useAuth} from "../hooks/auth";
 import ErrorPage from "../pages/ErrorPage";
-
-const AuthProviderConfigure = ({children}: { children: JSX.Element }) => {
-    const {getAccessToken} = useAuth();
-    
-    configure(getAccessToken);
-    
-    return children;
-}
 
 
 function AuthProvider({children}: { children: JSX.Element }) {
@@ -47,7 +37,7 @@ function AuthProvider({children}: { children: JSX.Element }) {
             }}
             onRedirectCallback={onRedirectCallback}
         >
-            <AuthProviderConfigure>{children}</AuthProviderConfigure>
+            {children}
         </Auth0Provider>
     );
 }

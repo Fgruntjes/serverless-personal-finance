@@ -2,9 +2,16 @@
 - name: Deploy App.Function.Integration.Ynab auth0 api
   gather_facts: false
   hosts: localhost
+  vars:
+    auth0_api_identifier: "public"
+    auth0_scopes:
+      - function.integration.ynab
   tasks:
     - include_tasks: ensure_api.yml
+    - include_tasks: ensure_role.yml
       vars:
-        auth0_api_identifier: "public"
-        auth0_scopes: >-
-          function.integration.ynab
+        auth0_role_name: "User"
+    - include_tasks: ensure_rule.yml
+      vars:
+        auth0_rule_name: "tenant-claim"
+        auth0_rule_script: "{{ lookup('template', playbook_dir + '/tenant-claim.js') }}"
