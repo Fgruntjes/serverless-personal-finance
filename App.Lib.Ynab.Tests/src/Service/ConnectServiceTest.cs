@@ -1,5 +1,6 @@
 using System.Collections.Specialized;
 using System.Net;
+using App.Lib.Authorization;
 using App.Lib.Database;
 using App.Lib.Tests.Logging;
 using App.Lib.Ynab.Dto;
@@ -21,6 +22,7 @@ public class ConnectServiceTest
     private readonly DateTime _now = new(2023, 01, 01);
     private readonly DateTime _validTokenDate = new(2023, 02, 02);
     private readonly DateTime _expiredTokenDate = new(2022, 12, 30);
+    private readonly Guid _tenant = new("98956dc5-215c-4795-b615-aa204c9a1644");
     private readonly ConnectService _connectService;
     private readonly Mock<IOAuthTokenStorage> _tokenStorageMock;
 
@@ -53,7 +55,9 @@ public class ConnectServiceTest
             Options.Create(_ynabOptions),
             _httpClient,
             XUnitLogger.CreateLogger<ConnectService>(testOutputHelper),
-            dateTimeProviderMock.Object);
+            dateTimeProviderMock.Object,
+            new AuthContextMock(_tenant)
+            );
     }
 
     [Fact]
@@ -185,6 +189,7 @@ public class ConnectServiceTest
             .BeEquivalentTo(new OAuthToken()
             {
                 Name = ConnectService.TokenName,
+                Tenant = _tenant,
                 AccessToken = EncryptedString.FromDecryptedValue("OtherAccessToken"),
                 RefreshToken = EncryptedString.FromDecryptedValue("OtherRefreshToken"),
                 ExpiresAt = _now.AddSeconds(600)
@@ -265,7 +270,7 @@ public class ConnectServiceTest
     public async void Disconnect()
     {
         await _connectService.Disconnect();
-        _tokenStorageMock.Verify(s => s.Delete(ConnectService.TokenName), Times.Once());
+        _tokenStorageMock.Verify(s => s.Delete(ConnectService.TokenName, _tenant), Times.Once());
     }
 
     private IOAuthToken SetupExpiredToken()
@@ -282,7 +287,7 @@ public class ConnectServiceTest
     private IOAuthToken SetupToken(IOAuthToken token)
     {
         _tokenStorageMock
-            .Setup(s => s.Get(It.IsAny<string>()))
+            .Setup(s => s.Get(It.IsAny<string>(), _tenant))
             .Returns(Task.FromResult(token));
 
         return token;

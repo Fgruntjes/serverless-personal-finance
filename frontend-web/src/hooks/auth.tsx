@@ -8,13 +8,13 @@ import {TranslationNamespaces} from "../locales/namespaces";
 
 type AuthContext = {
     isAuthenticated: boolean,
-    getAccessToken: TokenFetcher,
+    getAccessToken: TokenResolver,
     isLoading: boolean,
     signIn: VoidFunction,
     signOut: VoidFunction
 };
 
-export type TokenFetcher = () => Promise<string|undefined>;
+export type TokenResolver = () => Promise<string|undefined>;
 
 export function useAuth(): AuthContext {
     const {
@@ -37,13 +37,14 @@ export function useAuth(): AuthContext {
         isAuthenticated,
         isLoading,
         getAccessToken: async () => {
-            return getAccessTokenSilently() ?? "";
+            return !isAuthenticated ? "" : await getAccessTokenSilently() ?? "";
         },
         signIn: () => {
             if (isAuthenticated) {
                 toast.warning(t("alreadyLoggedIn"))
             } else {
-                loginWithRedirect({appState: {returnTo: `${window.location.pathname}${window.location.search}`}});
+                loginWithRedirect({appState: {returnTo: `${window.location.pathname}${window.location.search}`}})
+                    .catch(error => { throw error; });
             }
         },
         signOut: () => {

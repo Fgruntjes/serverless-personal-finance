@@ -59,9 +59,9 @@ public class OAuthTokenStorage : IOAuthTokenStorage
         );
     }
 
-    public async Task Delete(string tokenName, Guid tenant)
+    public async Task Delete(string name, Guid tenant)
     {
         await _dbContext.GetCollection<OAuthTokenDocument>()
-            .DeleteOneAsync(filter => filter.Name == tokenName && filter.Tenant == tenant);
+            .DeleteOneAsync(filter => filter.Name == name && filter.Tenant == tenant);
     }
 }

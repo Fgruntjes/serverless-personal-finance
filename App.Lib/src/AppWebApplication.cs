@@ -126,6 +126,9 @@ public static class AppWebApplication
 
         builder.Services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
         builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+        builder.Services.AddScoped<IAuthContext, AuthContext>();
+        builder.Services.AddHttpContextAccessor();
+
         builder.Services.AddControllers().AddNewtonsoftJson(options =>
         {
             options.SerializerSettings.Converters.Add(new StringEnumConverter());
@@ -150,7 +153,10 @@ public static class AppWebApplication
         {
             var settings = app.Services.GetRequiredService<IOptions<AppOptions>>();
             policy.WithOrigins(settings.Value.Frontend)
-                .WithHeaders("Authorization")
+                .WithHeaders(
+                    "Authorization",
+                    AuthContext.HeaderTenant
+                )
                 .AllowCredentials()
                 .AllowAnyMethod();
         });
