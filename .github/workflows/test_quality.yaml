@@ -28,8 +28,10 @@ jobs:
         -   uses: actions/setup-node@v3
             with:
                 node-version-file: frontend-web/package.json
-        -   run: cd frontend-web && npm ci
-        -   run: cd frontend-web && npx eslint . --ext .js,.jsx,.ts,.tsx
+        -   run: npm ci
+            working-directory: frontend-web
+        -   run: npx eslint . --ext .js,.jsx,.ts,.tsx
+            working-directory: frontend-web
 
     test_quality_success:
         runs-on: ubuntu-latest
