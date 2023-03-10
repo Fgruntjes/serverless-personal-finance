@@ -16,6 +16,8 @@ describe(useAuth.name, () => {
     const mockedGetAccessTokenSilently = jest.fn(); 
 
     function mockLoggedIn(): void {
+        mockedLoginWithRedirect.mockResolvedValue(undefined);
+        
         mockedUseAuth0.mockReturnValue({
             loginWithRedirect: mockedLoginWithRedirect,
             logout: mockedLogout,
@@ -32,6 +34,8 @@ describe(useAuth.name, () => {
     }
 
     function mockLoggedOut(): void {
+        mockedLoginWithRedirect.mockResolvedValue(undefined);
+        
         mockedUseAuth0.mockReturnValue({
             loginWithRedirect: mockedLoginWithRedirect,
             logout: mockedLogout,

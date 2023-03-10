@@ -43,8 +43,8 @@ export function useAuth(): AuthContext {
             if (isAuthenticated) {
                 toast.warning(t("alreadyLoggedIn"))
             } else {
-                loginWithRedirect({appState: {returnTo: `${window.location.pathname}${window.location.search}`}})
-                    .catch(error => { throw error; });
+                const loginPromise = loginWithRedirect({appState: {returnTo: `${window.location.pathname}${window.location.search}`}});
+                loginPromise.catch(error => { throw error; });
             }
         },
         signOut: () => {
