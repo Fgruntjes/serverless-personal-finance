@@ -29,7 +29,7 @@ jobs:
             with:
                 node-version-file: frontend-web/package.json
         -   run: cd frontend-web && npm ci
-        -   run: npx eslint . --ext .js,.jsx,.ts,.tsx
+        -   run: cd frontend-web && npx eslint . --ext .js,.jsx,.ts,.tsx
 
     test_quality_success:
         runs-on: ubuntu-latest
