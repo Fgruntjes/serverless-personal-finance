@@ -19,6 +19,8 @@
             --set-env-vars="Sentry__Dsn={{ sentry_dsn }}" \
             --set-env-vars="Database__ConnectionString={{ database_connection_string }}" \
             --set-env-vars="Database__DatabaseName={{ project_slug }}" \
+            --set-env-vars="Ynab__ClientId={{ ynab_client_id }}" \
+            --set-env-vars="Ynab__ClientSecret={{ ynab_client_secret }}" \
             --labels="environment={{ app_environment }}" \
             --platform=managed \
             --allow-unauthenticated \
