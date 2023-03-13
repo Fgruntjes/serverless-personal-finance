@@ -30,6 +30,8 @@
     sentry_dsn: "{{ SENTRY_DSN }}"
     database_connection_string: "{{ mongodb_connection_string_admin }}"
     auth0_domain: "{{ AUTH0_DOMAIN }}"
+    ynab_client_id: "{{ YNAB_CLIENT_ID }}"
+    ynab_client_secret: "{{ YNAB_CLIENT_SECRET }}"
 
 # Frontend
 - import_playbook: ../../frontend-web/deploy/deploy.yml

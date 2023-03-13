@@ -40,6 +40,10 @@ on:
                 required: true
             AUTH0_CLIENT_SECRET:
                 required: true
+            YNAB_CLIENT_ID:
+                required: true
+            YNAB_CLIENT_SECRET:
+                required: true
 
 jobs:
     deploy:
@@ -49,47 +53,49 @@ jobs:
             id-token: write
             deployments: write
         steps:
-        -   uses: actions/checkout@v3
-        -   uses: haya14busa/action-cond@v1
-            id: environment_url
-            with:
-                cond: ${{ inputs.environment == 'main' }}
-                # When urls change also change App.Lib.Configuration.DevEnvConfigurationProvider.GetFrontendUrl
-                if_true: "https://${{ secrets.GOOGLE_PROJECT_ID }}.pages.dev"
-                if_false: "https://${{ inputs.environment }}.${{ secrets.GOOGLE_PROJECT_ID }}.pages.dev"
-        -   uses: bobheadxi/deployments@v1
-            if: ${{ inputs.register_deployment }}
-            id: deployment
-            with:
-                step: start
-                token: ${{ secrets.GITHUB_TOKEN }}
-                env: ${{ inputs.environment }}
-        -   uses: ./.github/actions/config_cli_tools
-            with:
-                google_workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
-                google_service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
-        -   run: ./deploy/run-ansible.sh src/deploy.yml
-            env:
-                APP_TAG: ${{ inputs.tag }}
-                APP_ENVIRONMENT: ${{ inputs.environment }}
-                APP_FRONTEND: ${{ steps.environment_url.outputs.value }}
-                SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-                GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
-                GOOGLE_PROJECT_ID: ${{ secrets.GOOGLE_PROJECT_ID }}
-                MONGODB_ATLAS_PUBLIC_KEY: ${{ secrets.MONGODB_ATLAS_PUBLIC_KEY }}
-                MONGODB_ATLAS_PRIVATE_KEY: ${{ secrets.MONGODB_ATLAS_PRIVATE_KEY }}
-                MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
-                CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-                CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-                AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
-                AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
-                AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
-        -   uses: bobheadxi/deployments@v1
-            if: ${{ inputs.register_deployment }}
-            with:
-                step: finish
-                token: ${{ secrets.GITHUB_TOKEN }}
-                status: ${{ job.status }}
-                deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-                env: ${{ inputs.environment }}
-                env_url: ${{ steps.environment_url.outputs.value }}
+            - uses: actions/checkout@v3
+            - uses: haya14busa/action-cond@v1
+              id: environment_url
+              with:
+                  cond: ${{ inputs.environment == 'main' }}
+                  # When urls change also change App.Lib.Configuration.DevEnvConfigurationProvider.GetFrontendUrl
+                  if_true: "https://${{ secrets.GOOGLE_PROJECT_ID }}.pages.dev"
+                  if_false: "https://${{ inputs.environment }}.${{ secrets.GOOGLE_PROJECT_ID }}.pages.dev"
+            - uses: bobheadxi/deployments@v1
+              if: ${{ inputs.register_deployment }}
+              id: deployment
+              with:
+                  step: start
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  env: ${{ inputs.environment }}
+            - uses: ./.github/actions/config_cli_tools
+              with:
+                  google_workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+                  google_service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+            - run: ./deploy/run-ansible.sh src/deploy.yml
+              env:
+                  APP_TAG: ${{ inputs.tag }}
+                  APP_ENVIRONMENT: ${{ inputs.environment }}
+                  APP_FRONTEND: ${{ steps.environment_url.outputs.value }}
+                  SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+                  GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
+                  GOOGLE_PROJECT_ID: ${{ secrets.GOOGLE_PROJECT_ID }}
+                  MONGODB_ATLAS_PUBLIC_KEY: ${{ secrets.MONGODB_ATLAS_PUBLIC_KEY }}
+                  MONGODB_ATLAS_PRIVATE_KEY: ${{ secrets.MONGODB_ATLAS_PRIVATE_KEY }}
+                  MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+                  AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
+                  AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+                  AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
+                  YNAB_CLIENT_ID: ${{ secrets.YNAB_CLIENT_ID }}
+                  YNAB_CLIENT_SECRET: ${{ secrets.YNAB_CLIENT_SECRET }}
+            - uses: bobheadxi/deployments@v1
+              if: ${{ inputs.register_deployment }}
+              with:
+                  step: finish
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  status: ${{ job.status }}
+                  deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+                  env: ${{ inputs.environment }}
+                  env_url: ${{ steps.environment_url.outputs.value }}
