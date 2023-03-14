@@ -10,6 +10,7 @@ using App.Lib.Ynab.Rest.Dto;
 using Microsoft.Extensions.Options;
 using Moq;
 using Newtonsoft.Json;
+using WireMock.FluentAssertions;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WireMock.Server;
@@ -63,16 +64,13 @@ public class ConnectServiceTest
     [Fact]
     public async void IsConnected_ValidToken()
     {
-        SetupToken(new OAuthToken
-        {
-            Name = ConnectService.TokenName,
-            AccessToken = EncryptedString.FromDecryptedValue("SomeToken"),
-            ExpiresAt = _validTokenDate
-        });
+        SetupValidToken();
 
         (await _connectService.IsConnected())
             .Should()
             .BeTrue();
+
+        _appServer.Should().HaveReceivedACall();
     }
 
     [Fact]
@@ -86,16 +84,21 @@ public class ConnectServiceTest
         (await _connectService.IsConnected())
             .Should()
             .BeFalse();
+
+        _appServer.Should().HaveReceivedACall();
     }
 
     [Fact]
     public async void IsConnected_ExpiredToken()
     {
         SetupExpiredToken();
+        SetupRefresTokenApiResponse();
 
         (await _connectService.IsConnected())
             .Should()
-            .BeFalse();
+            .BeTrue();
+
+        _appServer.Should().HaveReceivedACall();
     }
 
     [Fact]
@@ -115,17 +118,13 @@ public class ConnectServiceTest
     [Fact]
     public async void GetValidAccessToken_Success()
     {
-        var createdToken = SetupToken(new OAuthToken
-        {
-            Name = ConnectService.TokenName,
-            AccessToken = EncryptedString.FromDecryptedValue("SomeAccessToken"),
-            RefreshToken = EncryptedString.FromDecryptedValue("SomeRefreshToken"),
-            ExpiresAt = _validTokenDate
-        });
+        var createdToken = SetupValidToken();
 
         (await _connectService.GetValidAccessToken())
             .Should()
             .BeEquivalentTo(createdToken);
+
+        _appServer.Should().HaveReceivedNoCalls();
     }
 
     [Fact]
@@ -142,6 +141,8 @@ public class ConnectServiceTest
         await act
             .Should()
             .ThrowAsync<TokenNotSetException>();
+
+        _appServer.Should().HaveReceivedACall();
     }
 
     [Fact]
@@ -158,31 +159,15 @@ public class ConnectServiceTest
         await act
             .Should()
             .ThrowAsync<TokenNotSetException>();
+
+        _appServer.Should().HaveReceivedACall();
     }
 
     [Fact]
     public async void GetValidAccessToken_Expired()
     {
         SetupExpiredToken();
-
-        _appServer
-            .Given(Request.Create()
-                .WithPath("/oauth/token")
-                .WithBody(body =>
-                {
-                    var token = JsonConvert.DeserializeObject<TokenRequestParams>(body);
-                    return
-                        token.ClientId == _ynabOptions.ClientId &&
-                        token.ClientSecret == _ynabOptions.ClientSecret &&
-                        token.GrantType == "refresh_token" &&
-                        token.RefreshToken == "SomeRefreshToken";
-                }))
-            .RespondWith(Response.Create().WithBodyAsJson(new TokenResponse
-            {
-                AccessToken = "OtherAccessToken",
-                RefreshToken = "OtherRefreshToken",
-                ExpiresIn = 600
-            }));
+        SetupRefresTokenApiResponse();
 
         (await _connectService.GetValidAccessToken())
             .Should()
@@ -194,6 +179,8 @@ public class ConnectServiceTest
                 RefreshToken = EncryptedString.FromDecryptedValue("OtherRefreshToken"),
                 ExpiresAt = _now.AddSeconds(600)
             });
+
+        _appServer.Should().HaveReceivedACall();
     }
 
     [Fact]
@@ -211,6 +198,8 @@ public class ConnectServiceTest
             .Should()
             .ThrowAsync<TokenException>()
             .WithMessage("Response status code does not indicate success: *");
+
+        _appServer.Should().HaveReceivedACall();
     }
 
     [Fact]
@@ -229,6 +218,8 @@ public class ConnectServiceTest
             .Should()
             .ThrowAsync<TokenException>()
             .WithMessage("Unexpected character encountered while parsing value: *");
+
+        _appServer.Should().HaveReceivedACall();
     }
 
     [Fact]
@@ -264,6 +255,8 @@ public class ConnectServiceTest
                     token.ExpiresAt == _now.AddSeconds(600)
                 )),
                 Times.Once());
+
+        _appServer.Should().HaveReceivedACall();
     }
 
     [Fact]
@@ -271,6 +264,19 @@ public class ConnectServiceTest
     {
         await _connectService.Disconnect();
         _tokenStorageMock.Verify(s => s.Delete(ConnectService.TokenName, _tenant), Times.Once());
+
+        _appServer.Should().HaveReceivedACall();
+    }
+
+    private IOAuthToken SetupValidToken()
+    {
+        return SetupToken(new OAuthToken
+        {
+            Name = ConnectService.TokenName,
+            AccessToken = EncryptedString.FromDecryptedValue("SomeAccessToken"),
+            RefreshToken = EncryptedString.FromDecryptedValue("SomeRefreshToken"),
+            ExpiresAt = _validTokenDate
+        });
     }
 
     private IOAuthToken SetupExpiredToken()
@@ -291,5 +297,27 @@ public class ConnectServiceTest
             .Returns(Task.FromResult(token));
 
         return token;
+    }
+
+    private void SetupRefresTokenApiResponse()
+    {
+        _appServer
+            .Given(Request.Create()
+                .WithPath("/oauth/token")
+                .WithBody(body =>
+                {
+                    var token = JsonConvert.DeserializeObject<TokenRequestParams>(body);
+                    return
+                        token.ClientId == _ynabOptions.ClientId &&
+                        token.ClientSecret == _ynabOptions.ClientSecret &&
+                        token.GrantType == "refresh_token" &&
+                        token.RefreshToken == "SomeRefreshToken";
+                }))
+            .RespondWith(Response.Create().WithBodyAsJson(new TokenResponse
+            {
+                AccessToken = "OtherAccessToken",
+                RefreshToken = "OtherRefreshToken",
+                ExpiresIn = 600
+            }));
     }
 }
