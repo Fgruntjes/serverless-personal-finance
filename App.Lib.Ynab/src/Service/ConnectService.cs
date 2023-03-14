@@ -90,8 +90,20 @@ public class ConnectService : IConnectService
 
     public async Task<bool> IsConnected()
     {
-        var token = await _tokenStorage.Get(TokenName, _authContext.CurrentTenant);
-        return !string.IsNullOrEmpty(token.AccessToken) && !TokenIsExpired(token);
+        try
+        {
+            await GetValidAccessToken();
+            return true;
+        }
+        catch (TokenNotSetException)
+        {
+            return false;
+        }
+        catch (TokenException exception)
+        {
+            _logger.LogWarning("IsConnected failed: {exception}", exception);
+            return false;
+        }
     }
 
     public async Task Disconnect()
