@@ -1,6 +1,0 @@
----
-- vars:
-      project_name: Function.Integration.Ynab
-      project_slug: "{{ app_environment }}-{{ project_name | lower | replace('.', '-') }}"
-  hosts: localhost
-- import_playbook: deploy_service.yml
