@@ -1,5 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Lib", "App.Lib\App.Lib.csproj", "{2E9A1B96-8AEF-44E4-ACBC-D115D94A42F5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Function.Banktransaction.Import", "App.Function.Banktransaction.Import\App.Function.Banktransaction.Import.csproj", "{C4E8B48D-E9A1-48C9-A82E-7053BE438278}"
@@ -23,6 +24,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Function.Integration.Ynab.Tests", "App.Function.Integration.Ynab.Tests\App.Function.Integration.Ynab.Tests.csproj", "{F72B3538-FBA1-4EF7-965A-4AB0F2121713}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Lib.Ynab.Tests", "App.Lib.Ynab.Tests\App.Lib.Ynab.Tests.csproj", "{F36A3BAD-89D6-4ED7-815E-9C87344338AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Deploy", "App.Deploy\App.Deploy.csproj", "{4A1C7793-6D83-46C5-8E72-BB2ACE90F611}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -78,5 +81,9 @@ Global
 		{F36A3BAD-89D6-4ED7-815E-9C87344338AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F36A3BAD-89D6-4ED7-815E-9C87344338AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F36A3BAD-89D6-4ED7-815E-9C87344338AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A1C7793-6D83-46C5-8E72-BB2ACE90F611}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A1C7793-6D83-46C5-8E72-BB2ACE90F611}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A1C7793-6D83-46C5-8E72-BB2ACE90F611}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A1C7793-6D83-46C5-8E72-BB2ACE90F611}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

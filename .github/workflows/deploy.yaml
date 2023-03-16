@@ -72,11 +72,12 @@ jobs:
               with:
                   google_workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
                   google_service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
-            - run: ./deploy/run-ansible.sh src/deploy.yml
+            - run: ./deploy/run-pulumi.sh up
               env:
                   APP_TAG: ${{ inputs.tag }}
                   APP_ENVIRONMENT: ${{ inputs.environment }}
                   APP_FRONTEND: ${{ steps.environment_url.outputs.value }}
+                  PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
                   SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
                   GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
                   GOOGLE_PROJECT_ID: ${{ secrets.GOOGLE_PROJECT_ID }}

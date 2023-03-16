@@ -1,0 +1,10 @@
+---
+- name: Deploy gcloud dataprotection secret
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Set variables
+      set_fact:
+        admin_user: "{{ admin_user | default('admin') }}"
+        read_user: "{{ read_user | default('read') }}"
+        write_user: "{{ write_user | default('write') }}"

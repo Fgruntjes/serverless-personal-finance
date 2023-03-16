@@ -28,7 +28,7 @@ function AuthProvider({children}: { children: JSX.Element }) {
             clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
             authorizationParams={{
                 redirect_uri: window.location.origin,
-                audience: `${process.env.REACT_APP_APP_ENVIRONMENT}:public`,
+                audience: `${process.env.REACT_APP_APP_ENVIRONMENT}-auth-public`,
                 scope: [
                     "openid",
                     "email",

@@ -47,9 +47,10 @@ jobs:
             with:
                 google_workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
                 google_service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
-        -   run: ./deploy/run-ansible.sh src/delete.yml
+        -   run: ./deploy/deploy.sh rm 
             env:
                 APP_ENVIRONMENT: ${{ inputs.environment }}
+                PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
                 GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}
                 GOOGLE_PROJECT_ID: ${{ secrets.GOOGLE_PROJECT_ID }}
                 MONGODB_ATLAS_PUBLIC_KEY: ${{ secrets.MONGODB_ATLAS_PUBLIC_KEY }}

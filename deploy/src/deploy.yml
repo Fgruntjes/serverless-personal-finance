@@ -10,7 +10,7 @@
   vars:
     app_environment: "{{ APP_ENVIRONMENT }}"
 
-# Infra (database)
+# Infra (database mongodb)
 - import_playbook: mongodb/create.yml
   vars:
     app_environment: "{{ APP_ENVIRONMENT }}"
@@ -18,6 +18,11 @@
     project_id: "{{ MONGODB_ATLAS_PROJECT_ID }}"
     public_api_key: "{{ MONGODB_ATLAS_PUBLIC_KEY }}"
     private_api_key: "{{ MONGODB_ATLAS_PRIVATE_KEY }}"
+
+# Infra (gcloud)
+- import_playbook: gcloud/deploy.yml
+  vars:
+    app_environment: "{{ APP_ENVIRONMENT }}"
 
 # Backend functions
 - import_playbook: ../../App.Function.Integration.Ynab/deploy/deploy.yml

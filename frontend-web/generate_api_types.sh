@@ -6,7 +6,7 @@ set -e
 set -x
 
 API_PROJECTS=( $(../.github/project_matrix.sh functions) )
-  
+ 
 # Clear old generated code
 rm -Rf src/generated/*/*
 
@@ -17,6 +17,7 @@ for PROJECT in "${API_PROJECTS[@]}"
 do
     (
         cd ../
+        export DOTNET_ENVIRONMENT=SwaggerBuild
         dotnet swagger tofile \
             --output "${PROJECT}/swagger.json" \
             "${PROJECT}/bin/Debug/net7.0/${PROJECT}.dll" \

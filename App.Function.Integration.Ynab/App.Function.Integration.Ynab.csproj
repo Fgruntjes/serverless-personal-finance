@@ -13,10 +13,4 @@
       <ProjectReference Include="..\App.Lib.Ynab\App.Lib.Ynab.csproj" />
       <ProjectReference Include="..\App.Lib\App.Lib.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="App.Lib">
-        <HintPath>..\App.Function.Integration.Ynab.Tests\bin\Debug\net6.0\App.Lib.dll</HintPath>
-      </Reference>
-    </ItemGroup>
 </Project>

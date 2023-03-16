@@ -21,6 +21,7 @@ PROJECT_SLUG=$(echo "${PROJECT_NAME}" | slugify )
 SERVICE_ACCOUNT_NAME="github-cicd"
 IDENTITY_POOL_NAME="github-pool"
 IDENTITY_PROVIDER_NAME="github-provider"
+PULUMI_CONFIG_PASSPHRASE=$(echo $RANDOM | md5sum | head -c 20; echo;)
 
 # Create project
 if ! gcloud projects describe "${PROJECT_SLUG}" > /dev/null; then
@@ -133,6 +134,23 @@ fi
 echo ""
 
 
+# Create pulumi state bucket
+if ! gcloud storage buckets describe --project="${PROJECT_SLUG}" "gs://${PROJECT_SLUG}-pulumi" > /dev/null; then
+    echo "Creating pulumi state bucket"
+    gcloud storage buckets create "gs://${PROJECT_SLUG}-pulumi" \
+        --no-public-access-prevention \
+        --location="${GOOGLE_REGION}" \
+        --project="${PROJECT_SLUG}"
+        
+    gcloud storage buckets update "gs://${PROJECT_SLUG}-pulumi" \
+      --versioning \
+      --lifecycle-file=pulumi-state-bucket-lifecycle.json
+else
+    echo "Pulumi state bucket already created"
+fi
+echo ""
+
+
 # Create mongodb atlas project
 if ! atlas project list | grep "${PROJECT_SLUG}" > /dev/null; then
     echo "Creating MongoDB Atlas project"
@@ -191,6 +209,8 @@ storeSecret GOOGLE_PROJECT_ID
 storeSecret MONGODB_ATLAS_PRIVATE_KEY
 storeSecret MONGODB_ATLAS_PUBLIC_KEY
 storeSecret MONGODB_ATLAS_PROJECT_ID
+
+storeSecret PULUMI_CONFIG_PASSPHRASE
 
 # Variables that are required before setup. Preferably these are created with cli tools.
 storeSecret AUTH0_DOMAIN

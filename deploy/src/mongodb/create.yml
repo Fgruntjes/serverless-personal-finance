@@ -15,36 +15,46 @@
 
     # Create instance
     - name: Get MongoDB Atlas serverless instance info
-      shell: atlas serverless describe "{{ app_environment }}" -o json
+      shell: |
+        set -o pipefail
+        atlas serverless describe "{{ app_environment }}" -o json
       register: instance_info
       changed_when: false
       failed_when: false
     - name: Create server instance
       when: instance_info.rc != 0
-      shell: atlas serverless create "{{ app_environment }}" \
-        --provider=GCP \
-        --region="{{ google_region | replace('europe-west1', 'WESTERN_EUROPE') }}"
+      shell: |
+        set -o pipefail
+        atlas serverless create "{{ app_environment }}" \
+          --provider=GCP \
+          --region="{{ google_region | replace('europe-west1', 'WESTERN_EUROPE') }}"
 
     # Configure network access
     - name: Get network access list
-      shell: atlas accessLists list -o json | jq -e -r ".results[] | select(.comment == \"public\")" > /dev/null
+      shell: |
+        set -o pipefail
+        atlas accessLists list -o json | jq -e -r ".results[] | select(.comment == \"public\")" > /dev/null
       register: access_info
       changed_when: false
       failed_when: false
     - name: Create network access list
       when: access_info.rc != 0
-      shell: atlas accessLists create "0.0.0.0/0" --comment="public"
-
+      shell: |
+        set -o pipefail
+        atlas accessLists create "0.0.0.0/0" --comment="public"
     # Create users
-    - include_tasks: create_user.yml
+    - name: "Create admin use {{ admin_user }}"
+      include_tasks: create_user.yml
       vars:
         - username: "{{ admin_user }}"
           role: atlasAdmin
-    - include_tasks: create_user.yml
+    - name: "Create write use {{ read_user }}"
+      include_tasks: create_user.yml
       vars:
         - username: "{{ read_user }}"
           role: readAnyDatabase
-    - include_tasks: create_user.yml
+    - name: "Create write use {{ write_user }}"
+      include_tasks: create_user.yml
       vars:
         - username: "{{ write_user }}"
           role: readWriteAnyDatabase
