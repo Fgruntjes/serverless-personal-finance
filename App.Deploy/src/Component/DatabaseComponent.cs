@@ -50,7 +50,7 @@ public class DatabaseComponent : ComponentResource
 			{
 				ProjectId = config.MongoDb.ProjectId,
 				ProviderSettingsBackingProviderName = "GCP",
-				ProviderSettingsProviderName = "GCP",
+				ProviderSettingsProviderName = "SERVERLESS",
 				ProviderSettingsRegionName = config.Gcp.Region.Replace(
 					"europe-west1",
 					"WESTERN_EUROPE")
