@@ -17,7 +17,7 @@ namespace App.Lib;
 public static class AppWebApplication
 {
     public const string SwaggerBuildEnvironment = "SwaggerBuild";
-    
+
     public static async Task CreateAndRun(string[] args)
     {
         await CreateAndRun(args, _ => { }, _ => { });
@@ -123,7 +123,7 @@ public static class AppWebApplication
 
         builder.Configuration.AddEnvironmentVariables();
         builder.Configuration.AddUserSecrets(Assembly.GetExecutingAssembly(), true);
-        
+
         if (builder.Environment.IsDevelopment())
         {
             builder.Configuration.AddDevEnvVariables();
@@ -187,7 +187,7 @@ public static class AppWebApplication
         {
             return;
         }
-        
+
         var certificate = builder.Configuration.MustGetValue<string>("Security:ProtectionCertificate");
 
         builder.Services.AddDataProtection()

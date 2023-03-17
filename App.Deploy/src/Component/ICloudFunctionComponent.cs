@@ -4,5 +4,5 @@ namespace App.Deploy.Component;
 
 interface ICloudFunctionComponent
 {
-	public Output<string> Url { get; }
+    public Output<string> Url { get; }
 }
