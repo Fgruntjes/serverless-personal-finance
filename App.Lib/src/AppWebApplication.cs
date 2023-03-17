@@ -188,9 +188,11 @@ public static class AppWebApplication
             return;
         }
 
-        var certificate = builder.Configuration.MustGetValue<string>("Security:ProtectionCertificate");
-
-        builder.Services.AddDataProtection()
-                    .ProtectKeysWithCertificate(new X509Certificate2(certificate));
+        var dataProtectionBuilder = builder.Services.AddDataProtection();
+        var certificate = builder.Configuration.GetValue<string>("Security:ProtectionCertificate");
+        if (certificate != null)
+        {
+            dataProtectionBuilder.ProtectKeysWithCertificate(new X509Certificate2(certificate));
+        }
     }
 }
