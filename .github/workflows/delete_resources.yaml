@@ -47,7 +47,7 @@ jobs:
             with:
                 google_workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
                 google_service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
-        -   run: ./deploy/deploy.sh rm 
+        -   run: ./App.Deploy/deploy.sh rm 
             env:
                 APP_ENVIRONMENT: ${{ inputs.environment }}
                 PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
