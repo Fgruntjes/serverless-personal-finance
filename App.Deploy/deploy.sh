@@ -9,12 +9,6 @@ test -f .env.deploy.local && source .env.deploy.local
 test -f .env.local && source .env.local
 set +a
 
-# Install Pulumi if not available
-if ! command -v pulumi &> /dev/null
-then
-    curl -fsSL https://get.pulumi.com | sh
-fi
-
 # Login to cloud
 pulumi login "gs://${GOOGLE_PROJECT_ID}-pulumi"
 
