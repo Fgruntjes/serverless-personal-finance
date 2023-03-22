@@ -15,15 +15,6 @@ internal class FrontendComponent : ComponentResource
     private readonly Client _authClient;
     private Command _buildCommand;
 
-    [Output]
-    public Output<string> FrontendUrl
-    {
-        get => Output.Create($"https://{_config.Environment}.{_config.ProjectSlug}.pages.dev"
-            .Replace("https://main.", "https://"));
-        // ReSharper disable once UnusedMember.Global
-        set { }
-    }
-
     public FrontendComponent(
         string name,
         AppConfig config,
@@ -46,8 +37,8 @@ internal class FrontendComponent : ComponentResource
         _authClient = new Client($"{name}-client", new()
         {
             AppType = "spa",
-            AllowedOrigins = new[] { FrontendUrl },
-            Callbacks = new[] { FrontendUrl },
+            AllowedOrigins = new[] { _config.FrontendUrl },
+            Callbacks = new[] { _config.FrontendUrl },
         });
 
         BuildFrontend();

@@ -9,6 +9,9 @@ test -f .env.deploy.local && source .env.deploy.local
 test -f .env.local && source .env.local
 set +a
 
+# Login to cloud
+pulumi login "gs://${GOOGLE_PROJECT_ID}-pulumi"
+
 # Set configuration only if modified
 if [ ".env.deploy.local" -nt "Pulumi.${APP_ENVIRONMENT}.yaml" ] || [ ".env.local" -nt "Pulumi.${APP_ENVIRONMENT}.yaml" ]; then
     # So old configs are cleared
@@ -29,8 +32,9 @@ if [ ".env.deploy.local" -nt "Pulumi.${APP_ENVIRONMENT}.yaml" ] || [ ".env.local
     
     pulumi_config_set app:tag "${APP_TAG}"
     pulumi_config_set app:environment "${APP_ENVIRONMENT}"
-    pulumi_config_set app:frontend "${APP_FRONTEND}"
     pulumi_config_set app:projectDir "$(dirname $(pwd))"
+    pulumi_config_set app:dataProtectionCert "${DATA_PROTECTION_CERTIFICATE}"
+
     pulumi_config_set sentry:dsn "${SENTRY_DSN}" --secret
     
     pulumi_config_set mongodbatlas:publicKey "${MONGODB_ATLAS_PUBLIC_KEY}" --secret
@@ -51,9 +55,6 @@ else
         --non-interactive \
         --create "${APP_ENVIRONMENT}"
 fi
-
-# Login to cloud
-pulumi login "gs://${GOOGLE_PROJECT_ID}-pulumi"
 
 if [ "$1" == "up" ]; then
     pulumi up \

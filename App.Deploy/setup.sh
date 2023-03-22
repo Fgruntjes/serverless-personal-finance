@@ -23,6 +23,9 @@ IDENTITY_POOL_NAME="github-pool"
 IDENTITY_PROVIDER_NAME="github-provider"
 PULUMI_CONFIG_PASSPHRASE=$(echo $RANDOM | md5sum | head -c 20; echo;)
 
+echo "Generating data protection cert"
+DATA_PROTECTION_CERTIFICATE=$(openssl req -x509 -newkey rsa:2048 -keyout /dev/stdout -out /dev/stdout -nodes -days 365 --subj '/')
+
 # Create project
 if ! gcloud projects describe "${PROJECT_SLUG}" > /dev/null; then
   echo "Creating project: ${PROJECT_SLUG}"
@@ -198,7 +201,8 @@ function storeSecret {
     
     echo "${SECRET_VALUE}" | gh secret set "${SECRET_NAME}" --app actions
     echo "${SECRET_VALUE}" | gh secret set "${SECRET_NAME}" --app dependabot
-    echo "${SECRET_NAME}=\"${SECRET_VALUE}\"" >> .env.deploy.local
+    
+    echo "${SECRET_NAME}='${SECRET_VALUE}'" >> .env.deploy.local
 }
 cat /dev/null > .env.deploy.local
 storeSecret GOOGLE_WORKLOAD_IDENTITY_PROVIDER
@@ -210,7 +214,9 @@ storeSecret MONGODB_ATLAS_PRIVATE_KEY
 storeSecret MONGODB_ATLAS_PUBLIC_KEY
 storeSecret MONGODB_ATLAS_PROJECT_ID
 
+# Secret protection keys
 storeSecret PULUMI_CONFIG_PASSPHRASE
+storeSecret DATA_PROTECTION_CERTIFICATE
 
 # Variables that are required before setup. Preferably these are created with cli tools.
 storeSecret AUTH0_DOMAIN

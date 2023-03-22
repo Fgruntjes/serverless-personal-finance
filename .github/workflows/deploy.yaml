@@ -54,13 +54,6 @@ jobs:
             deployments: write
         steps:
             - uses: actions/checkout@v3
-            - uses: haya14busa/action-cond@v1
-              id: environment_url
-              with:
-                  cond: ${{ inputs.environment == 'main' }}
-                  # When urls change also change App.Lib.Configuration.DevEnvConfigurationProvider.GetFrontendUrl
-                  if_true: "https://${{ secrets.GOOGLE_PROJECT_ID }}.pages.dev"
-                  if_false: "https://${{ inputs.environment }}.${{ secrets.GOOGLE_PROJECT_ID }}.pages.dev"
             - uses: bobheadxi/deployments@v1
               if: ${{ inputs.register_deployment }}
               id: deployment
@@ -76,7 +69,6 @@ jobs:
               env:
                   APP_TAG: ${{ inputs.tag }}
                   APP_ENVIRONMENT: ${{ inputs.environment }}
-                  APP_FRONTEND: ${{ steps.environment_url.outputs.value }}
                   PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
                   SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
                   GOOGLE_REGION: ${{ secrets.GOOGLE_REGION }}

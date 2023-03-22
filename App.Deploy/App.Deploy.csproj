@@ -16,5 +16,9 @@
     <PackageReference Include="Pulumi.Mongodbatlas" Version="3.7.1" />
     <PackageReference Include="Pulumi.Random" Version="4.12.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\App.Lib\App.Lib.csproj" />
+  </ItemGroup>
   
 </Project>

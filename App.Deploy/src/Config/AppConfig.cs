@@ -1,3 +1,5 @@
+using App.Lib.Configuration;
+
 namespace App.Deploy.Config;
 
 public class AppConfig
@@ -6,16 +8,18 @@ public class AppConfig
 
     public string Tag => _config.Require("tag");
     public string Environment => _config.Require("environment");
-    public string Frontend => _config.Require("frontend");
     public string ProjectDir => _config.Require("projectDir");
     public string ProjectSlug => Gcp.Project;
-
+    public string DataProtectionCert => _config.Require("dataProtectionCert");
+    
     public GcpConfig Gcp { get; }
     public MongoDbConfig MongoDb { get; }
     public Auth0Config Auth0 { get; }
     public SentryConfig Sentry { get; }
     public YnabConfig Ynab { get; }
-    public CloudflareConfig Cloudflare { get; set; }
+    public CloudflareConfig Cloudflare { get; }
+
+    public string FrontendUrl => DevEnvConfigurationProvider.GetFrontendUrl(Environment, ProjectSlug);
 
     public AppConfig()
     {

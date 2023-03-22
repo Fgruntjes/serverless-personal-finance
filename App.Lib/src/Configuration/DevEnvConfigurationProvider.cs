@@ -14,7 +14,7 @@ public class DevEnvConfigurationProvider : ConfigurationProvider
         Data["Auth0:Domain"] = devVars["AUTH0_DOMAIN"];
     }
 
-    private string GetFrontendUrl(string appEnvironment, string googleProjectId)
+    public static string GetFrontendUrl(string appEnvironment, string projectSlug)
     {
         // If changed also change .github/workflows/deploy.yaml jobs.deploy
         switch (appEnvironment)
@@ -22,9 +22,9 @@ public class DevEnvConfigurationProvider : ConfigurationProvider
             case "dev":
                 return "http://localhost:3000";
             case "main":
-                return $"https://{googleProjectId}.pages.dev";
+                return $"https://{projectSlug}.pages.dev";
             default:
-                return $"https://{appEnvironment}.{googleProjectId}.pages.dev";
+                return $"https://{appEnvironment}.{projectSlug}.pages.dev";
         }
     }
 

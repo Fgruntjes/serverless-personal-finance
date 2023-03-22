@@ -23,14 +23,6 @@ public class DatabaseComponent : ComponentResource
         set { }
     }
 
-    [Output]
-    public Output<string> DatabaseName
-    {
-        get => _server.Name;
-        // ReSharper disable once UnusedMember.Global
-        set { }
-    }
-
     public DatabaseComponent(
         string name,
         AppConfig config

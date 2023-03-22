@@ -2,6 +2,7 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;
   &lt;Assembly Path="/home/freek/.nuget/packages/sentry.extensions.logging/3.22.0/lib/net6.0/Sentry.Extensions.Logging.dll" /&gt;
   &lt;Assembly Path="/home/freek/.nuget/packages/ynab.rest/0.7.0/lib/netstandard2.0/YNAB.Rest.dll" /&gt;
+  &lt;Assembly Path="/home/freek/.nuget/packages/pulumi.gcp/6.51.0/lib/netcoreapp3.1/Pulumi.Gcp.dll" /&gt;
 &lt;/AssemblyExplorer&gt;</s:String>
 	
 	

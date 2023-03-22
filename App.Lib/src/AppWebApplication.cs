@@ -189,7 +189,7 @@ public static class AppWebApplication
         }
 
         var dataProtectionBuilder = builder.Services.AddDataProtection();
-        var certificate = builder.Configuration.GetValue<string>("Security:ProtectionCertificate");
+        var certificate = builder.Configuration.GetValue<string>("Security:ProtectionCertificatePath");
         if (certificate != null)
         {
             dataProtectionBuilder.ProtectKeysWithCertificate(new X509Certificate2(certificate));
