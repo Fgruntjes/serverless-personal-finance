@@ -106,7 +106,9 @@ gcloud iam service-accounts add-iam-policy-binding "${GOOGLE_SERVICE_ACCOUNT_EMA
 GCLOUD_ROLES=(
   "roles/artifactregistry.repoAdmin"
   "roles/storage.objectViewer"
+  "roles/storage.objectCreator"
   "roles/iam.serviceAccountUser"
+  "roles/artifactregistry.repoAdmin"
 )
 for GCLOUD_ROLE in "${GCLOUD_ROLES[@]}"; do
 	  gcloud projects add-iam-policy-binding "${PROJECT_SLUG}" \
