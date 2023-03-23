@@ -108,6 +108,7 @@ GCLOUD_ROLES=(
   "roles/storage.objectAdmin"
   "roles/iam.serviceAccountUser"
   "roles/artifactregistry.repoAdmin"
+  "roles/secretmanager.admin"
 )
 for GCLOUD_ROLE in "${GCLOUD_ROLES[@]}"; do
 	  gcloud projects add-iam-policy-binding "${PROJECT_SLUG}" \
