@@ -56,6 +56,9 @@ else
         --create "${APP_ENVIRONMENT}"
 fi
 
+# Concurrency is handled by github actions
+pulumi cancel --yes
+
 if [ "$1" == "up" ]; then
     pulumi up \
       --non-interactive \
