@@ -24,7 +24,8 @@ internal static class SecretVersionExtension
             Secret = version.Secret,
             Items = new ServiceTemplateVolumeSecretItemArgs
             {
-                Version = version.Name
+                Version = version.Name,
+                Mode = 0440
             }
         };
     }
