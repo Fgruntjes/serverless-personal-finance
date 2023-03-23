@@ -117,6 +117,7 @@ internal class YnabComponent : ComponentResource, ICloudFunctionComponent
     {
         var secret = new Secret($"{_name}-{identifier}", new()
         {
+            SecretId = $"{_name}-{identifier}",
             Labels = new Dictionary<string, string>
             {
                 { "environment", _config.Environment }

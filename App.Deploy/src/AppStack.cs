@@ -7,9 +7,6 @@ namespace App.Deploy;
 
 internal class AppStack : Stack
 {
-    [Output]
-    public Output<string> FrontendUrl { get; set; }
-
     public AppStack()
     {
         var config = new AppConfig();
