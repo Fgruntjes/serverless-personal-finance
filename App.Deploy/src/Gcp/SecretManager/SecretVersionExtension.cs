@@ -17,7 +17,7 @@ internal static class SecretVersionExtension
         };
     }
 
-    public static ServiceTemplateVolumeSecretArgs ToServiceTemplateVolume(this SecretVersion version)
+    public static ServiceTemplateVolumeSecretArgs ToServiceTemplateVolume(this SecretVersion version, string file)
     {
         return new ServiceTemplateVolumeSecretArgs
         {
@@ -25,7 +25,8 @@ internal static class SecretVersionExtension
             Items = new ServiceTemplateVolumeSecretItemArgs
             {
                 Version = version.Name,
-                Mode = 0440
+                Mode = 0440,
+                Path = file
             }
         };
     }

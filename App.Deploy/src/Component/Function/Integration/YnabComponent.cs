@@ -10,7 +10,7 @@ namespace App.Deploy.Component.Function.Integration;
 
 internal class YnabComponent : ComponentResource, ICloudFunctionComponent
 {
-    private const string ProtectionCertificatePath = "/etc/secrets/gcloud_data_protection_certificate";
+    private const string ProtectionCertificatePath = "/etc/secrets/gcloud/gcloud_data_protection_certificate";
     private const string DataProtectionCertificateVolumeName = "gcloud_data_protection_certificate";
     private readonly Service _service;
     private readonly string _name;
@@ -95,7 +95,7 @@ internal class YnabComponent : ComponentResource, ICloudFunctionComponent
                             new ServiceTemplateContainerVolumeMountArgs
                             {
                                 Name = DataProtectionCertificateVolumeName,
-                                MountPath = ProtectionCertificatePath
+                                MountPath = Path.GetDirectoryName(ProtectionCertificatePath)
                             }
                         }
                     },
@@ -106,7 +106,7 @@ internal class YnabComponent : ComponentResource, ICloudFunctionComponent
                     {
                         Name = DataProtectionCertificateVolumeName,
                         Secret = CreateSecret("data-protection-cert", _config.DataProtectionCert)
-                            .ToServiceTemplateVolume()
+                            .ToServiceTemplateVolume(Path.GetFileName(ProtectionCertificatePath))
                     },
                 }
             },
