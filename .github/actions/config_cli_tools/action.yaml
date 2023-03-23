@@ -34,7 +34,7 @@ runs:
     -   uses: giantswarm/install-binary-action@v1
         with:
             binary: 'pulumi'
-            version: '3.58.0'
+            version: '3.59.0'
             smoke_test: "${binary} version"
             tarball_binary_path: "${binary}"
             download_url: 'https://get.pulumi.com/releases/sdk/pulumi-v${version}-linux-x64.tar.gz'
