@@ -105,8 +105,7 @@ gcloud iam service-accounts add-iam-policy-binding "${GOOGLE_SERVICE_ACCOUNT_EMA
     --member="principalSet://iam.googleapis.com/${IDENTITY_POOL_ID}/attribute.repository/${GITHUB_REPOSITORY}"
 GCLOUD_ROLES=(
   "roles/artifactregistry.repoAdmin"
-  "roles/storage.objectViewer"
-  "roles/storage.objectCreator"
+  "roles/storage.objectAdmin"
   "roles/iam.serviceAccountUser"
   "roles/artifactregistry.repoAdmin"
 )
