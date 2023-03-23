@@ -21,6 +21,10 @@ PROJECT_SLUG=$(echo "${PROJECT_NAME}" | slugify )
 SERVICE_ACCOUNT_NAME="github-cicd"
 IDENTITY_POOL_NAME="github-pool"
 IDENTITY_PROVIDER_NAME="github-provider"
+PULUMI_CONFIG_PASSPHRASE=$(echo $RANDOM | md5sum | head -c 20; echo;)
+
+echo "Generating data protection cert"
+DATA_PROTECTION_CERTIFICATE=$(openssl req -x509 -newkey rsa:2048 -keyout /dev/stdout -out /dev/stdout -nodes -days 365 --subj '/')
 
 # Create project
 if ! gcloud projects describe "${PROJECT_SLUG}" > /dev/null; then
@@ -37,6 +41,7 @@ echo "Enabling required services"
 gcloud services enable iamcredentials.googleapis.com --project "${PROJECT_SLUG}"
 gcloud services enable artifactregistry.googleapis.com --project "${PROJECT_SLUG}"
 gcloud services enable run.googleapis.com --project "${PROJECT_SLUG}"
+gcloud services enable secretmanager.googleapis.com --project "${PROJECT_SLUG}"
 echo ""
 
 # Link billing account
@@ -100,8 +105,10 @@ gcloud iam service-accounts add-iam-policy-binding "${GOOGLE_SERVICE_ACCOUNT_EMA
     --member="principalSet://iam.googleapis.com/${IDENTITY_POOL_ID}/attribute.repository/${GITHUB_REPOSITORY}"
 GCLOUD_ROLES=(
   "roles/artifactregistry.repoAdmin"
-  "roles/storage.objectViewer"
+  "roles/storage.objectAdmin"
   "roles/iam.serviceAccountUser"
+  "roles/artifactregistry.repoAdmin"
+  "roles/secretmanager.admin"
 )
 for GCLOUD_ROLE in "${GCLOUD_ROLES[@]}"; do
 	  gcloud projects add-iam-policy-binding "${PROJECT_SLUG}" \
@@ -128,6 +135,23 @@ if ! gcloud artifacts repositories describe --project="${PROJECT_SLUG}" --locati
         --project="${PROJECT_SLUG}"
 else
     echo "Artifact repository already created"
+fi
+echo ""
+
+
+# Create pulumi state bucket
+if ! gcloud storage buckets describe --project="${PROJECT_SLUG}" "gs://${PROJECT_SLUG}-pulumi" > /dev/null; then
+    echo "Creating pulumi state bucket"
+    gcloud storage buckets create "gs://${PROJECT_SLUG}-pulumi" \
+        --no-public-access-prevention \
+        --location="${GOOGLE_REGION}" \
+        --project="${PROJECT_SLUG}"
+        
+    gcloud storage buckets update "gs://${PROJECT_SLUG}-pulumi" \
+      --versioning \
+      --lifecycle-file=pulumi-state-bucket-lifecycle.json
+else
+    echo "Pulumi state bucket already created"
 fi
 echo ""
 
@@ -179,7 +203,8 @@ function storeSecret {
     
     echo "${SECRET_VALUE}" | gh secret set "${SECRET_NAME}" --app actions
     echo "${SECRET_VALUE}" | gh secret set "${SECRET_NAME}" --app dependabot
-    echo "${SECRET_NAME}=\"${SECRET_VALUE}\"" >> .env.deploy.local
+    
+    echo "${SECRET_NAME}='${SECRET_VALUE}'" >> .env.deploy.local
 }
 cat /dev/null > .env.deploy.local
 storeSecret GOOGLE_WORKLOAD_IDENTITY_PROVIDER
@@ -191,6 +216,9 @@ storeSecret MONGODB_ATLAS_PRIVATE_KEY
 storeSecret MONGODB_ATLAS_PUBLIC_KEY
 storeSecret MONGODB_ATLAS_PROJECT_ID
 
+# Secret protection keys
+storeSecret PULUMI_CONFIG_PASSPHRASE
+storeSecret DATA_PROTECTION_CERTIFICATE
 
 # Variables that are required before setup. Preferably these are created with cli tools.
 storeSecret AUTH0_DOMAIN

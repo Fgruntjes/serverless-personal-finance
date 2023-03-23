@@ -1,6 +1,9 @@
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
+using App.Lib.Authorization;
 using App.Lib.Configuration;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
@@ -8,12 +11,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Converters;
-using App.Lib.Authorization;
 
 namespace App.Lib;
 
 public static class AppWebApplication
 {
+    public const string SwaggerBuildEnvironment = "SwaggerBuild";
+
     public static async Task CreateAndRun(string[] args)
     {
         await CreateAndRun(args, _ => { }, _ => { });
@@ -116,9 +120,10 @@ public static class AppWebApplication
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.Configure<AppOptions>(builder.Configuration.GetSection(AppOptions.OptionsKey));
         builder.Services.Configure<Auth0Options>(builder.Configuration.GetSection(Auth0Options.OptionsKey));
-        builder.Configuration
-            .AddEnvironmentVariables()
-            .AddUserSecrets(Assembly.GetExecutingAssembly(), true);
+
+        builder.Configuration.AddEnvironmentVariables();
+        builder.Configuration.AddUserSecrets(Assembly.GetExecutingAssembly(), true);
+
         if (builder.Environment.IsDevelopment())
         {
             builder.Configuration.AddDevEnvVariables();
@@ -138,7 +143,7 @@ public static class AppWebApplication
         builder.Services.AddSwaggerGen();
         builder.Services.AddSwaggerGenNewtonsoftSupport();
         builder.Services.AddLogging();
-        builder.Services.AddDataProtection();
+        ConfigureDataProtection(builder);
         builder.Services.AddCors();
         builder.Services.AddAppAuthentication(builder.Configuration);
 
@@ -174,5 +179,20 @@ public static class AppWebApplication
         await configureApp(app);
 
         app.Run();
+    }
+
+    private static void ConfigureDataProtection(WebApplicationBuilder builder)
+    {
+        if (builder.Environment.EnvironmentName == SwaggerBuildEnvironment)
+        {
+            return;
+        }
+
+        var dataProtectionBuilder = builder.Services.AddDataProtection();
+        var certificate = builder.Configuration.GetValue<string>("Security:ProtectionCertificatePath");
+        if (certificate != null)
+        {
+            dataProtectionBuilder.ProtectKeysWithCertificate(new X509Certificate2(certificate));
+        }
     }
 }
