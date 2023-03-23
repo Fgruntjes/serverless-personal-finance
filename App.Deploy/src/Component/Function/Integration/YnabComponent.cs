@@ -70,7 +70,7 @@ internal class YnabComponent : ComponentResource, ICloudFunctionComponent
                             new(){ Name = "Database__DatabaseName", Value = "function_integration_ynab" },
                             new(){ Name = "Ynab__ClientId", Value = config.Ynab.ClientId },
                             new(){ Name = "Security__ProtectionCertificatePath", Value = ProtectionCertificatePath },
-                            
+
                             new(){
                                 Name = "Sentry__Dsn",
                                 ValueSource = CreateSecret("sentry-dsn", config.Sentry.Dsn)
@@ -100,7 +100,7 @@ internal class YnabComponent : ComponentResource, ICloudFunctionComponent
                         }
                     },
                 },
-                Volumes = new []
+                Volumes = new[]
                 {
                     new ServiceTemplateVolumeArgs()
                     {
@@ -123,7 +123,7 @@ internal class YnabComponent : ComponentResource, ICloudFunctionComponent
             },
             Replication = new SecretReplicationArgs { Automatic = true }
         });
-        
+
         return new SecretVersion($"{_name}-{identifier}", new SecretVersionArgs
         {
             Secret = secret.Id,

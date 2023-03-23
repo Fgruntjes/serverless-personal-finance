@@ -11,7 +11,7 @@ public class AppConfig
     public string ProjectDir => _config.Require("projectDir");
     public string ProjectSlug => Gcp.Project;
     public string DataProtectionCert => _config.Require("dataProtectionCert");
-    
+
     public GcpConfig Gcp { get; }
     public MongoDbConfig MongoDb { get; }
     public Auth0Config Auth0 { get; }
