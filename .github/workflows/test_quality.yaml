@@ -34,4 +34,4 @@ jobs:
         - test_quality_frontend_web_typescript
         if: ${{ always() }}
         steps:
-        -   run: "[[ '${{ needs.test_quality_dotnet.result }}' == 'success' && '${{ needs.test_quality_ansible.result }}' == 'success' && '${{ needs.test_quality_frontend_web_typescript.result }}' == 'success' ]]"
+        -   run: "[[ '${{ needs.test_quality_dotnet.result }}' == 'success' && '${{ needs.test_quality_frontend_web_typescript.result }}' == 'success' ]]"
