@@ -13,7 +13,7 @@ set +a
 pulumi login "gs://${GOOGLE_PROJECT_ID}-pulumi"
 
 # Set configuration only if modified
-if [ ".env.deploy.local" -nt "Pulumi.${APP_ENVIRONMENT}.yaml" ] || [ ".env.local" -nt "Pulumi.${APP_ENVIRONMENT}.yaml" ]; then
+if { [ ".env.deploy.local" -nt "Pulumi.${APP_ENVIRONMENT}.yaml" ] || [ ".env.local" -nt "Pulumi.${APP_ENVIRONMENT}.yaml" ]; } || [ ! -f "Pulumi.${APP_ENVIRONMENT}.yaml" ]; then
     # So old configs are cleared
     rm -f "Pulumi.${APP_ENVIRONMENT}.yaml"
     
